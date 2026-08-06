@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+
+# Secrets — never commit
+.env
+.env.*
+!.env.example
+*.pem
+*-firebase-adminsdk*.json
+serviceAccount*.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
+
+# Optional local copies of the Netlify deploy archive
+ZIP/
+*.zip

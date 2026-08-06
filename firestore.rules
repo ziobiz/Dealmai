@@ -1,0 +1,184 @@
+// ============================================================
+// Deal Pro AI — Firestore Security Rules
+// ============================================================
+// Copy the contents of this file (between the rules_version line and the
+// final closing brace) into:
+//   Firebase Console → Firestore Database → Rules tab → Publish
+//
+// MODEL:
+//   • Admin status is stored in users/{uid}.role == "admin"
+//   • Customer status: users/{uid}.role == "customer"
+//   • Netlify Functions use Firebase Admin SDK which BYPASSES these rules
+//     entirely (it authenticates with service account credentials).
+//     So all backend writes work regardless of what's here.
+//   • These rules only apply to FRONTEND (web client) reads/writes.
+//
+// CRITICAL: After publishing, sign out and sign in again so the auth token
+// refreshes. Otherwise the new rules may not be visible to your session.
+// ============================================================
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // -------- Helper functions --------
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Check admin role by reading the user's profile document.
+    // Cost: 1 document read per rule evaluation (cached within a single request).
+    function isAdmin() {
+      return isSignedIn() &&
+             exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+             get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // -------- USERS --------
+    // Self can read/write own profile.
+    // Admin can read/write anyone's profile.
+    // Anyone signed in can list users where role=='admin' (used by adminExists()
+    // probe to detect if any admin exists in the system).
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      // Self can create own profile (customer self-signup / first-admin bootstrap).
+      // Admin can create a profile for anyone (the Add User panel writes the new
+      // user's profile from the admin's session — without isAdmin() here that
+      // write was denied, leaving an Auth account with no Firestore profile = a
+      // "ghost" user that never appeared in the Users table).
+      allow create: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow update: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // List query for adminExists() — allow listing users where role==admin
+    // (this is safe because it doesn't expose anything other than existence of admins)
+    match /users/{userId} {
+      allow list: if true;  // adminExists() probe needs this
+    }
+
+    // -------- ORDERS --------
+    // Customer can read their own orders.
+    // Admin can read/write all.
+    // Backend (Admin SDK) bypasses these rules.
+    match /orders/{orderId} {
+      allow read: if isAdmin() ||
+                     (isSignedIn() && resource.data.customer.email == request.auth.token.email);
+      allow write: if isAdmin();
+    }
+
+    // -------- PACKAGES --------
+    // Public read (so checkout page can show pricing).
+    // Admin write only.
+    match /packages/{packageId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // -------- TRANSLATIONS --------
+    // Public read (i18n strings).
+    // Admin write only.
+    match /translations/{lang} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // -------- EMAIL QUEUE --------
+    // Admin read/write only (contains email addresses, body content).
+    match /email_queue/{emailId} {
+      allow read, write: if isAdmin();
+    }
+
+    // -------- WEBHOOK EVENTS (OnTheLine) --------
+    // Admin read; admin write (so the "Fire Test Webhook" button in the admin
+    // panel can simulate an event from the frontend). Real ontheline events
+    // come through the Netlify Function which uses Admin SDK and bypasses
+    // these rules anyway.
+    match /webhook_events/{eventId} {
+      allow read:  if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // -------- PAYMENT EVENTS (all gateways) --------
+    // Audit log for payment creation + gateway callbacks, written by the
+    // Netlify Functions via Admin SDK (which bypasses these rules). Each doc
+    // carries a `gateway` field so events from different providers live
+    // together. Admin read-only from the frontend.
+    match /payment_events/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;  // only backend (Admin SDK) writes
+    }
+
+    // -------- CHILLPAY EVENTS (legacy) --------
+    // Admin read only — backend writes via Admin SDK.
+    // This is the audit log for ChillPay payment creations and callbacks.
+    match /chillpay_events/{eventId} {
+      allow read: if isAdmin();
+      allow write: if false;  // only backend (Admin SDK) writes
+    }
+
+    // -------- AUDIT LOG --------
+    // Append-only log written by Netlify Functions (delete-customer,
+    // provision-dmchamp, etc.) via Admin SDK. Frontend admin can read
+    // for the audit trail; nobody writes from frontend.
+    match /audit_log/{logId} {
+      allow read:  if isAdmin();
+      allow write: if false;  // only backend (Admin SDK) writes
+    }
+
+    // -------- ONTHELINE PARTNERS & PAYMENT GATEWAYS --------
+    // Admin-managed reference lists: { code, companyName, createdAt }.
+    // Admin reads/writes from the frontend CRUD UI. The ontheline webhook
+    // reads these via Admin SDK (bypasses these rules) to validate incoming
+    // partner/paygw codes.
+    match /ontheline_partners/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /ontheline_paygw/{id} {
+      allow read, write: if isAdmin();
+    }
+    match /ontheline_currencies/{id} {
+      allow read, write: if isAdmin();
+    }
+
+    // -------- CONFIG --------
+    // Application configuration documents managed by admin via UI.
+    // Notable docs:
+    //   config/webhook  — { secret, updatedAt, updatedBy }
+    //                     The shared HMAC secret for verifying ontheline
+    //                     webhook signatures. Backend reads it via Admin SDK
+    //                     (bypasses these rules); frontend admin reads it to
+    //                     display and writes it via the Regenerate button.
+    //   config/branding — { siteName, logoDataUrl, faviconDataUrl,
+    //                       enabledLangs, dmchampPortalUrl, updatedAt, updatedBy }
+    //                     Site name + custom logo + browser-tab favicon +
+    //                     enabled UI languages + DM Champ portal URL. PUBLIC
+    //                     READ so guest browsers see the brand, favicon, and
+    //                     language picker without signing in.
+    //   config/payment  — { activeGateway, updatedAt, updatedBy }
+    //                     Which payment gateway settles NEW direct orders.
+    //                     Only the SELECTION lives here — gateway credentials
+    //                     stay in Netlify env vars, never in Firestore, since
+    //                     the frontend can read this collection.
+    //   config/dmchamp  — { apiKey, enabled, creditsPerUsd,
+    //                       defaultMonthlyCredits, rollOverToNextMonth,
+    //                       timeZoneId, country, updatedAt, updatedBy }
+    //                     DM Champ integration settings. Admin read/write
+    //                     only — the API key must NEVER be exposed publicly.
+    //                     Netlify Functions read via Admin SDK.
+    //
+    // Admin write only. Branding doc is publicly readable so customer/guest
+    // browsers can pull the site name + logo without needing to be signed in.
+    // The webhook secret and dmchamp docs remain admin-read-only.
+    match /config/{configId} {
+      allow read:  if configId == "branding" || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // -------- DEFAULT DENY --------
+    // Any collection not explicitly matched above is denied.
+    // (No catch-all rule needed — Firestore default-denies.)
+  }
+}

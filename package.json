@@ -1,0 +1,12 @@
+{
+  "name": "deal-pro-functions",
+  "version": "1.0.0",
+  "description": "Server functions for Deal Pro — ontheline webhook receiver",
+  "private": true,
+  "engines": {
+    "node": "18"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
+}

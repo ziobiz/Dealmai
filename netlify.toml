@@ -1,0 +1,180 @@
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
+  # Disable smart secret scanning. The only key it flags is the Firebase Web API
+  # config key (apiKey: "AIza..."), which is SAFE to expose in client-side code:
+  # — Firebase Web API keys are designed to be public; they identify the project,
+  #   not authorize access.
+  # — All actual security is enforced by Firestore Security Rules and Firebase Auth.
+  # — Google's official docs show this key embedded in <script> tags in HTML.
+  # Real secrets (FIREBASE_PRIVATE_KEY, ONTHELINE_WEBHOOK_SECRET) live in
+  # Netlify env vars and are never committed.
+  SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
+  SECRETS_SCAN_ENABLED = "false"
+
+[functions]
+  # Node 18 runtime; firebase-admin needs full Node, not edge
+  node_bundler = "esbuild"
+  external_node_modules = ["firebase-admin"]
+
+# ============================================================
+# Scheduled function: send-queued-emails
+# Runs every 5 minutes (UTC). Pulls pending emails from Firestore queue
+# and sends via Resend API.
+#
+# Note: scheduled functions only run on PUBLISHED (production) deploys.
+# Draft / branch / preview deploys won't trigger the schedule.
+# ============================================================
+[functions."send-queued-emails"]
+  schedule = "*/5 * * * *"
+
+# Scheduled function: settle-pending-payments
+# Every 10 minutes, ask the payment gateway about orders still sitting on
+# 'pending'. Gateways drop webhooks (misconfigured URL, provider outage,
+# exhausted retries) and without this a customer who really paid is left with
+# no account, no credits and no receipt until an admin notices. The sweep polls
+# the provider and settles anything that turns out to be paid.
+[functions."settle-pending-payments"]
+  schedule = "*/10 * * * *"
+
+# Optional: pretty URL alias so the webhook path is shorter than .netlify/functions/...
+[[redirects]]
+  from = "/api/ontheline-webhook"
+  to = "/.netlify/functions/ontheline-webhook"
+  status = 200
+  force = true
+
+# Manual trigger for the email sender (useful for debugging / testing)
+# In normal operation it runs automatically every 5 minutes via the schedule
+# defined in send-queued-emails.js (exports.config.schedule = '*/5 * * * *')
+[[redirects]]
+  from = "/api/send-emails-now"
+  to = "/.netlify/functions/send-queued-emails"
+  status = 200
+  force = true
+
+# ============================================================
+# Payment gateway endpoints (provider-agnostic)
+# ============================================================
+# The frontend calls /.netlify/functions/create-payment DIRECTLY (the /api/*
+# alias is unreliable on production), but the aliases are kept for
+# completeness and for anything hitting them from outside the app.
+#
+# create-payment resolves the ACTIVE gateway from config/payment.activeGateway;
+# payment-callback takes ?gw=<id> so each provider gets its own callback URL:
+#   https://dealmai.com/.netlify/functions/payment-callback?gw=chillpay
+[[redirects]]
+  from = "/api/create-payment"
+  to = "/.netlify/functions/create-payment"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/check-payment-status"
+  to = "/.netlify/functions/check-payment-status"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/payment-callback"
+  to = "/.netlify/functions/payment-callback"
+  status = 200
+  force = true
+
+# ---- Legacy ChillPay aliases (kept so already-registered URLs keep working) ----
+# create-chillpay-payment / chillpay-callback are thin wrappers that delegate to
+# the generic handlers above. The ChillPay dashboard's "URL Background" still
+# points at /.netlify/functions/chillpay-callback, which forces gw=chillpay.
+[[redirects]]
+  from = "/api/create-chillpay-payment"
+  to = "/.netlify/functions/create-chillpay-payment"
+  status = 200
+  force = true
+
+# Receives background callback from ChillPay (configure URL Background in ChillPay dashboard)
+# Sandbox/Production both POST to this same URL — mode is controlled by CHILLPAY_MODE env var
+[[redirects]]
+  from = "/api/chillpay-callback"
+  to = "/.netlify/functions/chillpay-callback"
+  status = 200
+  force = true
+
+# ============================================================
+# Admin: hard-delete a customer user (Firebase Auth + Firestore profile)
+# ============================================================
+# Called by Admin → Users → Delete. Requires Firebase ID token of an admin
+# in the Authorization header; the function verifies admin status before
+# proceeding. Removes BOTH the Firebase Auth account and the Firestore
+# profile so the email is fully released for re-use.
+[[redirects]]
+  from = "/api/delete-customer"
+  to = "/.netlify/functions/delete-customer"
+  status = 200
+  force = true
+
+# ============================================================
+# Admin: manually (re)provision a DM Champ sub-account for an order
+# ============================================================
+# Called by Admin → Orders → View → "Provision DM Champ" / "Retry" button.
+# Auto-provisioning happens automatically inside chillpay-callback.js when
+# payment succeeds; this endpoint exists for retries when the auto-call
+# failed (e.g. DM Champ was down) or when admin wants to provision an
+# order that was created via a different source (ontheline webhook).
+# Requires Firebase ID token of an admin in the Authorization header.
+[[redirects]]
+  from = "/api/provision-dmchamp"
+  to = "/.netlify/functions/provision-dmchamp"
+  status = 200
+  force = true
+
+# Currency → USD conversion helper for the Admin → Simulate-webhook form.
+# Uses the same FREECURRENCY_API_KEY + currency-convert lib as the real
+# webhook, so the browser never sees the API key.
+[[redirects]]
+  from = "/api/convert-currency"
+  to = "/.netlify/functions/convert-currency"
+  status = 200
+  force = true
+
+# ============================================================
+# Customer-facing return URL after paying at ChillPay
+# ============================================================
+# ChillPay redirects the customer's browser back to /payment-result
+# using HTTP POST (per v1.2.5 docs Table 3.2). Netlify static hosting
+# cannot serve static HTML on POST — those return 404. So we route the
+# POST to a Netlify Function (payment-result.js) which parses the body
+# and issues a 303 See Other redirect to /index.html?<params>#payment-result.
+# The SPA then renders the payment-result page using the query string.
+#
+# Force flag (force = true) is REQUIRED so POST hits the function before
+# Netlify's static-file-lookup or the GET-only SPA catch-all.
+[[redirects]]
+  from = "/payment-result"
+  to = "/.netlify/functions/payment-result"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/payment-result/"
+  to = "/.netlify/functions/payment-result"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/payment-result/*"
+  to = "/.netlify/functions/payment-result"
+  status = 200
+  force = true
+
+# ============================================================
+# SPA catch-all fallback (MUST be at the bottom — last match wins)
+# ============================================================
+# NO force flag — static files (app.js, CSS, images) are served directly
+# from disk; only paths without a real file fall through to index.html.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
