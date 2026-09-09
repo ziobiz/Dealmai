@@ -50,7 +50,11 @@ const handlerErrors = Object.create(null);
 
 function loadHandler(name) {
   if (handlerCache[name]) return handlerCache[name];
-  if (handlerErrors[name]) throw handlerErrors[name];
+  // Allow retry after env is filled and service restarted; also retry once if
+  // a previous load failed before Firebase helper existed.
+  if (handlerErrors[name]) {
+    delete handlerErrors[name];
+  }
   try {
     // eslint-disable-next-line import/no-dynamic-require, global-require
     const mod = require(path.join(FUNCTIONS_DIR, name));

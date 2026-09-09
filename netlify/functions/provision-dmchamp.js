@@ -30,24 +30,8 @@
 // Diagnostic:  GET  /api/provision-dmchamp
 // ============================================================
 
-const admin = require('firebase-admin');
+const { admin, db } = require('./lib/firebase-admin-app');
 const dmchamp = require('./lib/dmchamp');
-
-// Firebase Admin singleton (same pattern as the other functions)
-if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId:   process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey:  (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n')
-      })
-    });
-  } catch (e) {
-    console.error('[provision-dmchamp] Firebase init failed:', e);
-  }
-}
-const db = admin.firestore();
 
 const corsHeaders = {
   'Content-Type': 'application/json',

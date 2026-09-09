@@ -23,25 +23,10 @@
 // Diagnostic:  GET  /.netlify/functions/check-payment-status
 // ============================================================
 
-const admin = require('firebase-admin');
+const { admin, db } = require('./lib/firebase-admin-app');
 const gateways = require('./lib/gateways');
 const { settlePaidOrder } = require('./lib/settle-order');
 const { provisionForOrder: provisionDmChamp } = require('./provision-dmchamp');
-
-if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n')
-      })
-    });
-  } catch (e) {
-    console.error('Firebase init failed:', e);
-  }
-}
-const db = admin.firestore();
 
 const CORS = {
   'Access-Control-Allow-Origin': '*',

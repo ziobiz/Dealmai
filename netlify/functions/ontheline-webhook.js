@@ -22,29 +22,10 @@
 // ============================================================
 
 const crypto = require('crypto');
-const admin = require('firebase-admin');
+const { admin, db } = require('./lib/firebase-admin-app');
 const pkgLogic = require('./lib/packages');
 const dmchamp = require('./lib/dmchamp');
 const { convertToUsd } = require('./lib/currency-convert');
-
-// ------------------------------------------------------------
-// Firebase Admin initialisation (singleton across cold starts)
-// ------------------------------------------------------------
-if (!admin.apps.length) {
-  try {
-    admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        // Netlify env vars sometimes strip newlines — restore them
-        privateKey: (process.env.FIREBASE_PRIVATE_KEY || '').replace(/\\n/g, '\n')
-      })
-    });
-  } catch (e) {
-    console.error('Firebase init failed:', e);
-  }
-}
-const db = admin.firestore();
 
 // ------------------------------------------------------------
 // Package catalog — must mirror what the web app uses
