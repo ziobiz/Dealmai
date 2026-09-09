@@ -26,6 +26,10 @@ _deploy_*.py
 _fix_*.py
 _debug_*.py
 _check_*.py
+_migrate_*.py
+_migration_export/
+_import_*.py
+_seed_*.py
 
 # Accidental media drops in repo root
 WhatsApp Image*.jpeg

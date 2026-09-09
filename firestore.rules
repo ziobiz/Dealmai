@@ -177,6 +177,13 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    // -------- SMTP ACCOUNTS --------
+    // Multiple outbound mail accounts managed in Admin → Email SMTP.
+    // Passwords live here; admin-only. Backend (Admin SDK) bypasses rules.
+    match /smtp_accounts/{accountId} {
+      allow read, write: if isAdmin();
+    }
+
     // -------- DEFAULT DENY --------
     // Any collection not explicitly matched above is denied.
     // (No catch-all rule needed — Firestore default-denies.)

@@ -7,52 +7,50 @@
 //
 // Required environment variables:
 //   FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY
-//   EMAIL_FROM                  — e.g. "DealMai <noreply@dealmai.com>"
-//   EMAIL_REPLY_TO              — optional
 //
-// Mail transport (prefer Google SMTP on VPS):
-//   SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS
-//   SMTP_SECURE=true            — default true when port is 465
-// Fallback (legacy Netlify):
-//   RESEND_API_KEY
+// Mail transport preference:
+//   1) Firestore smtp_accounts (+ config/smtp) — managed in Admin → Email SMTP
+//   2) Env SMTP_HOST / SMTP_USER / SMTP_PASS / EMAIL_FROM
+//   3) Legacy Resend RESEND_API_KEY
+//
+// Optional per-queue override: email_queue.smtpAccountId
 // ============================================================
 
 const nodemailer = require('nodemailer');
 const { admin, db } = require('./lib/firebase-admin-app');
 const { renderEmail } = require('./lib/email-templates');
+const { loadSmtpSettings } = require('./lib/smtp-settings');
 
-const SUPPORT_BCC = 'support@dealmai.com';
+const DEFAULT_SUPPORT_BCC = 'support@dealmai.com';
 
-function smtpConfigured() {
+function envSmtpConfigured() {
   return Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS);
 }
 
-function createSmtpTransport() {
-  const port = Number(process.env.SMTP_PORT || 465);
-  const secureEnv = (process.env.SMTP_SECURE || '').toLowerCase();
-  const secure = secureEnv ? secureEnv === 'true' || secureEnv === '1' : port === 465;
+function createSmtpTransport(cfg) {
   return nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port,
-    secure,
+    host: cfg.host,
+    port: cfg.port,
+    secure: cfg.secure,
     auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS
+      user: cfg.user,
+      pass: cfg.pass
     }
   });
 }
 
-async function sendViaSmtp({ to, subject, html, text, replyTo, fromOntheline }) {
-  if (!smtpConfigured()) throw new Error('SMTP_HOST/SMTP_USER/SMTP_PASS are not set');
+async function sendViaSmtp(cfg, { to, subject, html, text, fromOntheline }) {
+  if (!cfg) throw new Error('No SMTP account configured (Admin → Email SMTP or env SMTP_*)');
 
-  const from = process.env.EMAIL_FROM || `DealMai <${process.env.SMTP_USER}>`;
-  const rewriteTo = (process.env.EMAIL_TEST_REWRITE_TO || '').trim();
+  const from = cfg.from;
+  const supportBcc = cfg.supportBcc || DEFAULT_SUPPORT_BCC;
+  const rewriteTo = (cfg.testRewriteTo || '').trim();
   let actualTo = to;
   let actualSubject = subject;
-  if (rewriteTo && rewriteTo.toLowerCase() !== to.toLowerCase()) {
+  if (rewriteTo && rewriteTo.toLowerCase() !== String(to).toLowerCase()) {
     actualTo = rewriteTo;
     actualSubject = `[TEST → ${to}] ${subject}`;
-    console.log(`[send-queued-emails] Rewriting recipient: ${to} → ${rewriteTo} (EMAIL_TEST_REWRITE_TO active)`);
+    console.log(`[send-queued-emails] Rewriting recipient: ${to} → ${rewriteTo}`);
   }
 
   let mail;
@@ -60,27 +58,33 @@ async function sendViaSmtp({ to, subject, html, text, replyTo, fromOntheline }) 
     const label = String(to || '').replace(/"/g, '');
     mail = {
       from,
-      to: `"${label}" <${SUPPORT_BCC}>`,
+      to: `"${label}" <${supportBcc}>`,
       subject: `[ontheline → ${to}] ${actualSubject}`,
       html,
       text
     };
-    console.log(`[send-queued-emails] ontheline mail for ${to} redirected to support only (customer not delivered)`);
+    console.log(`[send-queued-emails] ontheline mail for ${to} redirected to support only`);
   } else {
     mail = {
       from,
       to: actualTo,
-      bcc: SUPPORT_BCC,
+      bcc: supportBcc,
       subject: actualSubject,
       html,
       text
     };
   }
-  if (replyTo) mail.replyTo = replyTo;
+  if (cfg.replyTo) mail.replyTo = cfg.replyTo;
 
-  const transport = createSmtpTransport();
+  const transport = createSmtpTransport(cfg);
   const info = await transport.sendMail(mail);
-  return { id: info.messageId || null, status: 'sent', provider: 'smtp' };
+  return {
+    id: info.messageId || null,
+    status: 'sent',
+    provider: 'smtp',
+    smtpAccountId: cfg.accountId || null,
+    smtpSource: cfg.source
+  };
 }
 
 async function sendViaResend({ to, subject, html, text, replyTo, fromOntheline }) {
@@ -88,13 +92,14 @@ async function sendViaResend({ to, subject, html, text, replyTo, fromOntheline }
   if (!apiKey) throw new Error('RESEND_API_KEY is not set');
 
   const from = process.env.EMAIL_FROM || 'Deal Pro <onboarding@resend.dev>';
+  const supportBcc = process.env.EMAIL_SUPPORT_BCC || DEFAULT_SUPPORT_BCC;
   const rewriteTo = (process.env.EMAIL_TEST_REWRITE_TO || '').trim();
   let actualTo = to;
   let actualSubject = subject;
   if (rewriteTo && rewriteTo.toLowerCase() !== to.toLowerCase()) {
     actualTo = rewriteTo;
     actualSubject = `[TEST → ${to}] ${subject}`;
-    console.log(`[send-queued-emails] Rewriting recipient: ${to} → ${rewriteTo} (EMAIL_TEST_REWRITE_TO active)`);
+    console.log(`[send-queued-emails] Rewriting recipient: ${to} → ${rewriteTo}`);
   }
 
   let body;
@@ -102,17 +107,16 @@ async function sendViaResend({ to, subject, html, text, replyTo, fromOntheline }
     const label = String(to || '').replace(/"/g, '');
     body = {
       from,
-      to: [`"${label}" <${SUPPORT_BCC}>`],
+      to: [`"${label}" <${supportBcc}>`],
       subject: `[ontheline → ${to}] ${actualSubject}`,
       html,
       text
     };
-    console.log(`[send-queued-emails] ontheline mail for ${to} redirected to support only (customer not delivered)`);
   } else {
     body = {
       from,
       to: [actualTo],
-      bcc: [SUPPORT_BCC],
+      bcc: [supportBcc],
       subject: actualSubject,
       html,
       text
@@ -141,8 +145,15 @@ async function sendViaResend({ to, subject, html, text, replyTo, fromOntheline }
 }
 
 async function sendEmail(opts) {
-  if (smtpConfigured()) return sendViaSmtp(opts);
-  return sendViaResend(opts);
+  const cfg = await loadSmtpSettings(db, opts.smtpAccountId || null);
+  if (cfg) return sendViaSmtp(cfg, opts);
+  if (envSmtpConfigured()) {
+    // loadSmtpSettings already covers env; if it returned null, fall through
+  }
+  return sendViaResend({
+    ...opts,
+    replyTo: process.env.EMAIL_REPLY_TO
+  });
 }
 
 async function processEmailDoc(docSnap) {
@@ -166,16 +177,21 @@ async function processEmailDoc(docSnap) {
       subject,
       html,
       text,
-      replyTo: process.env.EMAIL_REPLY_TO,
-      fromOntheline
+      fromOntheline,
+      smtpAccountId: data.smtpAccountId || null
     });
+
+    const supportBcc = result.provider === 'smtp'
+      ? ((await loadSmtpSettings(db, data.smtpAccountId || null)) || {}).supportBcc || DEFAULT_SUPPORT_BCC
+      : (process.env.EMAIL_SUPPORT_BCC || DEFAULT_SUPPORT_BCC);
 
     await docSnap.ref.update({
       status: fromOntheline ? 'sent_support_only' : 'sent',
       sentAt: admin.firestore.FieldValue.serverTimestamp(),
       providerMessageId: result.id || null,
       emailProvider: result.provider || null,
-      deliveredTo: fromOntheline ? SUPPORT_BCC : data.to,
+      smtpAccountId: result.smtpAccountId || data.smtpAccountId || null,
+      deliveredTo: fromOntheline ? supportBcc : data.to,
       customerDelivered: fromOntheline ? false : true,
       lastError: admin.firestore.FieldValue.delete()
     });
@@ -208,8 +224,11 @@ exports.handler = async (event) => {
     } catch {}
   }
 
+  const smtpCfg = await loadSmtpSettings(db, null);
+  const transport = smtpCfg ? `smtp(${smtpCfg.source})` : (process.env.RESEND_API_KEY ? 'resend' : 'none');
+
   console.log(
-    `send-queued-emails: invoked (${invocationType})${nextRun ? `, next_run=${nextRun}` : ''} transport=${smtpConfigured() ? 'smtp' : 'resend'}`
+    `send-queued-emails: invoked (${invocationType})${nextRun ? `, next_run=${nextRun}` : ''} transport=${transport}`
   );
 
   try {
@@ -219,7 +238,7 @@ exports.handler = async (event) => {
       const msg = 'No pending emails in queue';
       console.log(msg);
       return isHttpInvocation
-        ? { statusCode: 200, body: JSON.stringify({ ok: true, processed: 0, message: msg, invocation: invocationType }) }
+        ? { statusCode: 200, body: JSON.stringify({ ok: true, processed: 0, message: msg, invocation: invocationType, transport }) }
         : { statusCode: 200 };
     }
 
@@ -239,7 +258,7 @@ exports.handler = async (event) => {
     return isHttpInvocation
       ? {
           statusCode: 200,
-          body: JSON.stringify({ ok: true, processed: results.length, summary, results, invocation: invocationType })
+          body: JSON.stringify({ ok: true, processed: results.length, summary, results, invocation: invocationType, transport })
         }
       : { statusCode: 200 };
   } catch (e) {

@@ -365,6 +365,7 @@ const DEFAULT_STRINGS = {
   "toast.paymentgw.saved":"New payments now go through {name}",
   "toast.paymentgw.failed":"Could not save: {error}",
   "admin.side.emails":"Email Queue",
+  "admin.side.smtp":"Email SMTP",
   "admin.side.languages":"Languages",
   "admin.side.branding":"Branding",
   "admin.side.dmchamp":"DM Champ",
@@ -650,6 +651,53 @@ const DEFAULT_STRINGS = {
   "admin.emails.kind.invoice":"Invoice",
   "admin.emails.kind.receipt":"Receipt",
   "admin.emails.kind.credentials":"Credentials",
+
+  // Admin · SMTP accounts
+  "admin.smtp.crumbs":"Console / Email SMTP",
+  "admin.smtp.title-html":'Email <span class="grad">SMTP</span>',
+  "admin.smtp.sub":"Manage one or more SMTP accounts for outbound mail (receipts, credentials, ontheline notices). The default account is used unless a queue item specifies another.",
+  "admin.smtp.global.title":"Global mail options",
+  "admin.smtp.global.replyTo":"Reply-To",
+  "admin.smtp.global.supportBcc":"Support BCC / ontheline inbox",
+  "admin.smtp.global.testRewrite":"Test rewrite To (optional)",
+  "admin.smtp.global.testRewrite.hint":"When set, every outbound message is redirected to this address (subject tagged). Leave empty in production.",
+  "admin.smtp.global.default":"Default account",
+  "admin.smtp.global.save":"Save options",
+  "admin.smtp.accounts.title":"SMTP accounts",
+  "admin.smtp.accounts.add":"Add account",
+  "admin.smtp.accounts.empty":"No SMTP accounts yet. Add one to send mail from the queue.",
+  "admin.smtp.col.name":"Name",
+  "admin.smtp.col.host":"Host",
+  "admin.smtp.col.user":"User",
+  "admin.smtp.col.from":"From",
+  "admin.smtp.col.status":"Status",
+  "admin.smtp.status.enabled":"Enabled",
+  "admin.smtp.status.disabled":"Disabled",
+  "admin.smtp.status.default":"Default",
+  "admin.smtp.action.edit":"Edit",
+  "admin.smtp.action.delete":"Delete",
+  "admin.smtp.action.setDefault":"Set default",
+  "admin.smtp.modal.add":"Add SMTP account",
+  "admin.smtp.modal.edit":"Edit SMTP account",
+  "admin.smtp.field.name":"Display name",
+  "admin.smtp.field.host":"SMTP host",
+  "admin.smtp.field.port":"Port",
+  "admin.smtp.field.secure":"SSL/TLS (usually on for port 465)",
+  "admin.smtp.field.user":"Username (email)",
+  "admin.smtp.field.pass":"Password / App password",
+  "admin.smtp.field.pass.keep":"Leave blank to keep the current password",
+  "admin.smtp.field.from":"From header",
+  "admin.smtp.field.from.hint":"e.g. Deal Mai <noreply@dealmai.com>",
+  "admin.smtp.field.enabled":"Enabled",
+  "admin.smtp.btn.save":"Save account",
+  "admin.smtp.btn.test":"Send test email",
+  "admin.smtp.test.to":"Test recipient",
+  "toast.smtp.saved":"SMTP options saved",
+  "toast.smtp.account.saved":"SMTP account saved",
+  "toast.smtp.account.deleted":"SMTP account deleted",
+  "toast.smtp.default.set":"Default SMTP account updated",
+  "toast.smtp.test.queued":"Test email queued — check Email Queue / inbox shortly",
+  "toast.smtp.needAccount":"Add and enable an SMTP account first",
 
   // Admin · languages
   "admin.langs.title-html":'Language <span class="grad">management</span>',
@@ -1088,6 +1136,7 @@ const FULL_TRANSLATIONS = {
     "toast.paymentgw.saved":"การชำระเงินใหม่จะผ่าน {name} แล้ว",
     "toast.paymentgw.failed":"บันทึกไม่สำเร็จ: {error}",
     "admin.side.emails":"คิวอีเมล",
+    "admin.side.smtp":"Email SMTP",
     "admin.side.languages":"ภาษา",
     "admin.side.branding":"แบรนด์",
     "admin.side.dmchamp":"DM Champ",
@@ -1731,6 +1780,7 @@ const FULL_TRANSLATIONS = {
     "toast.paymentgw.saved":"이제 신규 결제는 {name}(으)로 처리됩니다",
     "toast.paymentgw.failed":"저장하지 못했습니다: {error}",
     "admin.side.emails":"이메일 대기열",
+    "admin.side.smtp":"이메일 SMTP",
     "admin.side.languages":"언어",
     "admin.side.branding":"브랜딩",
     "admin.side.dmchamp":"DM Champ",
@@ -2439,6 +2489,7 @@ const FULL_TRANSLATIONS = {
     "toast.paymentgw.saved":"新規の決済は {name} 経由になりました",
     "toast.paymentgw.failed":"保存できませんでした: {error}",
     "admin.side.emails":"メールキュー",
+    "admin.side.smtp":"Email SMTP",
     "admin.side.languages":"言語",
     "admin.side.branding":"ブランディング",
     "admin.side.dmchamp":"DM Champ",
@@ -2991,6 +3042,8 @@ const State = {
   orderPartnerFilter: "",         // ontheline partner code filter ("" = all)
   orderPaygwFilter: "",           // ontheline paygw code filter ("" = all)
   orderCurrencyFilter: "",        // ontheline currency code filter ("" = all)
+  smtpAccounts: [],
+  smtpConfig: { defaultAccountId: null, replyTo: "", supportBcc: "support@dealmai.com", testRewriteTo: "" },
   // Branding (loaded from Firestore config/branding doc; falls back to defaults below)
   branding: {
     siteName: "Deal Pro",
@@ -3636,7 +3689,8 @@ function subscribeCollections(){
   }
 
   // Orders
-  const ordersQ = query(collection(db,"orders"), orderBy("createdAt","desc"), limit(50));
+  // Load enough history for month/period filters (was 50 — too small after migration).
+  const ordersQ = query(collection(db,"orders"), orderBy("createdAt","desc"), limit(2000));
   State.unsubs.push(onSnapshot(ordersQ, snap => {
     State.orders = snap.docs.map(d => ({ id:d.id, ...d.data() }));
     if(document.getElementById("page-admin").classList.contains("show")) renderAdminOrders();
@@ -3707,6 +3761,25 @@ function subscribeCollections(){
       if(activeView === "webhook") renderAdminWebhook();
     }
   }, onErr("config/webhook")));
+
+  // SMTP accounts + global smtp options (admin Email SMTP panel)
+  State.unsubs.push(onSnapshot(collection(db,"smtp_accounts"), snap => {
+    State.smtpAccounts = snap.docs.map(d => ({ id:d.id, ...d.data() }));
+    if(document.getElementById("page-admin")?.classList.contains("show")){
+      const v = document.querySelector(".side-item.active")?.dataset.admin;
+      if(v === "smtp") renderAdminSmtp();
+    }
+  }, onErr("smtp_accounts")));
+  State.unsubs.push(onSnapshot(doc(db,"config","smtp"), snap => {
+    State.smtpConfig = snap.exists()
+      ? { defaultAccountId:null, replyTo:"", supportBcc:"support@dealmai.com", testRewriteTo:"", ...snap.data() }
+      : { defaultAccountId:null, replyTo:"", supportBcc:"support@dealmai.com", testRewriteTo:"" };
+    if(document.getElementById("page-admin")?.classList.contains("show")){
+      const v = document.querySelector(".side-item.active")?.dataset.admin;
+      if(v === "smtp") renderAdminSmtp();
+    }
+  }, onErr("config/smtp")));
+
   // ontheline Partners + Payment Gateways (admin-managed reference lists).
   // Each doc: { code, companyName, createdAt }. Used to validate incoming
   // ontheline webhooks and to populate Order filters/columns.
@@ -6063,6 +6136,7 @@ const App = {
     if(name === "currencies") renderAdminCurrencies();
     if(name === "chillpay") renderAdminChillPay();
     if(name === "emails") renderAdminEmails();
+    if(name === "smtp") renderAdminSmtp();
     if(name === "languages") renderAdminLanguages();
     if(name === "branding") renderAdminBranding();
     if(name === "dmchamp") renderAdminDmChamp();
@@ -6087,7 +6161,7 @@ const App = {
     if(!wrap) return;
     const tabs = [
       ["orders","admin.side.orders"],["users","admin.side.users"],["packages","admin.side.packages"],
-      ["webhook","admin.side.webhook"],["partners","admin.side.partners"],["paygw","admin.side.paygw"],["currencies","admin.side.currencies"],["paymentgw","admin.side.paymentgw"],["chillpay","admin.side.chillpay"],["emails","admin.side.emails"],
+      ["webhook","admin.side.webhook"],["partners","admin.side.partners"],["paygw","admin.side.paygw"],["currencies","admin.side.currencies"],["paymentgw","admin.side.paymentgw"],["chillpay","admin.side.chillpay"],["emails","admin.side.emails"],["smtp","admin.side.smtp"],
       ["languages","admin.side.languages"],["branding","admin.side.branding"],
       ["dmchamp","admin.side.dmchamp"],["password","admin.side.password"]
     ];
@@ -7791,6 +7865,93 @@ function renderAdminEmails(){
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>`}
+      </div>
+    </div>
+  `;
+}
+
+function renderAdminSmtp(){
+  const el = document.getElementById("adm-smtp");
+  if(!el) return;
+  const cfg = State.smtpConfig || {};
+  const accounts = State.smtpAccounts || [];
+  const defaultId = cfg.defaultAccountId || "";
+
+  const accountOptions = accounts.map(a =>
+    `<option value="${escapeHtml(a.id)}" ${a.id===defaultId?"selected":""}>${escapeHtml(a.name || a.user || a.id)}</option>`
+  ).join("");
+
+  const rows = accounts.map(a => {
+    const isDef = a.id === defaultId;
+    const enabled = a.enabled !== false;
+    const hasPass = !!(a.pass && String(a.pass).trim());
+    return `
+      <tr>
+        <td>${escapeHtml(a.name || "—")}${isDef ? ` <span class="src-tag ontheline">${I.t("admin.smtp.status.default")}</span>` : ""}</td>
+        <td style="font-family:var(--mono);font-size:12px">${escapeHtml(a.host||"")}:${escapeHtml(String(a.port||""))}</td>
+        <td style="font-family:var(--mono);font-size:12px">${escapeHtml(a.user||"")}</td>
+        <td style="font-size:12px">${escapeHtml(a.from||"")}</td>
+        <td>
+          <span class="status-tag ${enabled?"sent":"failed"}"><span class="d"></span>${enabled ? I.t("admin.smtp.status.enabled") : I.t("admin.smtp.status.disabled")}</span>
+          ${hasPass ? "" : ` <span style="color:var(--amber);font-size:11px">· no password</span>`}
+        </td>
+        <td>
+          <div class="row-actions">
+            <button onclick="AdminActions.openSmtpAccount('${a.id}')">${I.t("admin.smtp.action.edit")}</button>
+            ${isDef ? "" : `<button onclick="AdminActions.setDefaultSmtp('${a.id}')">${I.t("admin.smtp.action.setDefault")}</button>`}
+            <button class="danger" onclick="AdminActions.deleteSmtpAccount('${a.id}')">${I.t("admin.smtp.action.delete")}</button>
+          </div>
+        </td>
+      </tr>`;
+  }).join("");
+
+  el.innerHTML = `
+    <div class="admin-head">
+      <div>
+        <div class="crumbs">${I.t("admin.smtp.crumbs")}</div>
+        <h1>${I.t("admin.smtp.title-html")}</h1>
+        <p class="sub" style="max-width:720px">${I.t("admin.smtp.sub")}</p>
+      </div>
+      <button class="btn-primary" onclick="AdminActions.openSmtpAccount()"><span>${I.t("admin.smtp.accounts.add")}</span><span class="arr">+</span></button>
+    </div>
+
+    <div class="wh-card" style="margin-bottom:18px">
+      <h3>${I.t("admin.smtp.global.title")}</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px">
+        <div class="field"><label>${I.t("admin.smtp.global.replyTo")}</label>
+          <input id="smtp-reply-to" type="email" value="${escapeHtml(cfg.replyTo||"")}" placeholder="support@dealmai.com"></div>
+        <div class="field"><label>${I.t("admin.smtp.global.supportBcc")}</label>
+          <input id="smtp-support-bcc" type="email" value="${escapeHtml(cfg.supportBcc||"support@dealmai.com")}"></div>
+        <div class="field"><label>${I.t("admin.smtp.global.default")}</label>
+          <select id="smtp-default-account"><option value="">—</option>${accountOptions}</select></div>
+        <div class="field"><label>${I.t("admin.smtp.global.testRewrite")}</label>
+          <input id="smtp-test-rewrite" type="email" value="${escapeHtml(cfg.testRewriteTo||"")}" placeholder="you@example.com">
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">${I.t("admin.smtp.global.testRewrite.hint")}</div></div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn-primary" onclick="AdminActions.saveSmtpOptions()"><span>${I.t("admin.smtp.global.save")}</span><span class="arr">→</span></button>
+        <button class="btn-ghost" onclick="AdminActions.queueSmtpTest()">${I.t("admin.smtp.btn.test")}</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="admin-head" style="margin-bottom:10px">
+        <h3 style="margin:0;font-size:15px">${I.t("admin.smtp.accounts.title")}</h3>
+      </div>
+      <div class="table-wrap">
+        ${accounts.length === 0
+          ? `<div class="empty-state">${I.t("admin.smtp.accounts.empty")}</div>`
+          : `<table>
+              <thead><tr>
+                <th>${I.t("admin.smtp.col.name")}</th>
+                <th>${I.t("admin.smtp.col.host")}</th>
+                <th>${I.t("admin.smtp.col.user")}</th>
+                <th>${I.t("admin.smtp.col.from")}</th>
+                <th>${I.t("admin.smtp.col.status")}</th>
+                <th>${I.t("admin.orders.col.actions")}</th>
+              </tr></thead>
+              <tbody>${rows}</tbody>
+            </table>`}
       </div>
     </div>
   `;
@@ -10257,6 +10418,172 @@ const AdminActions = {
       Toast.show(`Imported ${totalWritten} translation entries across ${langs.length} languages`,"ok");
     }else{
       Toast.show(`Imported with ${failed} failure(s) — check console`,"warn");
+    }
+  },
+
+  // ============================================================
+  // EMAIL SMTP ACTIONS
+  // ============================================================
+  async saveSmtpOptions(){
+    if(!State.user) return Toast.show("Not signed in","err");
+    try{
+      await setDoc(doc(db,"config","smtp"), {
+        replyTo: (document.getElementById("smtp-reply-to")?.value || "").trim(),
+        supportBcc: (document.getElementById("smtp-support-bcc")?.value || "").trim() || "support@dealmai.com",
+        testRewriteTo: (document.getElementById("smtp-test-rewrite")?.value || "").trim(),
+        defaultAccountId: document.getElementById("smtp-default-account")?.value || null,
+        updatedAt: serverTimestamp(),
+        updatedBy: State.user.email || State.user.uid
+      }, { merge: true });
+      Toast.show(I.t("toast.smtp.saved"),"ok");
+    }catch(e){
+      console.error(e);
+      Toast.show("Save failed: " + (e.code || e.message),"err");
+    }
+  },
+
+  async setDefaultSmtp(id){
+    if(!State.user) return;
+    try{
+      await setDoc(doc(db,"config","smtp"), {
+        defaultAccountId: id,
+        updatedAt: serverTimestamp(),
+        updatedBy: State.user.email || State.user.uid
+      }, { merge: true });
+      Toast.show(I.t("toast.smtp.default.set"),"ok");
+    }catch(e){
+      Toast.show(String(e.message||e),"err");
+    }
+  },
+
+  openSmtpAccount(id){
+    const existing = id ? (State.smtpAccounts || []).find(a => a.id === id) : null;
+    const title = existing ? I.t("admin.smtp.modal.edit") : I.t("admin.smtp.modal.add");
+    App.showModal(`
+      <button class="close" onclick="App.closeModal()">×</button>
+      <h2>${title}</h2>
+      <div class="field"><label>${I.t("admin.smtp.field.name")}</label>
+        <input id="smtp-acc-name" value="${escapeHtml(existing?.name||"")}" placeholder="Primary Gmail"></div>
+      <div class="field"><label>${I.t("admin.smtp.field.host")}</label>
+        <input id="smtp-acc-host" value="${escapeHtml(existing?.host||"smtp.gmail.com")}" placeholder="smtp.gmail.com"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="field"><label>${I.t("admin.smtp.field.port")}</label>
+          <input id="smtp-acc-port" type="number" value="${escapeHtml(String(existing?.port ?? 587))}"></div>
+        <div class="field"><label>${I.t("admin.smtp.field.secure")}</label>
+          <label style="display:flex;align-items:center;gap:8px;margin-top:10px">
+            <input id="smtp-acc-secure" type="checkbox" ${existing?.secure ? "checked" : ""}> SSL/TLS
+          </label></div>
+      </div>
+      <div class="field"><label>${I.t("admin.smtp.field.user")}</label>
+        <input id="smtp-acc-user" value="${escapeHtml(existing?.user||"")}" placeholder="you@gmail.com"></div>
+      <div class="field"><label>${I.t("admin.smtp.field.pass")}</label>
+        <input id="smtp-acc-pass" type="password" autocomplete="new-password" placeholder="${existing ? escapeHtml(I.t("admin.smtp.field.pass.keep")) : ""}"></div>
+      <div class="field"><label>${I.t("admin.smtp.field.from")}</label>
+        <input id="smtp-acc-from" value="${escapeHtml(existing?.from||"")}" placeholder="Deal Mai &lt;you@gmail.com&gt;">
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">${I.t("admin.smtp.field.from.hint")}</div></div>
+      <div class="field"><label style="display:flex;align-items:center;gap:8px">
+        <input id="smtp-acc-enabled" type="checkbox" ${!existing || existing.enabled !== false ? "checked" : ""}>
+        ${I.t("admin.smtp.field.enabled")}
+      </label></div>
+      <button class="btn-primary" style="margin-top:14px" onclick="AdminActions.saveSmtpAccount('${existing ? escapeHtml(existing.id) : ""}')">
+        <span>${I.t("admin.smtp.btn.save")}</span><span class="arr">→</span>
+      </button>
+    `);
+  },
+
+  async saveSmtpAccount(id){
+    if(!State.user) return Toast.show("Not signed in","err");
+    const name = (document.getElementById("smtp-acc-name")?.value || "").trim();
+    const host = (document.getElementById("smtp-acc-host")?.value || "").trim();
+    const port = Number(document.getElementById("smtp-acc-port")?.value || 587);
+    const secure = !!document.getElementById("smtp-acc-secure")?.checked;
+    const user = (document.getElementById("smtp-acc-user")?.value || "").trim();
+    const pass = document.getElementById("smtp-acc-pass")?.value || "";
+    const from = (document.getElementById("smtp-acc-from")?.value || "").trim();
+    const enabled = !!document.getElementById("smtp-acc-enabled")?.checked;
+    if(!name || !host || !user) return Toast.show("Name, host and user are required","err");
+    if(!id && !pass.trim()) return Toast.show("Password is required for a new account","err");
+
+    const payload = {
+      name, host, port, secure, user, from: from || `Deal Mai <${user}>`, enabled,
+      updatedAt: serverTimestamp(),
+      updatedBy: State.user.email || State.user.uid
+    };
+    if(pass.trim()) payload.pass = pass.trim();
+
+    try{
+      if(id){
+        await setDoc(doc(db,"smtp_accounts",id), payload, { merge: true });
+      }else{
+        const ref = await addDoc(collection(db,"smtp_accounts"), {
+          ...payload,
+          createdAt: serverTimestamp(),
+          createdBy: State.user.email || State.user.uid
+        });
+        if(!State.smtpConfig?.defaultAccountId){
+          await setDoc(doc(db,"config","smtp"), {
+            defaultAccountId: ref.id,
+            supportBcc: State.smtpConfig?.supportBcc || "support@dealmai.com",
+            replyTo: State.smtpConfig?.replyTo || "",
+            updatedAt: serverTimestamp(),
+            updatedBy: State.user.email || State.user.uid
+          }, { merge: true });
+        }
+      }
+      App.closeModal();
+      Toast.show(I.t("toast.smtp.account.saved"),"ok");
+    }catch(e){
+      console.error(e);
+      Toast.show("Save failed: " + (e.code || e.message),"err");
+    }
+  },
+
+  async deleteSmtpAccount(id){
+    if(!State.user) return;
+    if(!confirm("Delete this SMTP account?")) return;
+    try{
+      await deleteDoc(doc(db,"smtp_accounts",id));
+      if(State.smtpConfig?.defaultAccountId === id){
+        await setDoc(doc(db,"config","smtp"), {
+          defaultAccountId: null,
+          updatedAt: serverTimestamp(),
+          updatedBy: State.user.email || State.user.uid
+        }, { merge: true });
+      }
+      Toast.show(I.t("toast.smtp.account.deleted"),"ok");
+    }catch(e){
+      Toast.show(String(e.message||e),"err");
+    }
+  },
+
+  async queueSmtpTest(){
+    if(!State.user) return;
+    const accounts = (State.smtpAccounts || []).filter(a => a.enabled !== false && a.pass);
+    if(!accounts.length) return Toast.show(I.t("toast.smtp.needAccount"),"err");
+    const to = prompt(I.t("admin.smtp.test.to"), State.user.email || "");
+    if(!to) return;
+    try{
+      await addDoc(collection(db,"email_queue"), {
+        to: to.trim().toLowerCase(),
+        kind: "credentials",
+        lang: "en",
+        status: "pending",
+        source: "smtp_test",
+        smtpAccountId: State.smtpConfig?.defaultAccountId || accounts[0].id,
+        payload: {
+          ref: "SMTP-TEST",
+          customer: { name: "SMTP Test", email: to.trim().toLowerCase() },
+          initialPassword: "(test — ignore)",
+          packageTitle: "SMTP configuration test"
+        },
+        createdAt: serverTimestamp(),
+        createdBy: State.user.email || State.user.uid
+      });
+      Toast.show(I.t("toast.smtp.test.queued"),"ok");
+      // Trigger sender immediately
+      try{ await fetch("/.netlify/functions/send-queued-emails", { method:"POST" }); }catch{}
+    }catch(e){
+      Toast.show(String(e.message||e),"err");
     }
   },
 
