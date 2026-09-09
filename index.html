@@ -389,6 +389,31 @@
   .wh-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;backdrop-filter:blur(14px)}
   .wh-card h3{font-weight:500;font-size:16px;margin-bottom:6px}
   .wh-card .sub{font-size:13px;color:var(--muted);margin-bottom:18px;font-weight:300;line-height:1.5}
+  .srv-mon-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.03)}
+  .srv-mon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:14px}
+  .srv-mon-stat{border:1px solid var(--line);border-radius:10px;padding:12px;background:var(--surface)}
+  .srv-mon-stat.danger{border-color:rgba(255,80,80,.45)}
+  .srv-mon-stat-k{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .srv-mon-stat-v{font-size:15px;font-weight:500;line-height:1.25}
+  .srv-mon-stat-sub{font-size:11px;color:var(--muted);margin-top:6px;line-height:1.4;word-break:break-word}
+  .srv-mon-card{border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--surface);margin-bottom:12px}
+  .srv-mon-card h3{font-size:15px;font-weight:500;margin:0 0 6px}
+  .srv-mon-card-desc{font-size:12px;color:var(--muted);margin:0 0 12px;line-height:1.5}
+  .srv-mon-ssl-dl{display:grid;grid-template-columns:140px 1fr;gap:6px 12px;font-size:12px;margin:0}
+  .srv-mon-ssl-dl dt{color:var(--muted);font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+  .srv-mon-ssl-dl dd{margin:0;word-break:break-word}
+  .srv-mon-progress{height:8px;border-radius:99px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:10px}
+  .srv-mon-progress > span{display:block;height:100%;border-radius:99px}
+  .srv-mon-progress.ok > span{background:var(--lime)}
+  .srv-mon-progress.warn > span{background:var(--amber)}
+  .srv-mon-progress.danger > span{background:var(--red)}
+  .srv-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+  .srv-badge.ok{color:var(--lime);border:1px solid rgba(160,220,100,.35)}
+  .srv-badge.warn{color:var(--amber);border:1px solid rgba(240,180,60,.35)}
+  .srv-badge.danger{color:var(--red);border:1px solid rgba(255,80,80,.35)}
+  .srv-san-ok{color:var(--lime)}
+  .srv-san-miss{color:var(--red)}
+  @media(max-width:720px){.srv-mon-ssl-dl{grid-template-columns:1fr}}
   .wh-flow{display:flex;flex-direction:column;gap:0}
   .wh-step{display:flex;gap:12px;padding:12px 0;border-bottom:1px dashed var(--line);font-size:13px;font-weight:300}
   .wh-step:last-child{border-bottom:none}
@@ -402,7 +427,7 @@
   .test-webhook .form-row{margin-bottom:10px}
 
   /* Languages */
-  .lang-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
+  .lang-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:24px}
   .lang-card{background:var(--surface);border:1px solid var(--line);border-radius:13px;padding:20px;backdrop-filter:blur(14px);transition:border-color .25s}
   .lang-card.active{border-color:rgba(11,182,196,.4)}
   .lang-card.locked{opacity:.92}
@@ -1034,17 +1059,19 @@
       <button class="side-item active" data-admin="orders" onclick="App.setAdmin('orders',event)"><span class="ic">·</span><span data-i18n="admin.side.orders">Orders</span></button>
       <button class="side-item" data-admin="users" onclick="App.setAdmin('users',event)"><span class="ic">·</span><span data-i18n="admin.side.users">Users</span></button>
       <button class="side-item" data-admin="packages" onclick="App.setAdmin('packages',event)"><span class="ic">·</span><span data-i18n="admin.side.packages">Packages</span></button>
-      <button class="side-item" data-admin="webhook" onclick="App.setAdmin('webhook',event)"><span class="ic">·</span><span data-i18n="admin.side.webhook">ontheline Webhook</span></button>
-      <button class="side-item" data-admin="partners" onclick="App.setAdmin('partners',event)"><span class="ic">·</span><span data-i18n="admin.side.partners">ontheline Partners</span></button>
-      <button class="side-item" data-admin="paygw" onclick="App.setAdmin('paygw',event)"><span class="ic">·</span><span data-i18n="admin.side.paygw">ontheline Payment Gateways</span></button>
-      <button class="side-item" data-admin="currencies" onclick="App.setAdmin('currencies',event)"><span class="ic">·</span><span data-i18n="admin.side.currencies">ontheline Currencies</span></button>
-      <button class="side-item" data-admin="paymentgw" onclick="App.setAdmin('paymentgw',event)"><span class="ic">·</span><span data-i18n="admin.side.paymentgw">Payment Gateway</span></button>
-      <button class="side-item" data-admin="chillpay" onclick="App.setAdmin('chillpay',event)"><span class="ic">·</span><span data-i18n="admin.side.chillpay">Payment Gateway Events</span></button>
+      <button class="side-item" data-admin="webhook" onclick="App.setAdmin('webhook',event)"><span class="ic">·</span><span data-i18n="admin.side.webhook">Webhook</span></button>
+      <button class="side-item" data-admin="partners" onclick="App.setAdmin('partners',event)"><span class="ic">·</span><span data-i18n="admin.side.partners">Partner List</span></button>
+      <button class="side-item" data-admin="paygw" onclick="App.setAdmin('paygw',event)"><span class="ic">·</span><span data-i18n="admin.side.paygw">PG List</span></button>
+      <button class="side-item" data-admin="currencies" onclick="App.setAdmin('currencies',event)"><span class="ic">·</span><span data-i18n="admin.side.currencies">Currencies</span></button>
+      <button class="side-item" data-admin="paymentgw" onclick="App.setAdmin('paymentgw',event)"><span class="ic">·</span><span data-i18n="admin.side.paymentgw">PG Management</span></button>
+      <button class="side-item" data-admin="chillpay" onclick="App.setAdmin('chillpay',event)"><span class="ic">·</span><span data-i18n="admin.side.chillpay">PG Events</span></button>
       <button class="side-item" data-admin="emails" onclick="App.setAdmin('emails',event)"><span class="ic">·</span><span data-i18n="admin.side.emails">Email Queue</span></button>
       <button class="side-item" data-admin="smtp" onclick="App.setAdmin('smtp',event)"><span class="ic">·</span><span data-i18n="admin.side.smtp">Email SMTP</span></button>
+      <button class="side-item" data-admin="domain" onclick="App.setAdmin('domain',event)"><span class="ic">·</span><span data-i18n="admin.side.domain">Domain &amp; SSL</span></button>
+      <button class="side-item" data-admin="server" onclick="App.setAdmin('server',event)"><span class="ic">·</span><span data-i18n="admin.side.server">Server Management</span></button>
       <button class="side-item" data-admin="languages" onclick="App.setAdmin('languages',event)"><span class="ic">·</span><span data-i18n="admin.side.languages">Languages</span></button>
       <button class="side-item" data-admin="branding" onclick="App.setAdmin('branding',event)"><span class="ic">·</span><span data-i18n="admin.side.branding">Branding</span></button>
-      <button class="side-item" data-admin="dmchamp" onclick="App.setAdmin('dmchamp',event)"><span class="ic">·</span><span data-i18n="admin.side.dmchamp">DM Champ</span></button>
+      <button class="side-item" data-admin="dmchamp" onclick="App.setAdmin('dmchamp',event)"><span class="ic">·</span><span data-i18n="admin.side.dmchamp">AI API</span></button>
       <div class="side-title" style="margin-top:28px" data-i18n="admin.side.account">Account</div>
       <button class="side-item" data-admin="password" onclick="App.setAdmin('password',event)"><span class="ic">·</span><span data-i18n="admin.side.password">Change Password</span></button>
     </aside>
@@ -1063,6 +1090,8 @@
       <div class="admin-view" id="adm-chillpay" style="display:none"></div>
       <div class="admin-view" id="adm-emails" style="display:none"></div>
       <div class="admin-view" id="adm-smtp" style="display:none"></div>
+      <div class="admin-view" id="adm-domain" style="display:none"></div>
+      <div class="admin-view" id="adm-server" style="display:none"></div>
       <div class="admin-view" id="adm-languages" style="display:none"></div>
       <div class="admin-view" id="adm-branding" style="display:none"></div>
       <div class="admin-view" id="adm-dmchamp" style="display:none"></div>
@@ -1110,7 +1139,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js"></script>
+<script type="module" src="/app.js?v=20260910locale1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

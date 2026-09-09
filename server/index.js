@@ -28,6 +28,7 @@ const FUNCTION_NAMES = [
   'payment-result',
   'provision-dmchamp',
   'send-queued-emails',
+  'server-manage',
   'settle-pending-payments'
 ];
 
@@ -42,6 +43,7 @@ const API_ALIASES = {
   '/api/delete-customer': 'delete-customer',
   '/api/provision-dmchamp': 'provision-dmchamp',
   '/api/convert-currency': 'convert-currency',
+  '/api/server-manage': 'server-manage',
   '/payment-result': 'payment-result'
 };
 

@@ -35,9 +35,15 @@ const SUPPORTED_LANGS = [
   { code:"en", name:"English",  native:"English",  short:"EN" },
   { code:"th", name:"Thai",     native:"ไทย",      short:"TH" },
   { code:"ko", name:"Korean",   native:"한국어",    short:"KR" },
-  { code:"ja", name:"Japanese", native:"日本語",    short:"JA" },
+  { code:"ja", name:"Japanese", native:"日本語",    short:"JP" },
   { code:"zh", name:"Chinese",  native:"中文",      short:"CH" }
 ];
+
+/** Display label for language pills/admin (EN/TH/KR/JP/CH). Internal code stays en/th/ko/ja/zh. */
+function langShort(code){
+  const l = SUPPORTED_LANGS.find(x => x.code === code);
+  return (l && l.short) || String(code || "").toUpperCase();
+}
 
 // Master English strings — used as the canonical source AND as a fallback
 // These will be written to Firestore on first run, and editable from Admin
@@ -300,10 +306,10 @@ const DEFAULT_STRINGS = {
   "admin.side.orders":"Orders",
   "admin.side.users":"Users",
   "admin.side.packages":"Packages",
-  "admin.side.webhook":"ontheline Webhook",
-  "admin.side.partners":"ontheline Partners",
-  "admin.side.paygw":"ontheline Payment Gateways",
-  "admin.side.currencies":"ontheline Currencies",
+  "admin.side.webhook":"Webhook",
+  "admin.side.partners":"Partner List",
+  "admin.side.paygw":"PG List",
+  "admin.side.currencies":"Currencies",
   "admin.currencies.title":"ontheline Currencies",
   "admin.currencies.sub":"Manage the currency codes ontheline may send in the webhook <code>currency</code> field. An incoming webhook whose currency doesn't match one of these is rejected. The symbol is shown in Orders next to the amount; the USD value (for credit calculation) is derived via a live FX rate.",
   "admin.currencies.add":"Add Currency",
@@ -338,8 +344,8 @@ const DEFAULT_STRINGS = {
   "admin.codelist.code.ph":"e.g. PARTNER01",
   "admin.codelist.company.ph":"e.g. Acme Travel Co., Ltd.",
   "admin.codelist.code.hint":"Code is matched exactly (case-insensitive) against the webhook value. Company name is for your reference and shown in Orders.",
-  "admin.side.chillpay":"Payment Gateway Events",
-  "admin.side.paymentgw":"Payment Gateway",
+  "admin.side.chillpay":"PG Events",
+  "admin.side.paymentgw":"PG Management",
   "admin.paymentgw.crumbs":"Console / Payment Gateway",
   "admin.paymentgw.title-html":"Payment <span class=\"grad\">gateway</span>",
   "admin.paymentgw.sub":"Choose which provider settles new direct (web) payments. Orders already in progress keep the gateway they were created with.",
@@ -369,7 +375,7 @@ const DEFAULT_STRINGS = {
   "admin.side.smtp":"Email SMTP",
   "admin.side.languages":"Languages",
   "admin.side.branding":"Branding",
-  "admin.side.dmchamp":"DM Champ",
+  "admin.side.dmchamp":"AI API",
   "admin.side.account":"Account",
   "admin.side.password":"Change Password",
   "admin.side.signout":"Sign Out",
@@ -555,8 +561,13 @@ const DEFAULT_STRINGS = {
   "admin.users.action.delete":"Delete",
   "admin.users.role.admin":"Admin",
   "admin.users.role.customer":"Customer",
+  "admin.users.status.active":"Active",
+  "admin.users.status.pendingPassword":"Pending Password",
+  "admin.users.status.disabled":"Disabled",
   "admin.users.activePackage.none":"—",
+  "admin.users.activePackage.daysLeft":"{n} days left",
   "admin.users.activePackage.expiringSoon":"Expiring in {n}d",
+  "admin.users.empty":"No users yet.",
   "admin.users.modal.title-html":'Add new <span class="grad">user</span>',
   "admin.users.modal.sub":"User will receive credentials by email and must change the password on first sign-in.",
   "admin.users.modal.name":"Full Name",
@@ -697,6 +708,71 @@ const DEFAULT_STRINGS = {
   "toast.smtp.account.saved":"SMTP account saved",
   "toast.smtp.account.deleted":"SMTP account deleted",
   "toast.smtp.default.set":"Default SMTP account updated",
+
+  // Admin · Domain & SSL / Server (PG HQ Policy port)
+  "admin.side.domain":"Domain & SSL",
+  "admin.side.server":"Server Management",
+  "admin.domain.crumbs":"Console / Domain & SSL",
+  "admin.domain.title-html":'Domain <span class="grad">& SSL</span>',
+  "admin.domain.sub":"Public site URLs and Let's Encrypt SAN linkage — same idea as PG HQ Policy → Domain & SSL.",
+  "admin.domain.global.title":"Public URLs",
+  "admin.domain.global.hint":"Used for HTTPS SAN checks and operational docs. Scheme is added as https:// when missing.",
+  "admin.domain.field.site":"Public site URL",
+  "admin.domain.field.www":"www URL",
+  "admin.domain.field.api":"API base URL",
+  "admin.domain.save":"Save URLs",
+  "admin.domain.ssl.title":"Let's Encrypt · SAN linkage",
+  "admin.domain.ssl.intro":"Compares hostnames from the URLs below with the SAN list on this server's fullchain.pem. Mismatches can cause browser certificate warnings. SSL path / Certbot details are on Server.",
+  "admin.domain.ssl.loading":"Loading…",
+  "admin.domain.ssl.empty":"No hostnames configured yet.",
+  "admin.domain.col.host":"Hostname",
+  "admin.domain.col.source":"Source",
+  "admin.domain.col.inCert":"In certificate",
+  "admin.domain.sanOnly":"In SAN only (no matching URL):",
+  "admin.domain.missing":"Missing from certificate:",
+  "admin.domain.yes":"Yes",
+  "admin.domain.no":"No",
+  "admin.server.crumbs":"Console / Server",
+  "admin.server.title-html":'Server <span class="grad">operations</span>',
+  "admin.server.sub":"SSL certificate monitoring, hosting contract, and live host health — ported from PG HQ Policy → Server.",
+  "admin.server.ssl.title":"SSL certificate monitoring",
+  "admin.server.ssl.hint":"Monitors the Let's Encrypt fullchain.pem used by Nginx. LE live folder name matches the certbot certificate name (e.g. dealmai.com).",
+  "admin.server.field.pem":"fullchain.pem path",
+  "admin.server.field.le":"LE live folder name",
+  "admin.server.field.refresh":"Dashboard auto-refresh (minutes)",
+  "admin.server.field.refresh.hint":"1–60 minutes (stored as seconds). Leave empty for server default (120s).",
+  "admin.server.contract.title":"Hosting contract",
+  "admin.server.contract.hint":"Enter disk and traffic in GB. Values are stored as MB on the server.",
+  "admin.server.field.diskGb":"Contract disk (GB)",
+  "admin.server.field.trafficGb":"Contract traffic (GB / period)",
+  "admin.server.field.usedGb":"Traffic used (GB)",
+  "admin.server.field.start":"Contract start",
+  "admin.server.field.end":"Contract end",
+  "admin.server.save":"Save settings",
+  "admin.server.refresh":"Refresh now",
+  "admin.server.dash.title":"Live dashboard",
+  "admin.server.dash.hint":"SSL SAN list, Certbot timer, disk/memory, and health rows. Layout follows PG / NOTI system monitor.",
+  "admin.server.auto":"Auto refresh",
+  "admin.server.interval":"Interval",
+  "admin.server.generated":"Fetched at:",
+  "admin.server.alerts":"Health alerts",
+  "admin.server.card.ssl":"SSL certificate",
+  "admin.server.card.certbot":"Certbot · renew",
+  "admin.server.card.nginx":"Nginx stub",
+  "admin.server.card.contract":"Hosting contract",
+  "admin.server.card.health":"Health matrix",
+  "admin.server.col.metric":"Metric",
+  "admin.server.col.criteria":"Criteria",
+  "admin.server.col.value":"Value",
+  "admin.server.col.status":"Status",
+  "admin.server.status.ok":"OK",
+  "admin.server.status.warn":"Warn",
+  "admin.server.status.danger":"Danger",
+  "admin.server.json":"Raw JSON (debug)",
+  "toast.domain.saved":"Domain settings saved",
+  "toast.server.saved":"Server settings saved",
+  "toast.server.loadFail":"Could not load server status: {error}",
+  "toast.domain.loadFail":"Could not load domain settings: {error}",
   "toast.smtp.test.queued":"Test email queued — check Email Queue / inbox shortly",
   "toast.smtp.needAccount":"Add and enable an SMTP account first",
 
@@ -1071,10 +1147,10 @@ const FULL_TRANSLATIONS = {
     "admin.side.orders":"รายการสั่งซื้อ",
     "admin.side.users":"ผู้ใช้งาน",
     "admin.side.packages":"จัดการแพ็คเกจ",
-    "admin.side.webhook":"ontheline Webhook",
-    "admin.side.partners":"พาร์ทเนอร์ ontheline",
-    "admin.side.paygw":"Payment Gateway ontheline",
-    "admin.side.currencies":"สกุลเงิน ontheline",
+    "admin.side.webhook":"Webhook",
+    "admin.side.partners":"รายชื่อพาร์ทเนอร์",
+    "admin.side.paygw":"รายการ PG",
+    "admin.side.currencies":"สกุลเงิน",
     "admin.currencies.title":"สกุลเงิน ontheline",
     "admin.currencies.sub":"จัดการรหัสสกุลเงินที่ ontheline อาจส่งมาในฟิลด์ <code>currency</code> ของ webhook ถ้าสกุลเงินที่ส่งมาไม่ตรงกับที่กำหนดไว้ webhook จะถูกปฏิเสธ สัญลักษณ์จะแสดงในหน้า Orders ข้างจำนวนเงิน ส่วนมูลค่า USD (สำหรับคำนวณเครดิต) จะคำนวณจากอัตราแลกเปลี่ยนสด",
     "admin.currencies.add":"เพิ่มสกุลเงิน",
@@ -1109,8 +1185,8 @@ const FULL_TRANSLATIONS = {
     "admin.codelist.code.ph":"เช่น PARTNER01",
     "admin.codelist.company.ph":"เช่น บริษัท เอซเม่ ทราเวล จำกัด",
     "admin.codelist.code.hint":"รหัสจะถูกเทียบแบบตรงตัว (ไม่สนตัวพิมพ์เล็ก-ใหญ่) กับค่าใน webhook ส่วนชื่อบริษัทไว้อ้างอิงและแสดงในหน้า Orders",
-    "admin.side.chillpay":"Payment Gateway Events",
-    "admin.side.paymentgw":"Payment Gateway",
+    "admin.side.chillpay":"เหตุการณ์ PG",
+    "admin.side.paymentgw":"จัดการ PG",
     "admin.paymentgw.crumbs":"คอนโซล / Payment Gateway",
     "admin.paymentgw.title-html":"Payment <span class=\"grad\">gateway</span>",
     "admin.paymentgw.sub":"เลือกผู้ให้บริการที่จะรับชำระเงินสำหรับรายการขายตรงใหม่ ส่วนรายการที่กำลังดำเนินการอยู่จะยังใช้ gateway เดิมที่สร้างไว้",
@@ -1138,9 +1214,11 @@ const FULL_TRANSLATIONS = {
     "toast.paymentgw.failed":"บันทึกไม่สำเร็จ: {error}",
     "admin.side.emails":"คิวอีเมล",
     "admin.side.smtp":"Email SMTP",
+    "admin.side.domain":"Domain & SSL",
+    "admin.side.server":"จัดการเซิร์ฟเวอร์",
     "admin.side.languages":"ภาษา",
     "admin.side.branding":"แบรนด์",
-    "admin.side.dmchamp":"DM Champ",
+    "admin.side.dmchamp":"AI API",
     "admin.side.account":"บัญชี",
     "admin.side.password":"เปลี่ยนรหัสผ่าน",
     "admin.side.signout":"ออกจากระบบ",
@@ -1343,6 +1421,11 @@ const FULL_TRANSLATIONS = {
     "admin.users.action.delete":"ลบ",
     "admin.users.role.admin":"ผู้ดูแล",
     "admin.users.role.customer":"ลูกค้า",
+    "admin.users.status.active":"ใช้งานได้",
+    "admin.users.status.pendingPassword":"รอตั้งรหัสผ่าน",
+    "admin.users.status.disabled":"ปิดใช้งาน",
+    "admin.users.activePackage.daysLeft":"เหลือ {n} วัน",
+    "admin.users.empty":"ยังไม่มีผู้ใช้",
     "admin.users.modal.title-html":'เพิ่ม<span class="grad">ผู้ใช้ใหม่</span>',
     "admin.users.modal.sub":"ผู้ใช้จะได้รับข้อมูลเข้าใช้ทางอีเมลและต้องเปลี่ยนรหัสผ่านในการเข้าใช้ครั้งแรก",
     "admin.users.modal.name":"ชื่อ-นามสกุล",
@@ -1715,10 +1798,10 @@ const FULL_TRANSLATIONS = {
     "admin.side.orders":"주문",
     "admin.side.users":"사용자",
     "admin.side.packages":"패키지",
-    "admin.side.webhook":"ontheline 웹훅",
-    "admin.side.partners":"ontheline 파트너",
-    "admin.side.paygw":"ontheline 결제 게이트웨이",
-    "admin.side.currencies":"ontheline 통화",
+    "admin.side.webhook":"웹훅",
+    "admin.side.partners":"파트너 목록",
+    "admin.side.paygw":"PG 목록",
+    "admin.side.currencies":"통화",
     "admin.currencies.title":"ontheline 통화",
     "admin.currencies.sub":"ontheline이 웹훅 <code>currency</code> 필드에 보낼 수 있는 통화 코드를 관리합니다. 일치하지 않는 통화의 웹훅은 거부됩니다. 기호는 주문에서 금액 옆에 표시되며 USD 값(크레딧 계산용)은 실시간 환율로 변환됩니다.",
     "admin.currencies.add":"통화 추가",
@@ -1753,8 +1836,8 @@ const FULL_TRANSLATIONS = {
     "admin.codelist.code.ph":"예: PARTNER01",
     "admin.codelist.company.ph":"예: Acme Travel Co., Ltd.",
     "admin.codelist.code.hint":"코드는 웹훅 값과 정확히(대소문자 구분 없이) 일치해야 합니다. 회사명은 참고용이며 주문에 표시됩니다.",
-    "admin.side.chillpay":"Payment Gateway 이벤트",
-    "admin.side.paymentgw":"결제 게이트웨이",
+    "admin.side.chillpay":"PG 이벤트",
+    "admin.side.paymentgw":"PG 관리",
     "admin.paymentgw.crumbs":"콘솔 / 결제 게이트웨이",
     "admin.paymentgw.title-html":"결제 <span class=\"grad\">게이트웨이</span>",
     "admin.paymentgw.sub":"새로운 직접(웹) 결제를 처리할 제공업체를 선택하세요. 이미 진행 중인 주문은 생성 당시의 게이트웨이를 그대로 사용합니다.",
@@ -1782,11 +1865,74 @@ const FULL_TRANSLATIONS = {
     "toast.paymentgw.failed":"저장하지 못했습니다: {error}",
     "admin.side.emails":"이메일 대기열",
     "admin.side.smtp":"이메일 SMTP",
+    "admin.side.domain":"도메인 · SSL",
+    "admin.side.server":"서버 관리",
     "admin.side.languages":"언어",
     "admin.side.branding":"브랜딩",
-    "admin.side.dmchamp":"DM Champ",
+    "admin.side.dmchamp":"AI API",
     "admin.side.account":"계정",
     "admin.side.password":"비밀번호 변경",
+    "admin.domain.crumbs":"콘솔 / 도메인 · SSL",
+    "admin.domain.title-html":'도메인 <span class="grad">· SSL</span>',
+    "admin.domain.sub":"공개 사이트 URL과 Let's Encrypt SAN 대조 — PG 본사정책 → 도메인·SSL과 동일한 개념입니다.",
+    "admin.domain.global.title":"공개 URL",
+    "admin.domain.global.hint":"HTTPS SAN 확인과 운영 안내에 사용합니다. 스킴이 없으면 https:// 를 붙입니다.",
+    "admin.domain.field.site":"공개 사이트 URL",
+    "admin.domain.field.www":"www URL",
+    "admin.domain.field.api":"API 베이스 URL",
+    "admin.domain.save":"URL 저장",
+    "admin.domain.ssl.title":"Let's Encrypt · SAN 연동",
+    "admin.domain.ssl.intro":"아래 URL의 호스트명과 이 서버 fullchain.pem 의 SAN을 비교합니다. 불일치 시 브라우저 인증서 경고가 날 수 있습니다. SSL 경로·Certbot 상세는 서버 메뉴를 보세요.",
+    "admin.domain.ssl.loading":"불러오는 중…",
+    "admin.domain.ssl.empty":"아직 설정된 호스트명이 없습니다.",
+    "admin.domain.col.host":"호스트명",
+    "admin.domain.col.source":"출처",
+    "admin.domain.col.inCert":"인증서 포함",
+    "admin.domain.sanOnly":"SAN에만 있고 URL에 없는 호스트:",
+    "admin.domain.missing":"인증서에 없는 호스트:",
+    "admin.domain.yes":"예",
+    "admin.domain.no":"아니오",
+    "admin.server.crumbs":"콘솔 / 서버",
+    "admin.server.title-html":'서버 <span class="grad">운영</span>',
+    "admin.server.sub":"SSL 인증서 모니터링·호스팅 약정·실시간 호스트 헬스 — PG 본사정책 → 서버 기능을 이식했습니다.",
+    "admin.server.ssl.title":"SSL 인증서 모니터링",
+    "admin.server.ssl.hint":"Nginx가 사용하는 Let's Encrypt fullchain.pem 을 모니터링합니다. LE live 폴더명은 certbot 인증서 이름(예: dealmai.com)과 동일합니다.",
+    "admin.server.field.pem":"fullchain.pem 경로",
+    "admin.server.field.le":"LE live 폴더명",
+    "admin.server.field.refresh":"대시보드 자동 갱신(분)",
+    "admin.server.field.refresh.hint":"1~60분(내부는 초로 저장). 비우면 서버 기본(120초).",
+    "admin.server.contract.title":"호스팅 약정",
+    "admin.server.contract.hint":"디스크·트래픽은 GB로 입력합니다. 서버에는 MB로 저장됩니다.",
+    "admin.server.field.diskGb":"약정 디스크 (GB)",
+    "admin.server.field.trafficGb":"약정 트래픽 (GB/기간)",
+    "admin.server.field.usedGb":"트래픽 누적 사용 (GB)",
+    "admin.server.field.start":"약정 시작일",
+    "admin.server.field.end":"약정 종료일",
+    "admin.server.save":"설정 저장",
+    "admin.server.refresh":"지금 새로고침",
+    "admin.server.dash.title":"실시간 대시보드",
+    "admin.server.dash.hint":"SSL SAN·Certbot 타이머·디스크/메모리·헬스 표. 레이아웃은 PG / NOTI 시스템 모니터를 따릅니다.",
+    "admin.server.auto":"자동 갱신",
+    "admin.server.interval":"간격",
+    "admin.server.generated":"조회 시각:",
+    "admin.server.alerts":"헬스 경고",
+    "admin.server.card.ssl":"SSL 인증서",
+    "admin.server.card.certbot":"Certbot · 갱신",
+    "admin.server.card.nginx":"Nginx stub",
+    "admin.server.card.contract":"호스팅 약정",
+    "admin.server.card.health":"헬스 매트릭스",
+    "admin.server.col.metric":"항목",
+    "admin.server.col.criteria":"기준",
+    "admin.server.col.value":"값",
+    "admin.server.col.status":"상태",
+    "admin.server.status.ok":"양호",
+    "admin.server.status.warn":"주의",
+    "admin.server.status.danger":"위험",
+    "admin.server.json":"원본 JSON (디버그)",
+    "toast.domain.saved":"도메인 설정을 저장했습니다",
+    "toast.server.saved":"서버 설정을 저장했습니다",
+    "toast.server.loadFail":"서버 상태를 불러오지 못했습니다: {error}",
+    "toast.domain.loadFail":"도메인 설정을 불러오지 못했습니다: {error}",
     "admin.side.signout":"로그아웃",
     // Admin · branding
     "admin.branding.crumbs":"콘솔 / 브랜딩",
@@ -1987,6 +2133,11 @@ const FULL_TRANSLATIONS = {
     "admin.users.action.delete":"삭제",
     "admin.users.role.admin":"관리자",
     "admin.users.role.customer":"고객",
+    "admin.users.status.active":"활성",
+    "admin.users.status.pendingPassword":"비밀번호 대기",
+    "admin.users.status.disabled":"비활성",
+    "admin.users.activePackage.daysLeft":"{n}일 남음",
+    "admin.users.empty":"사용자가 없습니다",
     "admin.users.modal.title-html":'<span class="grad">새 사용자</span> 추가',
     "admin.users.modal.sub":"사용자는 이메일로 자격 증명을 받게 되며 첫 로그인 시 비밀번호를 변경해야 합니다.",
     "admin.users.modal.name":"성명",
@@ -2424,10 +2575,10 @@ const FULL_TRANSLATIONS = {
     "admin.side.orders":"注文",
     "admin.side.users":"ユーザー",
     "admin.side.packages":"パッケージ",
-    "admin.side.webhook":"onthelineウェブフック",
-    "admin.side.partners":"onthelineパートナー",
-    "admin.side.paygw":"ontheline決済ゲートウェイ",
-    "admin.side.currencies":"ontheline通貨",
+    "admin.side.webhook":"Webhook",
+    "admin.side.partners":"パートナー一覧",
+    "admin.side.paygw":"PG一覧",
+    "admin.side.currencies":"通貨",
     "admin.currencies.title":"ontheline通貨",
     "admin.currencies.sub":"onthelineがウェブフックの<code>currency</code>フィールドに送信する可能性のある通貨コードを管理します。一致しない通貨のウェブフックは拒否されます。記号は注文の金額の横に表示され、USD値（クレジット計算用）はライブ為替レートで変換されます。",
     "admin.currencies.add":"通貨を追加",
@@ -2462,8 +2613,8 @@ const FULL_TRANSLATIONS = {
     "admin.codelist.code.ph":"例: PARTNER01",
     "admin.codelist.company.ph":"例: Acme Travel Co., Ltd.",
     "admin.codelist.code.hint":"コードはウェブフック値と完全に（大文字小文字を区別せず）一致します。会社名は参照用で注文に表示されます。",
-    "admin.side.chillpay":"Payment Gateway イベント",
-    "admin.side.paymentgw":"決済ゲートウェイ",
+    "admin.side.chillpay":"PGイベント",
+    "admin.side.paymentgw":"PG管理",
     "admin.paymentgw.crumbs":"コンソール / 決済ゲートウェイ",
     "admin.paymentgw.title-html":"決済<span class=\"grad\">ゲートウェイ</span>",
     "admin.paymentgw.sub":"新規の直接（ウェブ）決済を処理する事業者を選択します。進行中の注文は作成時のゲートウェイをそのまま使用します。",
@@ -2491,9 +2642,11 @@ const FULL_TRANSLATIONS = {
     "toast.paymentgw.failed":"保存できませんでした: {error}",
     "admin.side.emails":"メールキュー",
     "admin.side.smtp":"Email SMTP",
+    "admin.side.domain":"Domain & SSL",
+    "admin.side.server":"サーバー管理",
     "admin.side.languages":"言語",
     "admin.side.branding":"ブランディング",
-    "admin.side.dmchamp":"DM Champ",
+    "admin.side.dmchamp":"AI API",
     "admin.side.account":"アカウント",
     "admin.side.password":"パスワード変更",
     "admin.side.signout":"ログアウト",
@@ -2696,6 +2849,11 @@ const FULL_TRANSLATIONS = {
     "admin.users.action.delete":"削除",
     "admin.users.role.admin":"管理者",
     "admin.users.role.customer":"顧客",
+    "admin.users.status.active":"アクティブ",
+    "admin.users.status.pendingPassword":"パスワード設定待ち",
+    "admin.users.status.disabled":"無効",
+    "admin.users.activePackage.daysLeft":"残り{n}日",
+    "admin.users.empty":"ユーザーはまだいません",
     "admin.users.modal.title-html":'<span class="grad">新規ユーザー</span> 追加',
     "admin.users.modal.sub":"ユーザーはメールで認証情報を受け取り、初回ログイン時にパスワードを変更する必要があります。",
     "admin.users.modal.name":"氏名",
@@ -3027,12 +3185,33 @@ const FULL_TRANSLATIONS = {
     "admin.side.orders":"订单",
     "admin.side.users":"用户",
     "admin.side.packages":"套餐",
+    "admin.side.webhook":"Webhook",
+    "admin.side.partners":"合作伙伴列表",
+    "admin.side.paygw":"PG 列表",
+    "admin.side.currencies":"货币",
+    "admin.side.paymentgw":"PG 管理",
+    "admin.side.chillpay":"PG 事件",
     "admin.side.languages":"语言",
     "admin.side.branding":"品牌",
     "admin.side.smtp":"邮件 SMTP",
     "admin.side.emails":"邮件队列",
+    "admin.side.domain":"域名与 SSL",
+    "admin.side.server":"服务器管理",
+    "admin.side.dmchamp":"AI API",
+    "admin.side.account":"账户",
     "admin.side.password":"修改密码",
     "admin.side.signout":"退出",
+    "admin.users.status.active":"正常",
+    "admin.users.status.pendingPassword":"待设密码",
+    "admin.users.status.disabled":"已停用",
+    "admin.users.activePackage.daysLeft":"剩余 {n} 天",
+    "admin.users.empty":"暂无用户",
+    "admin.orders.expires.daysLeft":"剩余 {n} 天",
+    "admin.orders.expires.expired":"已过期",
+    "account.active.daysLeft":"剩余 {n} 天",
+    "orders.status.paid":"已支付",
+    "orders.status.pending":"待处理",
+    "orders.status.failed":"失败",
     "toast.login.ok":"欢迎回来，{name}",
     "toast.login.fail":"邮箱或密码不正确"
   }
@@ -3288,10 +3467,75 @@ const STALE_VALUE_OVERRIDES = {
     ja: { "お支払いを処理しています。ChillPayの確認後、{email}に確認メールが届きます。通常1分以内に完了します。": "お支払いを処理しています。Payment Gatewayの確認後、{email}に確認メールが届きます。通常1分以内に完了します。" },
   },
   "admin.side.chillpay": {
-    en: { "ChillPay Events": "Payment Gateway Events" },
-    th: { "ChillPay Events": "Payment Gateway Events" },
-    ko: { "ChillPay 이벤트": "Payment Gateway 이벤트" },
-    ja: { "ChillPay イベント": "Payment Gateway イベント" },
+    en: {
+      "ChillPay Events": "PG Events",
+      "Payment Gateway Events": "PG Events"
+    },
+    th: {
+      "ChillPay Events": "เหตุการณ์ PG",
+      "Payment Gateway Events": "เหตุการณ์ PG"
+    },
+    ko: {
+      "ChillPay 이벤트": "PG 이벤트",
+      "Payment Gateway 이벤트": "PG 이벤트"
+    },
+    ja: {
+      "ChillPay イベント": "PGイベント",
+      "Payment Gateway イベント": "PGイベント"
+    },
+    zh: {
+      "ChillPay Events": "PG 事件",
+      "Payment Gateway Events": "PG 事件"
+    }
+  },
+  "admin.side.webhook": {
+    en: { "ontheline Webhook": "Webhook" },
+    th: { "ontheline Webhook": "Webhook" },
+    ko: { "ontheline 웹훅": "웹훅" },
+    ja: { "onthelineウェブフック": "Webhook" },
+    zh: { "ontheline Webhook": "Webhook" }
+  },
+  "admin.side.partners": {
+    en: { "ontheline Partners": "Partner List" },
+    th: { "พาร์ทเนอร์ ontheline": "รายชื่อพาร์ทเนอร์", "ontheline Partners": "รายชื่อพาร์ทเนอร์" },
+    ko: { "ontheline 파트너": "파트너 목록" },
+    ja: { "onthelineパートナー": "パートナー一覧" },
+    zh: { "ontheline Partners": "合作伙伴列表" }
+  },
+  "admin.side.paygw": {
+    en: { "ontheline Payment Gateways": "PG List" },
+    th: { "Payment Gateway ontheline": "รายการ PG", "ontheline Payment Gateways": "รายการ PG" },
+    ko: { "ontheline 결제 게이트웨이": "PG 목록" },
+    ja: { "ontheline決済ゲートウェイ": "PG一覧" },
+    zh: { "ontheline Payment Gateways": "PG 列表" }
+  },
+  "admin.side.currencies": {
+    en: { "ontheline Currencies": "Currencies" },
+    th: { "สกุลเงิน ontheline": "สกุลเงิน", "ontheline Currencies": "สกุลเงิน" },
+    ko: { "ontheline 통화": "통화" },
+    ja: { "ontheline通貨": "通貨" },
+    zh: { "ontheline Currencies": "货币" }
+  },
+  "admin.side.paymentgw": {
+    en: { "Payment Gateway": "PG Management" },
+    th: { "Payment Gateway": "จัดการ PG" },
+    ko: { "결제 게이트웨이": "PG 관리", "Payment Gateway": "PG 관리" },
+    ja: { "決済ゲートウェイ": "PG管理", "Payment Gateway": "PG管理" },
+    zh: { "Payment Gateway": "PG 管理" }
+  },
+  "admin.side.server": {
+    en: { "Server": "Server Management" },
+    th: { "Server": "จัดการเซิร์ฟเวอร์" },
+    ko: { "서버": "서버 관리" },
+    ja: { "サーバー": "サーバー管理", "Server": "サーバー管理" },
+    zh: { "Server": "服务器管理", "服务器": "服务器管理" }
+  },
+  "admin.side.dmchamp": {
+    en: { "DM Champ": "AI API" },
+    th: { "DM Champ": "AI API" },
+    ko: { "DM Champ": "AI API" },
+    ja: { "DM Champ": "AI API" },
+    zh: { "DM Champ": "AI API" }
   },
   "admin.orders.filter.chillpay": {
     en: { "ChillPay": "Payment Gateway" },
@@ -3363,6 +3607,7 @@ const I = {
   t(key, ph={}){
     const lang = State.currentLang;
     let v = (State.strings[lang] && State.strings[lang][key])
+         || (typeof FULL_TRANSLATIONS !== "undefined" && FULL_TRANSLATIONS[lang] && FULL_TRANSLATIONS[lang][key])
          || (State.strings.en && State.strings.en[key])
          || DEFAULT_STRINGS[key]
          || key;
@@ -3418,7 +3663,8 @@ const I = {
     });
   },
 
-  // Compute per-language coverage and locked status (locked if < 90%)
+  // Compute per-language coverage. Locked is informational only — enabled
+  // languages stay selectable; I.t() falls back to bundled FULL_TRANSLATIONS / EN.
   recalcStatus(){
     const total = Object.keys(DEFAULT_STRINGS).length;
     State.langStatus = {};
@@ -3428,12 +3674,17 @@ const I = {
         return;
       }
       const dict = State.strings[l.code] || {};
+      const bundled = (typeof FULL_TRANSLATIONS !== "undefined" && FULL_TRANSLATIONS[l.code]) || {};
       let filled = 0;
       Object.keys(DEFAULT_STRINGS).forEach(k => {
-        if(dict[k] && dict[k].trim() !== "") filled++;
+        const v = (dict[k] && String(dict[k]).trim() !== "") ? dict[k]
+                : (bundled[k] && String(bundled[k]).trim() !== "") ? bundled[k]
+                : "";
+        if(v) filled++;
       });
-      const pct = Math.round((filled / total) * 100);
-      State.langStatus[l.code] = { pct, count:filled, total, locked: pct < 90, isMaster:false };
+      const pct = total ? Math.round((filled / total) * 100) : 0;
+      // Never hard-lock UI languages — incomplete strings fall back to English.
+      State.langStatus[l.code] = { pct, count:filled, total, locked:false, isMaster:false };
     });
   }
 };
@@ -3558,6 +3809,13 @@ async function loadOrSeedTranslations(){
     console.warn("load translations failed, using defaults:", e.code || e.message);
     State.strings = { en: { ...DEFAULT_STRINGS } };
   }
+  // Layer bundled FULL_TRANSLATIONS under Firestore so TH/JP/CH work even when
+  // Firestore coverage is incomplete (Firestore values still win on conflict).
+  if(typeof FULL_TRANSLATIONS === "object" && FULL_TRANSLATIONS){
+    for(const lc of Object.keys(FULL_TRANSLATIONS)){
+      State.strings[lc] = { ...FULL_TRANSLATIONS[lc], ...(State.strings[lc] || {}) };
+    }
+  }
   I.recalcStatus();
 }
 
@@ -3638,22 +3896,75 @@ async function syncMissingTranslationsToFirestore(){
   // values that match what we previously shipped — never edits the admin's
   // custom translations.
   const FORCED_RENAMES = {
-    th: { "nav.login": { oldValues: ["เข้าสู่ระบบผู้ดูแล"], newValue: "เข้าสู่ระบบ" } },
-    ko: { "nav.login": { oldValues: ["관리자 로그인"], newValue: "로그인" } },
-    ja: { "nav.login": { oldValues: ["管理者ログイン"], newValue: "ログイン" } }
+    th: {
+      "nav.login": { oldValues: ["เข้าสู่ระบบผู้ดูแล"], newValue: "เข้าสู่ระบบ" },
+      "admin.side.webhook": { oldValues: ["ontheline Webhook"], newValue: "Webhook" },
+      "admin.side.partners": { oldValues: ["พาร์ทเนอร์ ontheline", "ontheline Partners"], newValue: "รายชื่อพาร์ทเนอร์" },
+      "admin.side.paygw": { oldValues: ["Payment Gateway ontheline", "ontheline Payment Gateways"], newValue: "รายการ PG" },
+      "admin.side.currencies": { oldValues: ["สกุลเงิน ontheline", "ontheline Currencies"], newValue: "สกุลเงิน" },
+      "admin.side.paymentgw": { oldValues: ["Payment Gateway"], newValue: "จัดการ PG" },
+      "admin.side.chillpay": { oldValues: ["Payment Gateway Events", "ChillPay Events"], newValue: "เหตุการณ์ PG" },
+      "admin.side.server": { oldValues: ["Server"], newValue: "จัดการเซิร์ฟเวอร์" },
+      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+    },
+    ko: {
+      "nav.login": { oldValues: ["관리자 로그인"], newValue: "로그인" },
+      "admin.side.webhook": { oldValues: ["ontheline 웹훅"], newValue: "웹훅" },
+      "admin.side.partners": { oldValues: ["ontheline 파트너"], newValue: "파트너 목록" },
+      "admin.side.paygw": { oldValues: ["ontheline 결제 게이트웨이"], newValue: "PG 목록" },
+      "admin.side.currencies": { oldValues: ["ontheline 통화"], newValue: "통화" },
+      "admin.side.paymentgw": { oldValues: ["결제 게이트웨이", "Payment Gateway"], newValue: "PG 관리" },
+      "admin.side.chillpay": { oldValues: ["Payment Gateway 이벤트", "ChillPay 이벤트"], newValue: "PG 이벤트" },
+      "admin.side.server": { oldValues: ["서버"], newValue: "서버 관리" },
+      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+    },
+    ja: {
+      "nav.login": { oldValues: ["管理者ログイン"], newValue: "ログイン" },
+      "admin.side.webhook": { oldValues: ["onthelineウェブフック"], newValue: "Webhook" },
+      "admin.side.partners": { oldValues: ["onthelineパートナー"], newValue: "パートナー一覧" },
+      "admin.side.paygw": { oldValues: ["ontheline決済ゲートウェイ"], newValue: "PG一覧" },
+      "admin.side.currencies": { oldValues: ["ontheline通貨"], newValue: "通貨" },
+      "admin.side.paymentgw": { oldValues: ["決済ゲートウェイ", "Payment Gateway"], newValue: "PG管理" },
+      "admin.side.chillpay": { oldValues: ["Payment Gateway イベント", "ChillPay イベント"], newValue: "PGイベント" },
+      "admin.side.server": { oldValues: ["サーバー", "Server"], newValue: "サーバー管理" },
+      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+    },
+    zh: {
+      "admin.side.webhook": { oldValues: ["ontheline Webhook"], newValue: "Webhook" },
+      "admin.side.partners": { oldValues: ["ontheline Partners"], newValue: "合作伙伴列表" },
+      "admin.side.paygw": { oldValues: ["ontheline Payment Gateways"], newValue: "PG 列表" },
+      "admin.side.currencies": { oldValues: ["ontheline Currencies"], newValue: "货币" },
+      "admin.side.paymentgw": { oldValues: ["Payment Gateway"], newValue: "PG 管理" },
+      "admin.side.chillpay": { oldValues: ["Payment Gateway Events", "ChillPay Events"], newValue: "PG 事件" },
+      "admin.side.server": { oldValues: ["Server", "服务器"], newValue: "服务器管理" },
+      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+    },
+    en: {
+      "admin.side.webhook": { oldValues: ["ontheline Webhook"], newValue: "Webhook" },
+      "admin.side.partners": { oldValues: ["ontheline Partners"], newValue: "Partner List" },
+      "admin.side.paygw": { oldValues: ["ontheline Payment Gateways"], newValue: "PG List" },
+      "admin.side.currencies": { oldValues: ["ontheline Currencies"], newValue: "Currencies" },
+      "admin.side.paymentgw": { oldValues: ["Payment Gateway"], newValue: "PG Management" },
+      "admin.side.chillpay": { oldValues: ["Payment Gateway Events", "ChillPay Events"], newValue: "PG Events" },
+      "admin.side.server": { oldValues: ["Server"], newValue: "Server Management" },
+      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+    }
   };
 
   let totalAdded = 0;
   let totalRenamed = 0;
-  for(const lc of Object.keys(FULL_TRANSLATIONS)){
+  // Include English (DEFAULT_STRINGS) so sidebar renames land in Firestore too.
+  const syncLangs = [...new Set([...Object.keys(FULL_TRANSLATIONS), "en"])];
+  for(const lc of syncLangs){
     try{
       const ref = doc(db,"translations",lc);
       const snap = await getDoc(ref);
       const existing = snap.exists() ? (snap.data().strings || {}) : {};
 
-      // Find keys present in FULL_TRANSLATIONS but missing from Firestore
+      // Find keys present in bundled strings but missing from Firestore
+      const bundled = lc === "en" ? DEFAULT_STRINGS : (FULL_TRANSLATIONS[lc] || {});
       const missing = {};
-      for(const [k,v] of Object.entries(FULL_TRANSLATIONS[lc])){
+      for(const [k,v] of Object.entries(bundled)){
         if(!(k in existing)) missing[k] = v;
       }
       const addedCount = Object.keys(missing).length;
@@ -4219,7 +4530,9 @@ function subscribeTranslations(){
       if(change.type === "removed"){
         delete State.strings[docId];
       }else{
-        State.strings[docId] = data.strings || {};
+        const fromFs = data.strings || {};
+        const bundled = (typeof FULL_TRANSLATIONS !== "undefined" && FULL_TRANSLATIONS[docId]) || {};
+        State.strings[docId] = { ...bundled, ...fromFs };
       }
       touched = true;
     });
@@ -5136,21 +5449,21 @@ const App = {
     State.langs.forEach(l => {
       // Hide languages the admin has disabled (en is always shown).
       if(!this.isLangEnabled(l.code)) return;
-      const s = State.langStatus[l.code] || { locked:true };
-      const disabled = s.locked && l.code !== "en";
+      const s = State.langStatus[l.code] || { locked:false, pct:0 };
 
       const pill = l.short || l.code.toUpperCase();
       const btn = document.createElement("button");
       btn.textContent = pill;
-      btn.className = (State.currentLang === l.code ? "on " : "") + (disabled ? "locked" : "");
-      btn.title = disabled ? `Not yet translated (${s.pct||0}%)` : l.native;
-      if(!disabled) btn.onclick = () => this.setLang(l.code);
+      btn.className = (State.currentLang === l.code ? "on " : "");
+      btn.title = l.native + (s.pct != null ? ` (${s.pct}%)` : "");
+      btn.onclick = () => this.setLang(l.code);
       wrap.appendChild(btn);
 
       const b2 = document.createElement("button");
-      b2.textContent = `${pill} ${disabled?"·"+(s.pct||0)+"%":""}`;
-      b2.className = (State.currentLang === l.code ? "on " : "") + (disabled ? "locked" : "");
-      if(!disabled) b2.onclick = () => this.setLang(l.code);
+      b2.textContent = pill;
+      b2.className = (State.currentLang === l.code ? "on " : "");
+      b2.title = btn.title;
+      b2.onclick = () => this.setLang(l.code);
       drawer.appendChild(b2);
     });
 
@@ -5160,19 +5473,20 @@ const App = {
       sel.innerHTML = "";
       State.langs.forEach(l => {
         if(!this.isLangEnabled(l.code)) return;
-        const s = State.langStatus[l.code] || {};
-        if(!s.locked || l.code==="en"){
-          const o = document.createElement("option");
-          o.value = l.code; o.textContent = l.native;
-          if(l.code === State.currentLang) o.selected = true;
-          sel.appendChild(o);
-        }
+        const o = document.createElement("option");
+        o.value = l.code; o.textContent = l.native;
+        if(l.code === State.currentLang) o.selected = true;
+        sel.appendChild(o);
       });
     }
   },
 
   setLang(code){
     State.currentLang = code;
+    try{
+      document.documentElement.lang = code === "zh" ? "zh-CN" : code;
+      localStorage.setItem("dealmai.lang", code);
+    }catch{}
     I.apply();
     this.buildLangPicker();
     this.updateAuthUI();
@@ -5568,7 +5882,7 @@ const App = {
         <div class="pkg-card ${featured}" data-bucket="${bucket}" data-pid="${p.id}" data-price="${p.price}" onclick="App.selectPackage(this.dataset.bucket,this.dataset.pid,parseFloat(this.dataset.price))">
           ${badge}
           <div class="pkg-label">${escapeHtml(title)}</div>
-          <div class="pkg-price"><span class="cur">$</span>${p.price.toLocaleString()}${per}</div>
+          <div class="pkg-price"><span class="cur">$</span>${fmtNumber(p.price)}${per}</div>
           <div class="pkg-meta">${escapeHtml(desc)}</div>
           <div class="pkg-cta"><span>${I.t(cta)}</span><span class="arr">→</span></div>
         </div>
@@ -6228,6 +6542,9 @@ const App = {
   setAdmin(name, ev, opts){
     const fromPopstate = !!(opts && opts.fromPopstate);
     if(!State.user){ this.openLogin(); return; }
+    if(name !== "server" && typeof ServerManageUI !== "undefined"){
+      ServerManageUI.clearTimers();
+    }
     document.querySelectorAll(".side-item").forEach(s => s.classList.toggle("active", s.dataset.admin === name));
     document.querySelectorAll(".admin-view").forEach(v => v.style.display = "none");
     document.getElementById("adm-"+name).style.display = "block";
@@ -6241,6 +6558,8 @@ const App = {
     if(name === "chillpay") renderAdminChillPay();
     if(name === "emails") renderAdminEmails();
     if(name === "smtp") renderAdminSmtp();
+    if(name === "domain") renderAdminDomain();
+    if(name === "server") renderAdminServer();
     if(name === "languages") renderAdminLanguages();
     if(name === "branding") renderAdminBranding();
     if(name === "dmchamp") renderAdminDmChamp();
@@ -6266,6 +6585,7 @@ const App = {
     const tabs = [
       ["orders","admin.side.orders"],["users","admin.side.users"],["packages","admin.side.packages"],
       ["webhook","admin.side.webhook"],["partners","admin.side.partners"],["paygw","admin.side.paygw"],["currencies","admin.side.currencies"],["paymentgw","admin.side.paymentgw"],["chillpay","admin.side.chillpay"],["emails","admin.side.emails"],["smtp","admin.side.smtp"],
+      ["domain","admin.side.domain"],["server","admin.side.server"],
       ["languages","admin.side.languages"],["branding","admin.side.branding"],
       ["dmchamp","admin.side.dmchamp"],["password","admin.side.password"]
     ];
@@ -6278,11 +6598,25 @@ const App = {
 // ===========================================================
 // ADMIN VIEWS
 // ===========================================================
-function fmtMoney(n){ return "$"+(Number(n||0)).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function appLocale(){
+  const map = { en:"en-US", th:"th-TH", ko:"ko-KR", ja:"ja-JP", zh:"zh-CN" };
+  return map[State.currentLang] || "en-US";
+}
+function fmtNumber(n, opts){
+  const num = Number(n);
+  if(!Number.isFinite(num)) return "0";
+  return num.toLocaleString(appLocale(), opts);
+}
+function fmtMoney(n){
+  return "$"+fmtNumber(n||0,{minimumFractionDigits:2,maximumFractionDigits:2});
+}
 function fmtDate(ts){
   if(!ts) return "—";
   const d = ts.toDate ? ts.toDate() : new Date(ts);
-  return d.toLocaleString(undefined,{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
+  if(isNaN(d.getTime())) return "—";
+  // Always follow the in-app language — never the browser/OS locale
+  // (which caused Korean dates like "5월 19일 오후 11:38" while UI was EN).
+  return d.toLocaleString(appLocale(),{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
 }
 function escapeHtml(s){ return String(s??"").replace(/[<>&"]/g,c=>({"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;"}[c])); }
 
@@ -6320,7 +6654,7 @@ function fmtDateOnly(ts){
   if(!ts) return "—";
   const d = ts.toDate ? ts.toDate() : (ts instanceof Date ? ts : new Date(ts));
   if(isNaN(d.getTime())) return "—";
-  return d.toLocaleDateString(undefined,{year:"numeric",month:"short",day:"numeric"});
+  return d.toLocaleDateString(appLocale(),{year:"numeric",month:"short",day:"numeric"});
 }
 
 // Map a bucket id to a human label
@@ -6548,7 +6882,7 @@ function renderCustomerAccount(){
   const creditsTile = showCreditsEarned ? `
       <div class="acct-stat">
         <div class="lab">${I.t("account.stats.credits")}</div>
-        <div class="val teal">${creditsEarned.toLocaleString()}</div>
+        <div class="val teal">${fmtNumber(creditsEarned)}</div>
       </div>
   ` : "";
   const creditsNote = showCreditsEarned ? `
@@ -6619,7 +6953,7 @@ function renderCustomerAccount(){
     const subStatus = sub?.status || (latestPaid ? "pending" : null);
 
     if(subStatus === "created"){
-      const credits = Number.isFinite(Number(sub.monthlyCredits)) ? Number(sub.monthlyCredits).toLocaleString() : "—";
+      const credits = Number.isFinite(Number(sub.monthlyCredits)) ? fmtNumber(Number(sub.monthlyCredits)) : "—";
       dmchampCard = `
         <div class="acct-active" style="margin-top:18px;border-left:3px solid var(--teal)">
           <div class="num" style="margin-bottom:10px">${I.t("account.dmchamp.title").toUpperCase()}</div>
@@ -6650,7 +6984,7 @@ function renderCustomerAccount(){
       // Linked: existing DM Champ account associated with purchase. Show
       // email + credits + the "use your existing password" note. No temp
       // password block (we don't have one).
-      const credits = Number.isFinite(Number(sub.monthlyCredits)) ? Number(sub.monthlyCredits).toLocaleString() : "—";
+      const credits = Number.isFinite(Number(sub.monthlyCredits)) ? fmtNumber(Number(sub.monthlyCredits)) : "—";
       dmchampCard = `
         <div class="acct-active" style="margin-top:18px;border-left:3px solid var(--teal)">
           <div class="num" style="margin-bottom:10px">${I.t("account.dmchamp.title").toUpperCase()}</div>
@@ -6675,8 +7009,8 @@ function renderCustomerAccount(){
       // DM Champ account, OR an ontheline order where credits are mirrored for
       // display. Show email + credits + the "use your existing password" note,
       // same as linked (no temp password to show).
-      const credits = Number.isFinite(Number(sub.creditsGranted)) ? Number(sub.creditsGranted).toLocaleString()
-                    : Number.isFinite(Number(sub.monthlyCredits)) ? Number(sub.monthlyCredits).toLocaleString() : "—";
+      const credits = Number.isFinite(Number(sub.creditsGranted)) ? fmtNumber(Number(sub.creditsGranted))
+                    : Number.isFinite(Number(sub.monthlyCredits)) ? fmtNumber(Number(sub.monthlyCredits)) : "—";
       dmchampCard = `
         <div class="acct-active" style="margin-top:18px;border-left:3px solid var(--teal)">
           <div class="num" style="margin-bottom:10px">${I.t("account.dmchamp.title").toUpperCase()}</div>
@@ -6794,7 +7128,7 @@ function renderCustomerOrders(){
       // Reversal order — show credits removed as a negative red figure.
       const deducted = Number(o.creditsDeducted) || 0;
       creditsCell = deducted > 0
-        ? `<span style="font-family:var(--mono);font-size:12.5px;color:#c8463d;font-weight:600">−${deducted.toLocaleString()}</span>`
+        ? `<span style="font-family:var(--mono);font-size:12.5px;color:#c8463d;font-weight:600">−${fmtNumber(deducted)}</span>`
         : '<span style="color:var(--muted)">—</span>';
     } else if(o.status === "paid" || o.event === "Paid"){
       const credits = creditsForOrder(o);
@@ -6803,7 +7137,7 @@ function renderCustomerOrders(){
         // loadDmChampConfig() re-renders this table once it resolves.
         ? '<span style="color:var(--muted-2)">·</span>'
         : (credits > 0
-            ? `<span style="font-family:var(--mono);font-size:12.5px;color:var(--teal-deep);font-weight:600">${credits.toLocaleString()}</span>`
+            ? `<span style="font-family:var(--mono);font-size:12.5px;color:var(--teal-deep);font-weight:600">${fmtNumber(credits)}</span>`
             : '<span style="color:var(--muted)">—</span>');
     } else {
       creditsCell = '<span style="color:var(--muted)">—</span>';
@@ -6972,14 +7306,14 @@ function renderAdminOrders(){
       // Reversal order — show the credits removed as a negative red figure.
       const deducted = Number(o.creditsDeducted) || 0;
       creditsCell = deducted > 0
-        ? `<span style="font-family:var(--mono);font-size:12px;color:#c8463d;font-weight:600">−${deducted.toLocaleString()}</span>`
+        ? `<span style="font-family:var(--mono);font-size:12px;color:#c8463d;font-weight:600">−${fmtNumber(deducted)}</span>`
         : '<span style="color:var(--muted)">—</span>';
     } else if(o.status === "paid" || o.event === "Paid"){
       const credits = creditsForOrder(o);
       creditsCell = credits === null
         ? '<span style="color:var(--muted-2)">·</span>'      // rate not loaded yet
         : (credits > 0
-            ? `<span style="font-family:var(--mono);font-size:12px;color:var(--teal-deep);font-weight:600">${credits.toLocaleString()}</span>`
+            ? `<span style="font-family:var(--mono);font-size:12px;color:var(--teal-deep);font-weight:600">${fmtNumber(credits)}</span>`
             : '<span style="color:var(--muted)">—</span>');
     } else {
       creditsCell = '<span style="color:var(--muted)">—</span>';
@@ -7027,7 +7361,7 @@ function renderAdminOrders(){
             const orig = Number.isFinite(Number(o.amountOriginal)) ? Number(o.amountOriginal) : null;
             const usdTotal = Number.isFinite(Number(o.total)) ? Number(o.total)
                            : (Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd) : Number(o.subtotal) || 0);
-            const origTxt = orig !== null ? `${escapeHtml(sym)}${orig.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : "—";
+            const origTxt = orig !== null ? `${escapeHtml(sym)}${fmtNumber(orig,{minimumFractionDigits:2,maximumFractionDigits:2})}` : "—";
             return `<div style="line-height:1.4"><div style="font-weight:600">${origTxt} <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(o.currency)}</span></div>
               <div style="font-size:11px;color:var(--muted)">(${fmtMoney(usdTotal)})</div></div>`;
           }
@@ -7041,21 +7375,24 @@ function renderAdminOrders(){
           // to a direct/chillpay order's "failed" status (same meaning + colour).
           if(o.source === "ontheline" && o.event){
             const map = { "Paid":"paid", "Partial Refund":"pending", "Refund":"failed", "Unpaid":"pending", "Fail":"failed" };
-            const labelMap = { "Fail":"Failed" };
+            const labelMap = { "Fail":"Failed", "Paid":"Paid", "Unpaid":"Unpaid", "Refund":"Refund", "Partial Refund":"Partial Refund" };
             const cls = map[o.event] || "pending";
-            const label = labelMap[o.event] || o.event;
+            const statusKey = o.event === "Fail" ? "orders.status.failed" : (o.event === "Paid" ? "orders.status.paid" : null);
+            const label = statusKey ? I.t(statusKey) : (labelMap[o.event] || o.event);
             return `<span class="status-tag ${cls}"><span class="d"></span>${escapeHtml(label)}</span>`;
           }
-          return `<span class="status-tag ${o.status}"><span class="d"></span>${o.status}</span>`;
+          const sk = "orders.status." + (o.status || "");
+          const statusLabel = I.t(sk);
+          return `<span class="status-tag ${o.status}"><span class="d"></span>${escapeHtml(statusLabel === sk ? (o.status || "") : statusLabel)}</span>`;
         })()}</td>
         <td>${fmtDate(o.createdAt)}</td>
         <td>${(() => {
           const exp = toExpiryDate(o.expiresAt);
           if(!exp) return '<span style="color:var(--muted)">—</span>';
           const daysLeft = Math.ceil((exp.getTime() - Date.now()) / (24*3600*1000));
-          if(daysLeft < 0) return `<span style="color:var(--accent-magenta)" title="Expired">${fmtDateOnly(exp)}</span>`;
-          if(daysLeft <= 7) return `<span style="color:var(--amber)" title="${daysLeft} days left">${fmtDateOnly(exp)}<br><small style="font-size:10.5px;color:var(--muted)">${daysLeft}d left</small></span>`;
-          return `<span title="${daysLeft} days left">${fmtDateOnly(exp)}</span>`;
+          if(daysLeft < 0) return `<span style="color:var(--accent-magenta)" title="${escapeHtml(I.t("admin.orders.expires.expired"))}">${fmtDateOnly(exp)}</span>`;
+          if(daysLeft <= 7) return `<span style="color:var(--amber)" title="${escapeHtml(I.t("admin.orders.expires.daysLeft",{n:daysLeft}))}">${fmtDateOnly(exp)}<br><small style="font-size:10.5px;color:var(--muted)">${escapeHtml(I.t("admin.orders.expires.daysLeft",{n:daysLeft}))}</small></span>`;
+          return `<span title="${escapeHtml(I.t("admin.orders.expires.daysLeft",{n:daysLeft}))}">${fmtDateOnly(exp)}</span>`;
         })()}</td>
         <td>
           <div class="row-actions">
@@ -7103,7 +7440,7 @@ function renderAdminOrders(){
       <div class="stat"><div class="lab">${escapeHtml(ordersStatLabel)}</div><div class="val">${dateFiltered.length}<span class="unit">${I.t("admin.orders.unit.orders")}</span></div></div>
       <div class="stat"><div class="lab">${I.t("admin.orders.stat.online")}</div><div class="val">${onlineCount}<span class="unit">${I.t("admin.orders.unit.orders")}</span></div></div>
       <div class="stat"><div class="lab">${I.t("admin.orders.stat.direct")}</div><div class="val">${directCount}<span class="unit">${I.t("admin.orders.unit.orders")}</span></div></div>
-      <div class="stat accent"><div class="lab">${escapeHtml(revenueStatLabel)}</div><div class="val"><span class="cur">$</span>${revenue.toLocaleString()}</div></div>
+      <div class="stat accent"><div class="lab">${escapeHtml(revenueStatLabel)}</div><div class="val"><span class="cur">$</span>${fmtNumber(revenue)}</div></div>
     </div>
 
     <!-- Date range filter — primary toggle row -->
@@ -7334,7 +7671,8 @@ function renderAdminUsers(){
   };
 
   const rows = State.users.map(u => {
-    const statusLabel = u.disabled ? "Disabled" : (u.mustChangePassword ? "Pending Password" : "Active");
+    const statusKey = u.disabled ? "disabled" : (u.mustChangePassword ? "pendingPassword" : "active");
+    const statusLabel = I.t("admin.users.status." + statusKey);
     const statusClass = u.disabled ? "failed" : (u.mustChangePassword ? "pending" : "paid");
     const isSelf = State.user && (u.id === State.user.uid);
 
@@ -7350,7 +7688,7 @@ function renderAdminUsers(){
           <div style="line-height:1.45">
             <div style="font-size:12.5px">${escapeHtml(pkgName)}</div>
             <div style="font-size:11px;color:${isExpiringSoon?'var(--accent-magenta)':'var(--muted)'};font-family:var(--mono);letter-spacing:.04em;margin-top:2px">
-              ${active.daysLeft} ${active.daysLeft === 1 ? "day" : "days"} left
+              ${escapeHtml(I.t("admin.users.activePackage.daysLeft",{n:active.daysLeft}))}
             </div>
           </div>
         `;
@@ -7363,7 +7701,7 @@ function renderAdminUsers(){
     if(u.role === "customer"){
       const total = totalCreditsForEmail(u.email);
       if(total > 0){
-        creditsCell = `<span style="font-family:var(--mono);font-size:12.5px;color:var(--teal-deep);font-weight:600">${total.toLocaleString()}</span>`;
+        creditsCell = `<span style="font-family:var(--mono);font-size:12.5px;color:var(--teal-deep);font-weight:600">${fmtNumber(total)}</span>`;
       }
     }
 
@@ -7397,7 +7735,7 @@ function renderAdminUsers(){
     <div class="panel">
       <div class="panel-h"><h3>${I.t("admin.users.h")}</h3></div>
       <div class="table-wrap">
-        ${State.users.length === 0 ? `<div class="empty-state">${I.t("admin.users.h")} — none yet.</div>` :
+        ${State.users.length === 0 ? `<div class="empty-state">${I.t("admin.users.empty")}</div>` :
         `<table>
           <thead><tr>
             <th>${I.t("admin.users.col.name")}</th>
@@ -7543,7 +7881,7 @@ function renderAdminWebhook(){
         const usd = Number.isFinite(Number(e.amountUsd)) ? Number(e.amountUsd) : Number(e.amount) || 0;
         if(e.currency && e.currency !== "USD"){
           const orig = Number.isFinite(Number(e.amount)) ? Number(e.amount) : null;
-          const origTxt = orig !== null ? `${escapeHtml(sym)}${orig.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` : "—";
+          const origTxt = orig !== null ? `${escapeHtml(sym)}${fmtNumber(orig,{minimumFractionDigits:2,maximumFractionDigits:2})}` : "—";
           return `<div style="line-height:1.4"><div style="font-weight:600">${origTxt} <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(e.currency)}</span></div>
             <div style="font-size:11px;color:var(--muted)">(${fmtMoney(usd)})</div></div>`;
         }
@@ -8062,6 +8400,468 @@ function renderAdminSmtp(){
 }
 
 // ============================================================
+// ADMIN · Domain & SSL / Server (PG HQ Policy port)
+// ============================================================
+const ServerManageUI = {
+  _timer: null,
+  _countdown: null,
+  _nextAt: 0,
+  _data: null,
+  _domainData: null,
+
+  clearTimers(){
+    if(this._timer){ clearInterval(this._timer); this._timer = null; }
+    if(this._countdown){ clearInterval(this._countdown); this._countdown = null; }
+  },
+
+  async authHeaders(){
+    const user = auth.currentUser;
+    if(!user) throw new Error("Not signed in");
+    const idToken = await user.getIdToken(false);
+    return {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + idToken
+    };
+  },
+
+  apiUrl(qs){
+    const origin = window.location.origin;
+    return `${origin}/api/server-manage${qs || ""}`;
+  },
+
+  mbToGbInput(mb){
+    if(mb == null || mb === "") return "";
+    const n = Number(mb);
+    if(!Number.isFinite(n) || n <= 0) return "";
+    return String(Math.round((n / 1024) * 10000) / 10000).replace(/\.?0+$/,"");
+  },
+
+  gbToMb(gbStr){
+    const t = String(gbStr ?? "").trim().replace(",",".");
+    if(!t) return null;
+    const g = parseFloat(t);
+    if(!Number.isFinite(g) || g < 0) return null;
+    const mb = Math.round(g * 1024);
+    return mb <= 0 ? null : mb;
+  },
+
+  fmtBytes(n){
+    n = Number(n) || 0;
+    if(n >= 1099511627776) return (n/1099511627776).toFixed(2)+" TB";
+    if(n >= 1073741824) return (n/1073741824).toFixed(2)+" GB";
+    if(n >= 1048576) return (n/1048576).toFixed(2)+" MB";
+    if(n >= 1024) return (n/1024).toFixed(2)+" KB";
+    return n+" B";
+  },
+
+  fmtGbFromMb(mb){
+    if(mb == null || mb === "") return "—";
+    const n = Number(mb);
+    if(!Number.isFinite(n) || n < 0) return "—";
+    return (Math.round((n/1024)*1000)/1000).toFixed(3).replace(/\.?0+$/,"")+" GB";
+  },
+
+  fmtUptime(ms){
+    ms = Number(ms) || 0;
+    let s = Math.floor(ms/1000);
+    const d = Math.floor(s/86400); s -= d*86400;
+    const h = Math.floor(s/3600); s -= h*3600;
+    const m = Math.floor(s/60);
+    return `${d}d ${h}h ${m}m`;
+  },
+
+  badge(status){
+    const st = status === "danger" ? "danger" : status === "warn" ? "warn" : "ok";
+    const label = st === "danger" ? I.t("admin.server.status.danger")
+      : st === "warn" ? I.t("admin.server.status.warn")
+      : I.t("admin.server.status.ok");
+    return `<span class="srv-badge ${st}">${escapeHtml(label)}</span>`;
+  },
+
+  progress(pct, level){
+    pct = Math.max(0, Math.min(100, Number(pct)||0));
+    const lv = level === "danger" ? "danger" : level === "warn" ? "warn" : "ok";
+    return `<div class="srv-mon-progress ${lv}"><span style="width:${pct}%"></span></div>`;
+  },
+
+  fillServerForm(data){
+    const set = (id, v) => { const el = document.getElementById(id); if(el) el.value = v ?? ""; };
+    const today = (() => {
+      const d = new Date();
+      const y = d.getFullYear();
+      const m = String(d.getMonth() + 1).padStart(2, "0");
+      const day = String(d.getDate()).padStart(2, "0");
+      return `${y}-${m}-${day}`;
+    })();
+    set("srv-pem", data?.serverManageSslCertPath || "");
+    set("srv-le", data?.serverManageSslLeDomain || "");
+    const sec = data?.serverManageUiRefreshSec;
+    set("srv-refresh-min", (sec != null && sec >= 60) ? String(Math.round(sec/60)) : "");
+    set("srv-disk-gb", this.mbToGbInput(data?.serverManageContractDiskMb));
+    set("srv-traffic-gb", this.mbToGbInput(data?.serverManageContractTrafficMb));
+    set("srv-used-gb", this.mbToGbInput(data?.serverManageTrafficUsedMb));
+    // Browser date picker chrome follows OS locale (not app i18n). Default empty
+    // contract dates to today so the field is usable without relying on locale labels.
+    set("srv-start", data?.serverManageContractStart || today);
+    set("srv-end", data?.serverManageContractEnd || today);
+  },
+
+  renderDashboard(data){
+    const cards = document.getElementById("srv-cards");
+    const alerts = document.getElementById("srv-alerts");
+    const gen = document.getElementById("srv-generated");
+    const intEl = document.getElementById("srv-interval");
+    const raw = document.getElementById("srv-json-raw");
+    if(raw){
+      try{ raw.textContent = JSON.stringify(data, null, 2); }
+      catch{ raw.textContent = String(data); }
+    }
+    if(gen) gen.textContent = `${I.t("admin.server.generated")} ${data?.generatedAt || "—"}`;
+    if(intEl){
+      const secI = (data?.uiAutoRefreshSeconds > 0) ? data.uiAutoRefreshSeconds : 120;
+      const mi = Math.floor(secI/60);
+      const sc = secI % 60;
+      intEl.textContent = sc === 0 ? `${mi}m` : (mi > 0 ? `${mi}m ${sc}s` : `${secI}s`);
+    }
+    if(alerts){
+      const list = data?.health?.alerts || [];
+      alerts.innerHTML = list.length
+        ? `<div class="wh-card" style="border-color:rgba(255,80,80,.35);margin-bottom:12px"><strong>${escapeHtml(I.t("admin.server.alerts"))}</strong><ul style="margin:8px 0 0;padding-left:18px">${list.map(a => `<li>${escapeHtml(typeof a === "string" ? a : (a.k || JSON.stringify(a)))}</li>`).join("")}</ul></div>`
+        : "";
+    }
+    if(!cards) return;
+    if(!data || !data.host){
+      cards.innerHTML = `<div class="wh-card">${escapeHtml(data?.error || I.t("toast.server.loadFail",{error:"empty"}))}</div>`;
+      return;
+    }
+
+    const host = data.host || {};
+    const node = data.node || data.jvm || {};
+    const disk = data.disk || {};
+    const ssl = data.ssl || {};
+    const certbot = data.certbot || {};
+    const nginx = data.nginxStub || {};
+    const health = data.health || {};
+    const tm = host.memoryTotalMb || 0;
+    const am = host.memoryAvailableMb || 0;
+    const hpct = tm > 0 ? Math.round(((tm-am)/tm)*1000)/10 : 0;
+    const dp = disk.ok ? (Number(disk.usedPct)||0) : null;
+    const timer = certbot.certbotTimer || {};
+    const files = certbot.renewalConfFiles || [];
+
+    const stat = (k,v,sub,danger) =>
+      `<div class="srv-mon-stat${danger?" danger":""}"><div class="srv-mon-stat-k">${escapeHtml(k)}</div><div class="srv-mon-stat-v">${escapeHtml(String(v))}</div>${sub?`<div class="srv-mon-stat-sub">${sub}</div>`:""}</div>`;
+
+    let html = `<div class="srv-mon-grid">
+      ${stat("Hostname", host.hostname||"—", host.osFamily ? `${host.osFamily} · ${host.osVersion||""}` : "", false)}
+      ${stat("Memory", host.error ? "—" : `${hpct}%`, `avail ${am} / total ${tm} MB`, hpct >= 90)}
+      ${stat("Node heap", `${node.heapUsedMb??"—"} / ${node.heapMaxMb??"—"} MB`, node.nodeVersion || node.javaVersion || "", (Number(node.heapUsedPct)||0) >= 92)}
+      ${stat("Load · CPU", node.systemLoadAverage ?? "—", `cores ${node.cpuCount??"—"}`, false)}
+      ${stat("Uptime", this.fmtUptime(node.uptimeMs), "", false)}
+      ${stat("Disk", dp!=null?`${dp}%`:"—", disk.ok ? `${this.fmtBytes(disk.usedBytes)} / ${this.fmtBytes(disk.totalBytes)}` : escapeHtml(disk.error||"—"), dp!=null && dp>=90)}
+      ${stat("Certbot timer", timer.active||"—", `renewal .conf × ${files.length}`, String(timer.active||"").toLowerCase() !== "active")}
+    </div>`;
+
+    const resolved = data.sslResolvedPath || "";
+    const cfgPath = data.serverManageSslCertPath || "";
+    const leDom = data.serverManageSslLeDomain || "";
+    let sslBody = "";
+    if(ssl.status === "OK"){
+      const days = Number(ssl.daysRemaining);
+      const barPct = Math.min(100, Math.max(0, (days/90)*100));
+      const lv = days < 14 ? "danger" : days < 30 ? "warn" : "ok";
+      const san = Array.isArray(ssl.sanDnsNames) ? ssl.sanDnsNames : [];
+      sslBody = `<dl class="srv-mon-ssl-dl">
+        <dt>Resolved path</dt><dd>${escapeHtml(resolved||cfgPath||"—")}</dd>
+        <dt>Saved path</dt><dd>${escapeHtml(cfgPath||"—")}</dd>
+        <dt>LE live</dt><dd>${escapeHtml(leDom||"—")}</dd>
+        <dt>Subject</dt><dd>${escapeHtml(ssl.subjectDn||"—")}</dd>
+        <dt>Issuer</dt><dd>${escapeHtml(ssl.issuerDn||"—")}</dd>
+        <dt>Valid</dt><dd>${escapeHtml(ssl.notBefore||"")} ~ ${escapeHtml(ssl.notAfter||"")}</dd>
+        <dt>Days left</dt><dd><strong>${days}</strong></dd>
+        <dt>SHA-256</dt><dd style="font-family:var(--mono);font-size:11px">${escapeHtml(ssl.fingerprintSha256||"—")}</dd>
+      </dl>${this.progress(barPct, lv)}`;
+      if(san.length){
+        sslBody += `<p style="font-size:12px;font-weight:500;margin:12px 0 6px">SAN (dNSName)</p>
+          <div class="table-wrap"><table><thead><tr><th>No.</th><th>${escapeHtml(I.t("admin.domain.col.host"))}</th></tr></thead>
+          <tbody>${san.map((h,i)=>`<tr><td>${i+1}</td><td style="font-family:var(--mono);font-size:12px">${escapeHtml(h)}</td></tr>`).join("")}</tbody></table></div>`;
+      }
+    } else {
+      sslBody = `<p style="color:var(--amber);font-size:13px">${escapeHtml(ssl.detail || ssl.status || "—")}</p>
+        <dl class="srv-mon-ssl-dl"><dt>Resolved</dt><dd>${escapeHtml(resolved||"—")}</dd>
+        <dt>Env</dt><dd><code>DEALMAI_SSL_CERT_PATH</code></dd></dl>`;
+    }
+    const guide = data.sslOpsGuide || {};
+    const guideHtml = (guide.dns || guide.leSan || guide.cloudflare)
+      ? `<details style="margin-top:10px"><summary style="font-size:12px;color:var(--muted);cursor:pointer">Ops notes (DNS · SAN · proxy)</summary>
+          <ul style="font-size:12px;color:var(--muted);margin:8px 0 0;padding-left:18px;line-height:1.5">
+            ${guide.dns?`<li>${escapeHtml(guide.dns)}</li>`:""}
+            ${guide.leSan?`<li>${escapeHtml(guide.leSan)}</li>`:""}
+            ${guide.cloudflare?`<li>${escapeHtml(guide.cloudflare)}</li>`:""}
+          </ul></details>` : "";
+
+    html += `<div class="srv-mon-card"><h3>${escapeHtml(I.t("admin.server.card.ssl"))}</h3>
+      <p class="srv-mon-card-desc">Let's Encrypt fullchain.pem — expiry, SAN, fingerprint. Use Domain & SSL for URL ↔ SAN compare.</p>
+      ${sslBody}${guideHtml}</div>`;
+
+    html += `<div class="srv-mon-card"><h3>${escapeHtml(I.t("admin.server.card.certbot"))}</h3>
+      <p class="srv-mon-card-desc"><code>certbot.timer</code> runs periodic renew. Expand SAN with <code>certbot --nginx -d …</code>.</p>
+      <p style="font-size:13px;margin:0 0 6px"><strong>timer</strong> ${escapeHtml(timer.active||"—")}</p>
+      <p style="font-size:12px;color:var(--muted);margin:0 0 8px;word-break:break-word">next: ${escapeHtml(timer.next||"—")}</p>
+      <ul style="font-size:12px;margin:0;padding-left:18px;max-height:120px;overflow:auto">${files.slice(0,40).map(f=>`<li>${escapeHtml(f)}</li>`).join("")}</ul>
+    </div>`;
+
+    let nx = `<p style="font-size:13px">status: <strong>${escapeHtml(nginx.status||"—")}</strong></p>`;
+    if(nginx.bodyPreview) nx += `<pre style="font-size:11px;max-height:140px;overflow:auto;white-space:pre-wrap;background:rgba(0,0,0,.2);padding:8px;border-radius:8px">${escapeHtml(nginx.bodyPreview)}</pre>`;
+    else if(nginx.detail) nx += `<p style="font-size:12px;color:var(--muted)">${escapeHtml(nginx.detail)}</p>`;
+    else if(data.nginxStubStatusUrlConfigured === false && nginx.status === "SKIPPED")
+      nx = `<p style="font-size:12px;color:var(--muted)">stub_status URL not set (<code>NGINX_STUB_STATUS_URL</code>).</p>`;
+    html += `<div class="srv-mon-card"><h3>${escapeHtml(I.t("admin.server.card.nginx"))}</h3>${nx}</div>`;
+
+    const ctr = data.serverManageContract || {};
+    html += `<div class="srv-mon-card"><h3>${escapeHtml(I.t("admin.server.card.contract"))}</h3>
+      <p class="srv-mon-card-desc">Saved hosting contract (display GB · stored MB).</p>
+      <p style="font-size:13px;margin:0">Disk: <strong>${this.fmtGbFromMb(ctr.diskMb)}</strong> · Traffic: <strong>${this.fmtGbFromMb(ctr.trafficMb)}</strong></p>
+      <p style="font-size:13px;margin:6px 0 0">Used: <strong>${this.fmtGbFromMb(ctr.trafficUsedMb)}</strong> · Period: ${escapeHtml((ctr.periodStart||"—")+" ~ "+(ctr.periodEnd||"—"))}</p>
+    </div>`;
+
+    const hRows = health.rows || [];
+    html += `<div class="srv-mon-card"><h3>${escapeHtml(I.t("admin.server.card.health"))}</h3>
+      <div class="table-wrap"><table>
+        <thead><tr>
+          <th>${escapeHtml(I.t("admin.server.col.metric"))}</th>
+          <th>${escapeHtml(I.t("admin.server.col.criteria"))}</th>
+          <th>${escapeHtml(I.t("admin.server.col.value"))}</th>
+          <th>${escapeHtml(I.t("admin.server.col.status"))}</th>
+        </tr></thead>
+        <tbody>${hRows.map(r => `<tr>
+          <td>${escapeHtml(r.label||r.lK||"—")}</td>
+          <td style="color:var(--muted);font-size:12px">${escapeHtml(r.criteria||r.cK||"—")}</td>
+          <td>${escapeHtml(r.value||r.vK||"—")}</td>
+          <td>${this.badge(r.status)}</td>
+        </tr>`).join("") || `<tr><td colspan="4" style="text-align:center;color:var(--muted)">—</td></tr>`}</tbody>
+      </table></div>
+    </div>`;
+
+    cards.innerHTML = html;
+  },
+
+  scheduleAutoRefresh(data){
+    this.clearTimers();
+    const auto = document.getElementById("srv-auto");
+    if(auto && !auto.checked) return;
+    const sec = (data?.uiAutoRefreshSeconds > 0) ? data.uiAutoRefreshSeconds : 120;
+    this._nextAt = Date.now() + sec * 1000;
+    this._timer = setInterval(() => { if(document.getElementById("adm-server")?.style.display !== "none") loadAdminServerSummary(false); }, sec * 1000);
+    const cd = document.getElementById("srv-countdown");
+    this._countdown = setInterval(() => {
+      if(!cd) return;
+      const left = Math.max(0, Math.ceil((this._nextAt - Date.now())/1000));
+      cd.textContent = left > 0 ? `${left}s` : "…";
+    }, 500);
+  },
+
+  renderDomainLinkage(linkage){
+    const box = document.getElementById("domain-ssl-linkage");
+    if(!box) return;
+    if(!linkage){
+      box.innerHTML = `<p style="color:var(--muted)">${escapeHtml(I.t("admin.domain.ssl.loading"))}</p>`;
+      return;
+    }
+    const rows = linkage.configuredHostRows || [];
+    const missing = linkage.hostsMissingFromCert || [];
+    const sanOnly = linkage.sanWithoutConfiguredUrl || [];
+    const sslMeta = `<p style="font-size:12px;color:var(--muted);margin:0 0 10px">
+      SSL: <strong>${escapeHtml(linkage.sslStatus||"—")}</strong>
+      ${linkage.daysRemaining!=null?` · ${escapeHtml(I.t("admin.orders.expires.daysLeft",{n:linkage.daysRemaining}))}`:""}
+      ${linkage.notAfter?` · until ${escapeHtml(linkage.notAfter)}`:""}
+      ${linkage.leLiveCertName?` · LE <code>${escapeHtml(linkage.leLiveCertName)}</code>`:""}
+    </p>`;
+    let table = rows.length
+      ? `<div class="table-wrap"><table>
+          <thead><tr>
+            <th>${escapeHtml(I.t("admin.domain.col.host"))}</th>
+            <th>${escapeHtml(I.t("admin.domain.col.source"))}</th>
+            <th>${escapeHtml(I.t("admin.domain.col.inCert"))}</th>
+          </tr></thead>
+          <tbody>${rows.map(r => `<tr>
+            <td style="font-family:var(--mono);font-size:12px">${escapeHtml(r.hostname)}</td>
+            <td>${escapeHtml(r.label || r.sourceKind || "")}</td>
+            <td class="${r.inCertificate?"srv-san-ok":"srv-san-miss"}">${escapeHtml(r.inCertificate ? I.t("admin.domain.yes") : I.t("admin.domain.no"))}</td>
+          </tr>`).join("")}</tbody></table></div>`
+      : `<p style="color:var(--muted)">${escapeHtml(I.t("admin.domain.ssl.empty"))}</p>`;
+
+    if(missing.length){
+      table += `<p style="font-size:12px;color:var(--red);margin-top:10px">${escapeHtml(I.t("admin.domain.missing"))} ${missing.map(m=>escapeHtml(m.hostname)).join(", ")}</p>`;
+    }
+    if(sanOnly.length){
+      table += `<p style="font-size:12px;color:var(--muted);margin-top:8px">${escapeHtml(I.t("admin.domain.sanOnly"))} ${sanOnly.map(h=>`<code>${escapeHtml(h)}</code>`).join(" ")}</p>`;
+    }
+    if(Array.isArray(linkage.sanDnsNames) && linkage.sanDnsNames.length){
+      table += `<p style="font-size:12px;font-weight:500;margin:12px 0 6px">Certificate SAN</p>
+        <div style="font-family:var(--mono);font-size:12px">${linkage.sanDnsNames.map(h=>escapeHtml(h)).join(" · ")}</div>`;
+    }
+    if(linkage.linkageHint){
+      table += `<p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">${escapeHtml(linkage.linkageHint)}</p>`;
+    }
+    box.innerHTML = sslMeta + table;
+  }
+};
+
+function renderAdminDomain(){
+  const el = document.getElementById("adm-domain");
+  if(!el) return;
+  const d = ServerManageUI._domainData?.domain || {};
+  el.innerHTML = `
+    <div class="admin-head">
+      <div>
+        <div class="crumbs">${I.t("admin.domain.crumbs")}</div>
+        <h1>${I.t("admin.domain.title-html")}</h1>
+        <p class="sub" style="max-width:720px">${I.t("admin.domain.sub")}</p>
+      </div>
+      <button class="btn-ghost" onclick="loadAdminDomain(true)">${I.t("admin.server.refresh")}</button>
+    </div>
+
+    <div class="wh-card" style="margin-bottom:18px">
+      <h3>${I.t("admin.domain.global.title")}</h3>
+      <p class="sub">${I.t("admin.domain.global.hint")}</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field"><label>${I.t("admin.domain.field.site")}</label>
+          <input id="domain-site-url" type="text" value="${escapeHtml(d.publicSiteUrl||"")}" placeholder="https://dealmai.com"></div>
+        <div class="field"><label>${I.t("admin.domain.field.www")}</label>
+          <input id="domain-www-url" type="text" value="${escapeHtml(d.publicWwwUrl||"")}" placeholder="https://www.dealmai.com"></div>
+        <div class="field" style="grid-column:1/-1"><label>${I.t("admin.domain.field.api")}</label>
+          <input id="domain-api-url" type="text" value="${escapeHtml(d.publicApiBaseUrl||"")}" placeholder="https://dealmai.com"></div>
+      </div>
+      <div style="margin-top:14px">
+        <button class="btn-primary" onclick="AdminActions.saveDomainUrls()"><span>${I.t("admin.domain.save")}</span><span class="arr">→</span></button>
+      </div>
+    </div>
+
+    <div class="wh-card">
+      <h3>${I.t("admin.domain.ssl.title")}</h3>
+      <p class="sub">${I.t("admin.domain.ssl.intro")}</p>
+      <div id="domain-ssl-linkage"><p style="color:var(--muted)">${I.t("admin.domain.ssl.loading")}</p></div>
+    </div>
+  `;
+  if(ServerManageUI._domainData?.sslDomainLinkage){
+    ServerManageUI.renderDomainLinkage(ServerManageUI._domainData.sslDomainLinkage);
+  }
+  loadAdminDomain(false);
+}
+
+function renderAdminServer(){
+  const el = document.getElementById("adm-server");
+  if(!el) return;
+  el.innerHTML = `
+    <div class="admin-head">
+      <div>
+        <div class="crumbs">${I.t("admin.server.crumbs")}</div>
+        <h1>${I.t("admin.server.title-html")}</h1>
+        <p class="sub" style="max-width:720px">${I.t("admin.server.sub")}</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-ghost" onclick="loadAdminServerSummary(true)">${I.t("admin.server.refresh")}</button>
+        <button class="btn-primary" onclick="AdminActions.saveServerManage()"><span>${I.t("admin.server.save")}</span><span class="arr">→</span></button>
+      </div>
+    </div>
+
+    <div class="wh-card" style="margin-bottom:18px">
+      <h3>${I.t("admin.server.ssl.title")}</h3>
+      <p class="sub">${I.t("admin.server.ssl.hint")}</p>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:14px">
+        <div class="field"><label>${I.t("admin.server.field.pem")}</label>
+          <input id="srv-pem" type="text" placeholder="/etc/letsencrypt/live/dealmai.com/fullchain.pem"></div>
+        <div class="field"><label>${I.t("admin.server.field.le")}</label>
+          <input id="srv-le" type="text" placeholder="dealmai.com"></div>
+        <div class="field"><label>${I.t("admin.server.field.refresh")}</label>
+          <input id="srv-refresh-min" type="number" min="1" max="60" step="1" placeholder="2">
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">${I.t("admin.server.field.refresh.hint")}</div></div>
+      </div>
+    </div>
+
+    <div class="wh-card" style="margin-bottom:18px">
+      <h3>${I.t("admin.server.contract.title")}</h3>
+      <p class="sub">${I.t("admin.server.contract.hint")}</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+        <div class="field"><label>${I.t("admin.server.field.diskGb")}</label>
+          <input id="srv-disk-gb" type="number" step="0.001" placeholder="20"></div>
+        <div class="field"><label>${I.t("admin.server.field.trafficGb")}</label>
+          <input id="srv-traffic-gb" type="number" step="0.001" placeholder="1000"></div>
+        <div class="field"><label>${I.t("admin.server.field.usedGb")}</label>
+          <input id="srv-used-gb" type="number" step="0.001" placeholder="12.5"></div>
+        <div class="field"><label>${I.t("admin.server.field.start")}</label>
+          <input id="srv-start" type="date" lang="en"></div>
+        <div class="field"><label>${I.t("admin.server.field.end")}</label>
+          <input id="srv-end" type="date" lang="en"></div>
+      </div>
+    </div>
+
+    <div class="wh-card">
+      <h3>${I.t("admin.server.dash.title")}</h3>
+      <p class="sub">${I.t("admin.server.dash.hint")}</p>
+      <div class="srv-mon-toolbar">
+        <span id="srv-generated" class="small" style="font-size:12px;color:var(--muted)">—</span>
+        <span id="srv-countdown" style="font-size:12px;font-weight:600;color:var(--teal)">—</span>
+        <label style="display:flex;align-items:center;gap:6px;font-size:12px;user-select:none">
+          <input type="checkbox" id="srv-auto" checked onchange="ServerManageUI.scheduleAutoRefresh(ServerManageUI._data)"> ${I.t("admin.server.auto")}
+        </label>
+        <span style="font-size:12px;color:var(--muted)">${I.t("admin.server.interval")} <span id="srv-interval">—</span></span>
+      </div>
+      <div id="srv-alerts"></div>
+      <div id="srv-cards"><p style="color:var(--muted)">${I.t("admin.domain.ssl.loading")}</p></div>
+      <details style="margin-top:14px"><summary style="font-size:12px;color:var(--muted);cursor:pointer">${I.t("admin.server.json")}</summary>
+        <pre id="srv-json-raw" style="font-size:11px;max-height:240px;overflow:auto;white-space:pre-wrap;margin-top:8px"></pre>
+      </details>
+    </div>
+  `;
+  if(ServerManageUI._data){
+    ServerManageUI.fillServerForm(ServerManageUI._data);
+    ServerManageUI.renderDashboard(ServerManageUI._data);
+    ServerManageUI.scheduleAutoRefresh(ServerManageUI._data);
+  }
+  loadAdminServerSummary(false);
+}
+
+async function loadAdminDomain(force){
+  try{
+    const headers = await ServerManageUI.authHeaders();
+    const res = await fetch(ServerManageUI.apiUrl("?view=domain"), { headers, cache: force ? "no-store" : "default" });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok) throw new Error(data.error || res.statusText);
+    ServerManageUI._domainData = data;
+    const site = document.getElementById("domain-site-url");
+    const www = document.getElementById("domain-www-url");
+    const api = document.getElementById("domain-api-url");
+    if(site && data.domain) site.value = data.domain.publicSiteUrl || "";
+    if(www && data.domain) www.value = data.domain.publicWwwUrl || "";
+    if(api && data.domain) api.value = data.domain.publicApiBaseUrl || "";
+    ServerManageUI.renderDomainLinkage(data.sslDomainLinkage);
+  }catch(e){
+    Toast.show(I.t("toast.domain.loadFail",{error:String(e.message||e)}),"err");
+    const box = document.getElementById("domain-ssl-linkage");
+    if(box) box.innerHTML = `<p style="color:var(--red)">${escapeHtml(String(e.message||e))}</p>`;
+  }
+}
+
+async function loadAdminServerSummary(force){
+  try{
+    const headers = await ServerManageUI.authHeaders();
+    const res = await fetch(ServerManageUI.apiUrl("?view=summary"), { headers, cache: force ? "no-store" : "default" });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok) throw new Error(data.error || res.statusText);
+    ServerManageUI._data = data;
+    ServerManageUI.fillServerForm(data);
+    ServerManageUI.renderDashboard(data);
+    ServerManageUI.scheduleAutoRefresh(data);
+  }catch(e){
+    Toast.show(I.t("toast.server.loadFail",{error:String(e.message||e)}),"err");
+    const cards = document.getElementById("srv-cards");
+    if(cards) cards.innerHTML = `<div class="wh-card" style="border-color:rgba(255,80,80,.35)">${escapeHtml(String(e.message||e))}</div>`;
+  }
+}
+
+// ============================================================
 // ADMIN · PACKAGES (CRUD)
 // ============================================================
 function renderAdminPackages(){
@@ -8151,7 +8951,7 @@ function renderAdminLanguages(){
       : `<button class="lang-toggle ${isEnabled?"on":"off"}" onclick="AdminActions.toggleLangEnabled('${l.code}')" title="${I.t(isEnabled?"admin.langs.toggle.clickToDisable":"admin.langs.toggle.clickToEnable")}">${I.t(isEnabled?"admin.langs.toggle.on":"admin.langs.toggle.off")}</button>`;
     return `
       <div class="lang-card ${isLocked?"locked":"active"}${isEnabled?"":" lang-disabled"}">
-        <div class="flag">${l.code.toUpperCase()}</div>
+        <div class="flag">${escapeHtml(langShort(l.code))}</div>
         <div class="pct">${status}</div>
         <div class="bar"><div class="bar-fill" style="width:${s.pct}%"></div></div>
         <div class="meta">${escapeHtml(l.native)} — ${s.isMaster?I.t("admin.langs.master"):(isLocked?I.t("admin.langs.locked"):I.t("admin.langs.live"))}</div>
@@ -8171,10 +8971,10 @@ function renderAdminLanguages(){
         <h1>${I.t("admin.langs.title-html")}</h1>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="AdminActions.importAllTranslations(false)" title="Merge full TH/KO/JA translations — existing custom edits are kept where keys differ">
-          ⇪ Import TH / KO / JA
+        <button class="btn-ghost" onclick="AdminActions.importAllTranslations(false)" title="Merge full TH/KR/JP/CH translations — existing custom edits are kept where keys differ">
+          ⇪ Import TH / KR / JP / CH
         </button>
-        <button class="btn-ghost" onclick="AdminActions.importAllTranslations(true)" title="Wipe TH/KO/JA and replace with full bundled translations" style="border-color:var(--amber);color:var(--amber)">
+        <button class="btn-ghost" onclick="AdminActions.importAllTranslations(true)" title="Wipe TH/KR/JP/CH and replace with full bundled translations" style="border-color:var(--amber);color:var(--amber)">
           ⇪ Import + Overwrite
         </button>
       </div>
@@ -8186,7 +8986,7 @@ function renderAdminLanguages(){
         <h3>${I.t("admin.langs.translate-table.h")}</h3>
         <div class="translate-controls" style="margin:0">
           <select id="tl-lang" onchange="renderAdminLanguages_TranslateTable()">
-            ${State.langs.map(l => `<option value="${l.code}">${l.native} (${l.code.toUpperCase()})${l.code==="en"?" — master":""}</option>`).join("")}
+            ${State.langs.map(l => `<option value="${l.code}">${l.native} (${langShort(l.code)})${l.code==="en"?" — master":""}</option>`).join("")}
           </select>
           <input class="search" id="tl-search" placeholder="${I.t("admin.langs.translate-table.search")}" oninput="renderAdminLanguages_TranslateTable()" />
         </div>
@@ -8237,7 +9037,7 @@ window.renderAdminLanguages_TranslateTable = function(){
   const targetLang = State.langs.find(l => l.code === lang);
   const colHeaderRight = isMaster
     ? `${targetLang?.native || "English"} (EN) — Editable Master`
-    : `${targetLang?.native || lang} (${lang.toUpperCase()}) — Translation`;
+    : `${targetLang?.native || lang} (${langShort(lang)}) — Translation`;
 
   document.getElementById("translate-table-body").innerHTML = `
     <div class="translate-table">
@@ -8636,7 +9436,7 @@ async function renderAdminDmChamp(){
     const credits = Math.max(1, Math.round(amt * d.creditsPerUsd));
     return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px">
       <span style="font-family:var(--mono);color:var(--muted)">$${amt}</span>
-      <span style="font-weight:600;color:var(--teal-deep)">${credits.toLocaleString()}</span>
+      <span style="font-weight:600;color:var(--teal-deep)">${fmtNumber(credits)}</span>
     </div>`;
   }).join("");
 
@@ -9092,7 +9892,7 @@ const AdminActions = {
 
       let bodyHtml, actionBtn;
       if(subStatus === "created"){
-        const credits = Number.isFinite(Number(sub.monthlyCredits)) ? Number(sub.monthlyCredits).toLocaleString() : "—";
+        const credits = Number.isFinite(Number(sub.monthlyCredits)) ? fmtNumber(Number(sub.monthlyCredits)) : "—";
 
         // Helper: a labeled field that wraps cleanly even for long opaque strings
         // (UIDs, JWT-style tempPasswords). The value uses word-break:break-all so
@@ -9148,7 +9948,7 @@ const AdminActions = {
         //   (b) chillpay/direct repeat purchase — credits were actually granted
         //       via the Grant Credits API; show the fuller detail (email, uid,
         //       grant date, retry button).
-        const granted = Number.isFinite(Number(sub.creditsGranted)) ? Number(sub.creditsGranted).toLocaleString() : "—";
+        const granted = Number.isFinite(Number(sub.creditsGranted)) ? fmtNumber(Number(sub.creditsGranted)) : "—";
         const isOntheline = sub.source === "ontheline";
         if(isOntheline){
           // Minimal display — credits only, no API-related fields or retry.
@@ -9164,7 +9964,7 @@ const AdminActions = {
             <div style="font-size:12.5px;display:flex;flex-wrap:wrap;gap:14px">
               <div><span style="color:var(--muted)">Email:</span> <span style="font-family:var(--mono)">${escapeHtml(sub.email || "—")}</span></div>
               ${sub.uid ? `<div><span style="color:var(--muted)">UID:</span> <span style="font-family:var(--mono);word-break:break-all">${escapeHtml(sub.uid)}</span></div>` : ""}
-              ${sub.newBalance != null ? `<div><span style="color:var(--muted)">New balance:</span> ${Number(sub.newBalance).toLocaleString()}</div>` : ""}
+              ${sub.newBalance != null ? `<div><span style="color:var(--muted)">New balance:</span> ${fmtNumber(Number(sub.newBalance))}</div>` : ""}
               <div><span style="color:var(--muted)">Granted:</span> ${sub.createdAt ? fmtDate(sub.createdAt) : "—"}</div>
             </div>
           `;
@@ -9223,7 +10023,7 @@ const AdminActions = {
       const creditsBlock = (creditsForOrder > 0 && !isOnthelineOrder) ? `
         <div style="margin-top:14px;padding:14px 16px;background:rgba(11,182,196,0.04);border:1px solid var(--line);border-radius:9px;border-left:3px solid var(--teal-deep)">
           <h3 style="margin:0 0 10px;font-size:13px;font-family:var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--teal-deep)">${I.t("admin.orders.view.credits.label")}</h3>
-          <div style="font-size:22px;font-weight:600;color:var(--teal-deep);letter-spacing:-0.01em;margin-bottom:4px">${creditsForOrder.toLocaleString()}</div>
+          <div style="font-size:22px;font-weight:600;color:var(--teal-deep);letter-spacing:-0.01em;margin-bottom:4px">${fmtNumber(creditsForOrder)}</div>
           <div style="font-size:11.5px;color:var(--muted);font-family:var(--mono);letter-spacing:.04em;margin-bottom:10px">
             ${fmtMoney(subUsdForOrder)} (subtotal, ex. VAT) × ${rateUsed} credits/USD
           </div>
@@ -9253,7 +10053,7 @@ const AdminActions = {
       const origAmt = Number.isFinite(Number(o.amountOriginal)) ? Number(o.amountOriginal) : null;
       const usdAmt  = Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd) : Number(o.subtotal) || 0;
       const amountTxt = origAmt !== null
-        ? `${escapeHtml(sym)}${origAmt.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})} ${escapeHtml(o.currency||"")} <span style="color:var(--muted)">(${fmtMoney(usdAmt)})</span>`
+        ? `${escapeHtml(sym)}${fmtNumber(origAmt,{minimumFractionDigits:2,maximumFractionDigits:2})} ${escapeHtml(o.currency||"")} <span style="color:var(--muted)">(${fmtMoney(usdAmt)})</span>`
         : fmtMoney(usdAmt);
       const eventTxt = o.event ? escapeHtml(o.event) : "—";
       onthelineBlock = `
@@ -10546,6 +11346,79 @@ const AdminActions = {
     }
   },
 
+  async saveDomainUrls(){
+    if(!State.user) return Toast.show("Not signed in","err");
+    try{
+      const headers = await ServerManageUI.authHeaders();
+      const body = {
+        action: "saveDomain",
+        publicSiteUrl: (document.getElementById("domain-site-url")?.value || "").trim(),
+        publicWwwUrl: (document.getElementById("domain-www-url")?.value || "").trim(),
+        publicApiBaseUrl: (document.getElementById("domain-api-url")?.value || "").trim()
+      };
+      const res = await fetch(ServerManageUI.apiUrl(""), {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body)
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error(data.error || res.statusText);
+      ServerManageUI._domainData = data;
+      ServerManageUI.renderDomainLinkage(data.sslDomainLinkage);
+      Toast.show(I.t("toast.domain.saved"),"ok");
+    }catch(e){
+      console.error(e);
+      Toast.show(String(e.message||e),"err");
+    }
+  },
+
+  async saveServerManage(){
+    if(!State.user) return Toast.show("Not signed in","err");
+    try{
+      const headers = await ServerManageUI.authHeaders();
+      const minRaw = (document.getElementById("srv-refresh-min")?.value || "").trim();
+      let uiRefreshSec = null;
+      if(minRaw){
+        const m = parseFloat(minRaw);
+        if(Number.isFinite(m) && m > 0){
+          uiRefreshSec = Math.max(60, Math.min(3600, Math.round(m * 60)));
+        }
+      }
+      const body = {
+        action: "saveServer",
+        serverManageSslCertPath: (document.getElementById("srv-pem")?.value || "").trim(),
+        serverManageSslLeDomain: (document.getElementById("srv-le")?.value || "").trim(),
+        serverManageUiRefreshSec: uiRefreshSec,
+        serverManageContractDiskMb: ServerManageUI.gbToMb(document.getElementById("srv-disk-gb")?.value),
+        serverManageContractTrafficMb: ServerManageUI.gbToMb(document.getElementById("srv-traffic-gb")?.value),
+        serverManageTrafficUsedMb: (() => {
+          const t = String(document.getElementById("srv-used-gb")?.value || "").trim();
+          if(!t) return null;
+          const g = parseFloat(t.replace(",","."));
+          if(!Number.isFinite(g) || g < 0) return null;
+          return Math.max(0, Math.round(g * 1024));
+        })(),
+        serverManageContractStart: (document.getElementById("srv-start")?.value || "").trim(),
+        serverManageContractEnd: (document.getElementById("srv-end")?.value || "").trim()
+      };
+      const res = await fetch(ServerManageUI.apiUrl(""), {
+        method: "POST",
+        headers,
+        body: JSON.stringify(body)
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error(data.error || res.statusText);
+      ServerManageUI._data = data;
+      ServerManageUI.fillServerForm(data);
+      ServerManageUI.renderDashboard(data);
+      ServerManageUI.scheduleAutoRefresh(data);
+      Toast.show(I.t("toast.server.saved"),"ok");
+    }catch(e){
+      console.error(e);
+      Toast.show(String(e.message||e),"err");
+    }
+  },
+
   async setDefaultSmtp(id){
     if(!State.user) return;
     try{
@@ -10958,7 +11831,7 @@ const AdminActions = {
         updatedAt: serverTimestamp(),
         updatedBy: State.user.email || State.user.uid
       }, { merge: true });
-      Toast.show(I.t(isOn ? "toast.langs.disabled" : "toast.langs.enabled", { lang: code.toUpperCase() }),"ok");
+      Toast.show(I.t(isOn ? "toast.langs.disabled" : "toast.langs.enabled", { lang: langShort(code) }),"ok");
       // subscribeBranding will re-render the picker; also refresh the admin page.
       try{ renderAdminLanguages(); }catch{}
     }catch(e){
@@ -11031,13 +11904,13 @@ const AdminActions = {
     const rowsEl    = document.getElementById("dm-preview-rows");
     if(!rateInput || !rowsEl) return;
     const rate = Math.max(1, Number(rateInput.value) || 1);
-    if(echoEl) echoEl.textContent = rate.toLocaleString();
+    if(echoEl) echoEl.textContent = fmtNumber(rate);
     const amounts = [5, 10, 20, 50, 100];
     rowsEl.innerHTML = amounts.map(amt => {
       const credits = Math.max(1, Math.round(amt * rate));
       return `<div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:13px">
         <span style="font-family:var(--mono);color:var(--muted)">$${amt}</span>
-        <span style="font-weight:600;color:var(--teal-deep)">${credits.toLocaleString()}</span>
+        <span style="font-weight:600;color:var(--teal-deep)">${fmtNumber(credits)}</span>
       </div>`;
     }).join("");
   },
@@ -11321,6 +12194,14 @@ async function boot(){
     updateLoginModalMode();
     await loadOrSeedTranslations();
     await loadPackages();
+    // Restore last UI language (EN/TH/KR/JP/CH) after strings are ready
+    try{
+      const saved = localStorage.getItem("dealmai.lang");
+      if(saved && State.langs.some(l => l.code === saved) && App.isLangEnabled(saved)){
+        State.currentLang = saved;
+        document.documentElement.lang = saved === "zh" ? "zh-CN" : saved;
+      }
+    }catch{}
     // Public subscriptions — keep customer-facing pages live even before login
     subscribePackages();
     subscribeTranslations();
@@ -11453,6 +12334,9 @@ function updateLoginModalMode(){
 // Expose to global so inline onclick handlers work
 window.App = App;
 window.AdminActions = AdminActions;
+window.ServerManageUI = ServerManageUI;
+window.loadAdminDomain = loadAdminDomain;
+window.loadAdminServerSummary = loadAdminServerSummary;
 window.matchPackagesForAmount = matchPackagesForAmount;
 window.updateLoginModalMode = updateLoginModalMode;
 

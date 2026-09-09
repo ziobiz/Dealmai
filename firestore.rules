@@ -168,6 +168,18 @@ service cloud.firestore {
     //                     DM Champ integration settings. Admin read/write
     //                     only — the API key must NEVER be exposed publicly.
     //                     Netlify Functions read via Admin SDK.
+    //   config/domain   — { publicSiteUrl, publicWwwUrl, publicApiBaseUrl,
+    //                       updatedAt, updatedBy }
+    //                     Public site / www / API URLs for Domain & SSL
+    //                     (SAN linkage). Admin read/write; server-manage
+    //                     API also reads via Admin SDK.
+    //   config/serverManage — { sslCertPath, sslLeDomain, uiRefreshSec,
+    //                       contractDiskMb, contractTrafficMb,
+    //                       trafficUsedMb, contractStart, contractEnd,
+    //                       updatedAt, updatedBy }
+    //                     SSL monitoring + hosting contract (PG HQ Policy
+    //                     server manage). Admin read/write; live PEM/host
+    //                     stats come from the server-manage API.
     //
     // Admin write only. Branding doc is publicly readable so customer/guest
     // browsers can pull the site name + logo without needing to be signed in.
