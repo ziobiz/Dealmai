@@ -1,6 +1,9 @@
 /**
  * Express adapter that runs Netlify-style functions on a normal Node host.
  * Preserves /.netlify/functions/* and /api/* paths the SPA already calls.
+ *
+ * Handlers are lazy-loaded on first request so missing Firebase env does not
+ * prevent the API process (and routes like payment-result) from starting.
  */
 'use strict';
 
@@ -8,7 +11,6 @@ const path = require('path');
 const express = require('express');
 const cron = require('node-cron');
 
-// Load secrets from /etc/dealmai/env (preferred) or local .env
 require('dotenv').config({ path: '/etc/dealmai/env' });
 require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 
@@ -43,13 +45,31 @@ const API_ALIASES = {
   '/payment-result': 'payment-result'
 };
 
+const handlerCache = Object.create(null);
+const handlerErrors = Object.create(null);
+
 function loadHandler(name) {
-  // eslint-disable-next-line import/no-dynamic-require, global-require
-  const mod = require(path.join(FUNCTIONS_DIR, name));
-  if (typeof mod.handler !== 'function') {
-    throw new Error(`Function ${name} has no exports.handler`);
+  if (handlerCache[name]) return handlerCache[name];
+  if (handlerErrors[name]) throw handlerErrors[name];
+  try {
+    // eslint-disable-next-line import/no-dynamic-require, global-require
+    const mod = require(path.join(FUNCTIONS_DIR, name));
+    if (typeof mod.handler !== 'function') {
+      throw new Error(`Function ${name} has no exports.handler`);
+    }
+    handlerCache[name] = mod.handler;
+    handlerCache[name].__name = name;
+    console.log(`[api] loaded ${name}`);
+    return handlerCache[name];
+  } catch (err) {
+    handlerErrors[name] = err;
+    console.error(`[api] FAILED to load ${name}:`, err.message);
+    throw err;
   }
-  return mod.handler;
+}
+
+function getHandler(name) {
+  return loadHandler(name);
 }
 
 function toNetlifyEvent(req, functionName) {
@@ -64,8 +84,6 @@ function toNetlifyEvent(req, functionName) {
     body = body.toString('base64');
     isBase64Encoded = true;
   } else if (body && typeof body === 'object') {
-    // express.json / urlencoded already parsed — re-serialize for handlers
-    // that expect a raw string (most of ours do).
     const ct = (headers['content-type'] || '').toLowerCase();
     if (ct.includes('application/json')) {
       body = JSON.stringify(body);
@@ -81,7 +99,6 @@ function toNetlifyEvent(req, functionName) {
   }
 
   const queryStringParameters = { ...req.query };
-  // Path form: /.netlify/functions/payment-callback/chillpay
   const pathMatch = (req.path || '').match(
     /\/(?:\.netlify\/functions|api)\/payment-callback\/([^/?#]+)/i
   );
@@ -98,15 +115,30 @@ function toNetlifyEvent(req, functionName) {
     multiValueQueryStringParameters: null,
     body,
     isBase64Encoded,
-    // Handy for handlers that inspect path segments
     pathParameters: pathMatch ? { gateway: pathMatch[1] } : null,
     requestContext: { functionName }
   };
 }
 
-async function invoke(handler, req, res) {
+async function invoke(name, req, res) {
+  let handler;
   try {
-    const event = toNetlifyEvent(req, handler.__name || 'unknown');
+    handler = getHandler(name);
+  } catch (err) {
+    const firebaseMissing = !process.env.FIREBASE_PROJECT_ID;
+    res.status(503).json({
+      error: 'Service Unavailable',
+      function: name,
+      message: String(err.message || err),
+      hint: firebaseMissing
+        ? 'Set FIREBASE_* (and payment/SMTP) keys in /etc/dealmai/env then restart dealmai-api'
+        : 'Check server logs: journalctl -u dealmai-api -n 50'
+    });
+    return;
+  }
+
+  try {
+    const event = toNetlifyEvent(req, name);
     const result = await handler(event, {});
     if (!result || typeof result !== 'object') {
       res.status(500).type('text').send('Empty function response');
@@ -124,17 +156,15 @@ async function invoke(handler, req, res) {
     }
     res.status(status).send(result.body == null ? '' : result.body);
   } catch (err) {
-    console.error('[api]', err);
+    console.error('[api]', name, err);
     res.status(500).json({ error: 'Internal Server Error', message: String(err.message || err) });
   }
 }
 
-function mount(app, route, name, handler) {
-  handler.__name = name;
-  app.all(route, (req, res) => invoke(handler, req, res));
-  // Also accept trailing slash
+function mount(app, route, name) {
+  app.all(route, (req, res) => invoke(name, req, res));
   if (!route.endsWith('/')) {
-    app.all(`${route}/`, (req, res) => invoke(handler, req, res));
+    app.all(`${route}/`, (req, res) => invoke(name, req, res));
   }
 }
 
@@ -142,7 +172,6 @@ const app = express();
 app.disable('x-powered-by');
 app.set('trust proxy', 1);
 
-// Raw-ish body: keep both JSON and form; handlers re-serialize as needed.
 app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true, limit: '2mb' }));
 app.use(express.text({ type: ['text/*', 'application/xml'], limit: '2mb' }));
@@ -156,69 +185,53 @@ app.get('/healthz', (_req, res) => {
         process.env.FIREBASE_CLIENT_EMAIL &&
         process.env.FIREBASE_PRIVATE_KEY
     ),
+    smtpConfigured: Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS),
+    loadedFunctions: Object.keys(handlerCache),
     time: new Date().toISOString()
   });
 });
 
-const handlers = {};
 for (const name of FUNCTION_NAMES) {
-  try {
-    handlers[name] = loadHandler(name);
-    console.log(`[api] loaded ${name}`);
-  } catch (err) {
-    console.error(`[api] FAILED to load ${name}:`, err.message);
-  }
-}
-
-// Primary Netlify paths (what app.js calls)
-for (const name of FUNCTION_NAMES) {
-  if (!handlers[name]) continue;
-  mount(app, `/.netlify/functions/${name}`, name, handlers[name]);
-  // Path-style gateway id for payment-callback
+  mount(app, `/.netlify/functions/${name}`, name);
   if (name === 'payment-callback') {
-    mount(app, `/.netlify/functions/${name}/:gw`, name, handlers[name]);
+    mount(app, `/.netlify/functions/${name}/:gw`, name);
   }
 }
 
-// Clean aliases from netlify.toml
 for (const [route, name] of Object.entries(API_ALIASES)) {
-  if (!handlers[name]) continue;
-  mount(app, route, name, handlers[name]);
+  mount(app, route, name);
   if (name === 'payment-callback') {
-    mount(app, `${route}/:gw`, name, handlers[name]);
+    mount(app, `${route}/:gw`, name);
   }
 }
 
 const PORT = Number(process.env.PORT || 3000);
 app.listen(PORT, '127.0.0.1', () => {
-  console.log(`[api] listening on 127.0.0.1:${PORT}`);
+  console.log(`[api] listening on 127.0.0.1:${PORT} (lazy function load)`);
 });
 
-// ---- Cron (replaces Netlify scheduled functions) ----
-if (handlers['send-queued-emails']) {
-  cron.schedule('*/5 * * * *', async () => {
-    console.log('[cron] send-queued-emails');
-    try {
-      await handlers['send-queued-emails'](
-        { httpMethod: 'GET', headers: {}, queryStringParameters: {}, body: '' },
-        {}
-      );
-    } catch (e) {
-      console.error('[cron] send-queued-emails failed', e);
-    }
-  });
+try {
+  loadHandler('payment-result');
+} catch (_) {
+  /* ignore */
 }
 
-if (handlers['settle-pending-payments']) {
-  cron.schedule('*/10 * * * *', async () => {
-    console.log('[cron] settle-pending-payments');
-    try {
-      await handlers['settle-pending-payments'](
-        { httpMethod: 'GET', headers: {}, queryStringParameters: {}, body: '' },
-        {}
-      );
-    } catch (e) {
-      console.error('[cron] settle-pending-payments failed', e);
-    }
-  });
-}
+cron.schedule('*/5 * * * *', async () => {
+  console.log('[cron] send-queued-emails');
+  try {
+    const handler = getHandler('send-queued-emails');
+    await handler({ httpMethod: 'GET', headers: {}, queryStringParameters: {}, body: '' }, {});
+  } catch (e) {
+    console.error('[cron] send-queued-emails failed', e.message || e);
+  }
+});
+
+cron.schedule('*/10 * * * *', async () => {
+  console.log('[cron] settle-pending-payments');
+  try {
+    const handler = getHandler('settle-pending-payments');
+    await handler({ httpMethod: 'GET', headers: {}, queryStringParameters: {}, body: '' }, {});
+  } catch (e) {
+    console.error('[cron] settle-pending-payments failed', e.message || e);
+  }
+});
