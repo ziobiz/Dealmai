@@ -32,10 +32,11 @@ setPersistence(auth, browserLocalPersistence).catch(e => console.warn("Auth pers
 
 // ---------- Static data (canonical, will be merged with Firestore overrides) ----------
 const SUPPORTED_LANGS = [
-  { code:"en", name:"English",  native:"English" },
-  { code:"th", name:"Thai",     native:"ไทย" },
-  { code:"ko", name:"Korean",   native:"한국어" },
-  { code:"ja", name:"Japanese", native:"日本語" }
+  { code:"en", name:"English",  native:"English",  short:"EN" },
+  { code:"th", name:"Thai",     native:"ไทย",      short:"TH" },
+  { code:"ko", name:"Korean",   native:"한국어",    short:"KR" },
+  { code:"ja", name:"Japanese", native:"日本語",    short:"JA" },
+  { code:"zh", name:"Chinese",  native:"中文",      short:"CH" }
 ];
 
 // Master English strings — used as the canonical source AND as a fallback
@@ -2948,6 +2949,92 @@ const FULL_TRANSLATIONS = {
     "admin.packages.duration.days":"{n}日",
     // Misc
     "footer.tag":"24/7取引を成立させるAI営業エージェント。"
+  },
+
+  zh: {
+    "nav.home":"首页",
+    "nav.packages":"套餐",
+    "nav.admin":"管理控制台",
+    "nav.login":"登录",
+    "nav.signout":"退出",
+    "drawer.title":"菜单",
+    "drawer.lang":"语言",
+    "drawer.account":"账户",
+    "hero.eyebrow":"AI 销售代理 · 实时网络",
+    "hero.title-html":'在你<span class="grad">睡觉</span>时<br/>也能成交。<br/><span class="outline">真的。</span>',
+    "hero.lede":"{brand} 是自主 AI 销售代理，可筛选线索、处理异议、预约会议并完成成交 — 覆盖 WhatsApp、Instagram、Messenger 与您的网站，全天候四语服务。",
+    "hero.cta-primary":"浏览套餐",
+    "hero.cta-secondary":"打开管理控制台",
+    "hero.cta-admin":"打开管理控制台",
+    "hero.cta-account":"进入我的账户",
+    "hero.cta-signin":"登录",
+    "caps.num":"01 / 能力",
+    "caps.title-html":'不是机器人。是<span class="grad">成交高手</span>',
+    "caps.lede":"放入您的网址。代理会读取产品、价格与卖点 — 15 分钟内开始销售。无需代码，无需提示词。",
+    "cap.01.t":"真正像人",
+    "cap.01.d":"支持语音、图片、视频与 PDF 对话，像您最好的销售顾问。",
+    "cap.02.t":"多渠道",
+    "cap.02.d":"WhatsApp · Instagram · Messenger · 网页聊天 — 全渠道同一记忆。",
+    "cap.03.t":"15 分钟上线",
+    "cap.03.d":"粘贴网站 URL，AI 自动读取产品与价格。无需代码。",
+    "cap.04.t":"多模态",
+    "cap.04.d":"理解语音、图片、PDF 与视频 — 不只是文字。",
+    "cap.05.t":"聊天内预约",
+    "cap.05.d":"识别购买信号并在对话中预约，无需外部链接。",
+    "cap.06.t":"记忆与上下文",
+    "cap.06.d":"记住过往对话与偏好，建立长期关系。",
+    "cap.07.t":"活动与跟进",
+    "cap.07.d":"外呼消息、自动跟进，以及 IG / Facebook 评论转私信。",
+    "cap.08.t":"自我优化",
+    "cap.08.d":"一键优化：学习高成交对话并提升转化率。",
+    "pkg.num":"02 / 价格",
+    "pkg.title-html":'三种方式<span class="grad">开始</span>',
+    "pkg.lede":"按量付费积分、按日不限量，或滚动订阅。每个方案即时开通，凭证发送至邮箱。",
+    "pkg.tab.credit":"购买积分",
+    "pkg.tab.onetime":"一次性访问",
+    "pkg.tab.sub":"订阅",
+    "pkg.sub.note":"订阅周期内的积分在周期结束时过期。中途用尽可另购积分补齐。",
+    "pkg.select":"选择",
+    "pkg.subscribe":"订阅",
+    "pkg.configure":"自定义",
+    "pkg.featured":"热门",
+    "checkout.num":"03 / 结算",
+    "checkout.title-html":'即将<span class="grad">完成</span>',
+    "checkout.section.customer":"客户资料",
+    "checkout.section.payment":"支付方式",
+    "checkout.section.delivery":"收据送达",
+    "checkout.field.name":"全名",
+    "checkout.field.email":"邮箱",
+    "checkout.field.company":"公司",
+    "checkout.field.country":"国家/地区",
+    "checkout.field.via":"收据发送方式",
+    "checkout.field.lang":"收据语言",
+    "checkout.summary.title":"订单摘要",
+    "checkout.summary.package":"套餐",
+    "checkout.summary.activation":"开通",
+    "checkout.summary.activation-val":"即时",
+    "checkout.summary.subtotal":"小计",
+    "checkout.summary.vat":"增值税 7%",
+    "checkout.summary.total":"合计",
+    "checkout.summary.cta":"确认并支付",
+    "checkout.summary.secure":"256-bit 加密 · PCI DSS",
+    "login.title-html":'<span class="grad">登录</span>',
+    "login.sub":"访问您的 {brand} 账户",
+    "login.email":"邮箱",
+    "login.password":"密码",
+    "login.cta":"登录",
+    "footer.tag":"全天候成交的 AI 销售代理。",
+    "admin.side.orders":"订单",
+    "admin.side.users":"用户",
+    "admin.side.packages":"套餐",
+    "admin.side.languages":"语言",
+    "admin.side.branding":"品牌",
+    "admin.side.smtp":"邮件 SMTP",
+    "admin.side.emails":"邮件队列",
+    "admin.side.password":"修改密码",
+    "admin.side.signout":"退出",
+    "toast.login.ok":"欢迎回来，{name}",
+    "toast.login.fail":"邮箱或密码不正确"
   }
 };
 
@@ -3454,6 +3541,10 @@ async function loadOrSeedTranslations(){
   await trySeed("ja", {
     "nav.home":"ホーム", "nav.packages":"パッケージ", "nav.admin":"管理者", "nav.login":"ログイン", "nav.signout":"ログアウト"
   });
+  // Chinese (CH) — seed from bundled FULL_TRANSLATIONS.zh when available
+  if(FULL_TRANSLATIONS.zh){
+    await trySeed("zh", FULL_TRANSLATIONS.zh);
+  }
 
   // Load all into state (or fall back to defaults if collection still empty / unreadable)
   try{
@@ -4279,6 +4370,18 @@ const ABOUT_DOC = {
     lblEntity: "法人", lblReg: "登記番号", lblAddr: "所在地",
     lblSupport: "サポート", lblPlatform: "プラットフォーム",
     addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, バンコク, タイ"
+  },
+  zh: {
+    h1: "弥合全球线索响应的鸿沟",
+    p1: "在 <strong>ONTHELINE</strong>，我们看到现代企业面临的关键瓶颈：传统营销、僵化的聊天机器人，以及迟缓的人工回复，都难以留住客户注意力，导致大量高意向线索流失。",
+    p2: "因此我们打造了 <strong>DealMai</strong> —— 一套先进的 AI 自动化平台，把消息渠道变成高转化销售管道。",
+    p3: "通过把 WhatsApp、Instagram、LINE 与网站聊天等渠道，与概率式对话 AI 结合，DealMai 能像真人一样自然互动、筛选潜在客户、自动预约，并重新激活沉睡线索。7×24 小时运行，且能贴合各品牌语气，在不增加团队负担的前提下，把每一次咨询变成可衡量的增长机会。",
+    h2: "同一全球身份",
+    p4: "作为业务覆盖泰国、日本与韩国的 <strong>ONTHELINE</strong> 集团一员，我们把区域市场经验与先进技术基础设施结合。无论本地企业还是跨境业务，ONTHELINE 都能提供扩展客户沟通所需的 AI 工具与稳定能力。",
+    callout: "<strong>每一次咨询，都是增长机会。</strong> 在客户已经使用的渠道上，以您品牌的语气全天候响应。",
+    lblEntity: "主体", lblReg: "注册号", lblAddr: "地址",
+    lblSupport: "支持", lblPlatform: "平台",
+    addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, 曼谷, 泰国"
   }
 };
 
@@ -5036,15 +5139,16 @@ const App = {
       const s = State.langStatus[l.code] || { locked:true };
       const disabled = s.locked && l.code !== "en";
 
+      const pill = l.short || l.code.toUpperCase();
       const btn = document.createElement("button");
-      btn.textContent = l.code.toUpperCase();
+      btn.textContent = pill;
       btn.className = (State.currentLang === l.code ? "on " : "") + (disabled ? "locked" : "");
       btn.title = disabled ? `Not yet translated (${s.pct||0}%)` : l.native;
       if(!disabled) btn.onclick = () => this.setLang(l.code);
       wrap.appendChild(btn);
 
       const b2 = document.createElement("button");
-      b2.textContent = `${l.code.toUpperCase()} ${disabled?"·"+(s.pct||0)+"%":""}`;
+      b2.textContent = `${pill} ${disabled?"·"+(s.pct||0)+"%":""}`;
       b2.className = (State.currentLang === l.code ? "on " : "") + (disabled ? "locked" : "");
       if(!disabled) b2.onclick = () => this.setLang(l.code);
       drawer.appendChild(b2);
