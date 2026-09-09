@@ -3303,21 +3303,31 @@ const I = {
 // ===========================================================
 async function loadOrSeedTranslations(){
   // For each supported language, fetch its document. Seed English if missing.
+  // On a brand-new Firebase project the guest browser cannot WRITE (rules:
+  // translations write = admin only). In that case we fall back to in-memory
+  // DEFAULT_STRINGS so the site still loads, and an admin can seed later.
   const langsCol = collection(db, "translations");
 
-  // Seed English master if not present
-  const enRef = doc(db, "translations", "en");
-  const enSnap = await getDoc(enRef);
-  if(!enSnap.exists()){
-    await setDoc(enRef, { strings: DEFAULT_STRINGS, updatedAt: serverTimestamp() });
+  async function trySeed(lang, strings){
+    const ref = doc(db, "translations", lang);
+    try{
+      const snap = await getDoc(ref);
+      if(!snap.exists()){
+        await setDoc(ref, { strings, updatedAt: serverTimestamp() });
+      }
+      return true;
+    }catch(e){
+      console.warn(`translation seed/read failed for ${lang}:`, e.code || e.message);
+      return false;
+    }
   }
 
-  // Seed Thai with partial translation as example (94% to keep parity with mock-up)
-  const thRef = doc(db, "translations", "th");
-  const thSnap = await getDoc(thRef);
-  if(!thSnap.exists()){
+  // Seed English master if not present
+  await trySeed("en", DEFAULT_STRINGS);
+
+  // Seed Thai with partial translation as example
+  {
     const thStrings = {};
-    // Translate a meaningful portion to demonstrate the language being available
     Object.assign(thStrings, {
       "nav.home":"หน้าหลัก", "nav.packages":"แพ็คเกจ", "nav.admin":"ผู้ดูแลระบบ", "nav.login":"เข้าสู่ระบบ", "nav.signout":"ออกจากระบบ",
       "drawer.title":"เมนู", "drawer.lang":"ภาษา", "drawer.account":"บัญชี",
@@ -3380,26 +3390,30 @@ async function loadOrSeedTranslations(){
       "admin.packages.action.edit":"แก้ไข",
       "admin.packages.action.delete":"ลบ"
     });
-    await setDoc(thRef, { strings: thStrings, updatedAt: serverTimestamp() });
+    await trySeed("th", thStrings);
   }
 
-  // Korean and Japanese — seed with partial translations so they show as "locked"
-  for(const lc of ["ko","ja"]){
-    const lref = doc(db, "translations", lc);
-    const lsnap = await getDoc(lref);
-    if(!lsnap.exists()){
-      const partial = lc === "ko"
-        ? { "nav.home":"홈", "nav.packages":"패키지", "nav.admin":"관리자", "nav.login":"로그인", "nav.signout":"로그아웃",
-            "pkg.tab.credit":"크레딧 구매", "pkg.featured":"인기" }
-        : { "nav.home":"ホーム", "nav.packages":"パッケージ", "nav.admin":"管理者", "nav.login":"ログイン", "nav.signout":"ログアウト" };
-      await setDoc(lref, { strings: partial, updatedAt: serverTimestamp() });
+  // Korean and Japanese — seed with partial translations
+  await trySeed("ko", {
+    "nav.home":"홈", "nav.packages":"패키지", "nav.admin":"관리자", "nav.login":"로그인", "nav.signout":"로그아웃",
+    "pkg.tab.credit":"크레딧 구매", "pkg.featured":"인기"
+  });
+  await trySeed("ja", {
+    "nav.home":"ホーム", "nav.packages":"パッケージ", "nav.admin":"管理者", "nav.login":"ログイン", "nav.signout":"ログアウト"
+  });
+
+  // Load all into state (or fall back to defaults if collection still empty / unreadable)
+  try{
+    const snap = await getDocs(langsCol);
+    State.strings = {};
+    snap.forEach(d => { State.strings[d.id] = (d.data().strings) || {}; });
+    if(!State.strings.en || !Object.keys(State.strings.en).length){
+      State.strings.en = { ...DEFAULT_STRINGS };
     }
+  }catch(e){
+    console.warn("load translations failed, using defaults:", e.code || e.message);
+    State.strings = { en: { ...DEFAULT_STRINGS } };
   }
-
-  // Now load all into state
-  const snap = await getDocs(langsCol);
-  State.strings = {};
-  snap.forEach(d => { State.strings[d.id] = (d.data().strings) || {}; });
   I.recalcStatus();
 }
 
