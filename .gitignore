@@ -19,3 +19,14 @@ Thumbs.db
 # Optional local copies of the Netlify deploy archive
 ZIP/
 *.zip
+
+# Local scratch / deploy helpers (may contain host secrets)
+_ssh_*.py
+_deploy_*.py
+_fix_*.py
+_debug_*.py
+_check_*.py
+
+# Accidental media drops in repo root
+WhatsApp Image*.jpeg
+WhatsApp Image*.jpg
