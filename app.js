@@ -17,13 +17,12 @@ import {
 
 // ---------- Firebase init ----------
 const firebaseConfig = {
-  apiKey: "AIzaSyAiR-HKbkfiNJQqm8oBcmA0ZelQ7PTYaV8",
-  authDomain: "deal-pro-ai-web-app.firebaseapp.com",
-  projectId: "deal-pro-ai-web-app",
-  storageBucket: "deal-pro-ai-web-app.firebasestorage.app",
-  messagingSenderId: "426548482181",
-  appId: "1:426548482181:web:09966f281d50bb744599ec",
-  measurementId: "G-X9F07WC8YD"
+  apiKey: "AIzaSyCtACqFPoAXDLDOL3bHjlRb3aZrgDLtK3o",
+  authDomain: "dealmai-bcada.firebaseapp.com",
+  projectId: "dealmai-bcada",
+  storageBucket: "dealmai-bcada.firebasestorage.app",
+  messagingSenderId: "376233750419",
+  appId: "1:376233750419:web:99bf8984eb5ee9f2c90266"
 };
 const fbApp = initializeApp(firebaseConfig);
 const db = getFirestore(fbApp);
