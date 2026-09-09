@@ -30,3 +30,7 @@ _check_*.py
 # Accidental media drops in repo root
 WhatsApp Image*.jpeg
 WhatsApp Image*.jpg
+
+__pycache__/
+docs/__pycache__/
+

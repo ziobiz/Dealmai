@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealMai 사업 소개서 (결제사 제출용) V1.2</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif; font-size: 11pt; line-height: 1.7; color: #1a1a1a; background: #f5f6fa; }
+  .page-wrap { max-width: 860px; margin: 32px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,.10); overflow: hidden; }
+  .cover { background: linear-gradient(135deg, #1a3a5c 0%, #1565c0 60%, #1e88e5 100%); color: #fff; padding: 48px 52px 40px; display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; }
+  .cover-body { flex: 1; }
+  .cover-logo { flex-shrink: 0; display: flex; align-items: flex-start; padding-top: 4px; }
+  .cover-logo img { height: 72px; max-width: 260px; object-fit: contain; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,.20); }
+  .cover .logo-line { font-size: 13pt; font-weight: 700; letter-spacing: 2px; opacity: .85; margin-bottom: 14px; }
+  .cover h1 { font-size: 26pt; font-weight: 900; line-height: 1.25; margin-bottom: 10px; }
+  .cover .subtitle { font-size: 11.5pt; opacity: .82; margin-bottom: 24px; }
+  .cover .meta { font-size: 9.5pt; opacity: .65; border-top: 1px solid rgba(255,255,255,.25); padding-top: 14px; }
+  .body { padding: 44px 52px 60px; }
+  .toc { background: #f0f4ff; border-left: 4px solid #1565c0; border-radius: 0 8px 8px 0; padding: 20px 26px; margin-bottom: 40px; }
+  .toc h2 { font-size: 12pt; font-weight: 700; color: #1565c0; margin-bottom: 12px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { font-size: 10pt; line-height: 2.1; color: #1a3a5c; }
+  .toc a { color: #1565c0; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  h2.section-title { font-size: 15pt; font-weight: 800; color: #1a3a5c; border-bottom: 2.5px solid #1565c0; padding-bottom: 7px; margin: 42px 0 16px; page-break-after: avoid; }
+  h3.sub-title { font-size: 12pt; font-weight: 700; color: #1565c0; margin: 24px 0 10px; page-break-after: avoid; }
+  p { margin-bottom: 10px; }
+  .info-box { background: #e3f0ff; border: 1px solid #90caf9; border-left: 4px solid #1565c0; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #1a3a5c; }
+  .warn-box { background: #fff8e1; border: 1px solid #ffe082; border-left: 4px solid #f9a825; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #5d4037; }
+  .check-box { background: #e8f5e9; border: 1px solid #a5d6a7; border-left: 4px solid #2e7d32; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #1b5e20; }
+  .hq-box { background: #fce4ec; border: 1px solid #f48fb1; border-left: 4px solid #c62828; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #b71c1c; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 10pt; page-break-inside: avoid; }
+  th { background: #1565c0; color: #fff; font-weight: 700; padding: 9px 12px; text-align: left; border: 1px solid #1245a0; }
+  td { padding: 8px 12px; border: 1px solid #cfd8dc; vertical-align: top; }
+  tr:nth-child(even) td { background: #f4f7ff; }
+  td.center, th.center { text-align: center; }
+  .flow { background: #f8f9fd; border: 1px solid #dce3f5; border-radius: 8px; padding: 20px 24px; margin: 14px 0 20px; font-size: 10pt; page-break-inside: avoid; }
+  .flow-row { display: flex; align-items: flex-start; margin-bottom: 7px; }
+  .flow-actor { display: inline-block; min-width: 90px; font-weight: 700; color: #1565c0; flex-shrink: 0; padding-top: 1px; }
+  .flow-arrow { color: #888; margin: 0 10px; font-size: 13pt; flex-shrink: 0; }
+  .flow-desc { color: #37474f; }
+  .step-badge { display: inline-block; background: #1565c0; color: #fff; font-weight: 800; font-size: 9pt; padding: 2px 10px; border-radius: 20px; margin-right: 8px; vertical-align: middle; }
+  hr.section-rule { border: none; border-top: 1px dashed #c5cae9; margin: 36px 0; }
+  .footer { background: #1a3a5c; color: rgba(255,255,255,.65); text-align: center; font-size: 9pt; padding: 18px 24px; }
+  ul { padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+  .print-btn { position: fixed; bottom: 28px; right: 28px; z-index: 9999; background: #1565c0; color: #fff; border: none; border-radius: 10px; padding: 11px 20px; font-size: 10.5pt; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(21,101,192,.45); }
+  @media print {
+    body { background: #fff; font-size: 10pt; }
+    .page-wrap { max-width: 100%; margin: 0; border-radius: 0; box-shadow: none; }
+    .cover { padding: 28px 36px 24px; }
+    .body { padding: 28px 36px 36px; }
+    table, .flow, .info-box, .warn-box, .check-box { page-break-inside: avoid; }
+    .footer, .no-print, .print-btn { display: none !important; }
+    @page { size: A4; margin: 14mm 12mm; }
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ 인쇄 / PDF 저장</button>
+<div class="page-wrap">
+  <div class="cover">
+    <div class="cover-body">
+      <div class="logo-line">DEALMAI · AI Sales Agent</div>
+      <h1>사업 소개서</h1>
+      <div class="subtitle">결제사 제출용 — 서비스 개요 · 수익 구조 · 마케팅 채널 · 향후 사업 방향</div>
+      <div class="meta">서비스: https://dealmai.com &nbsp;|&nbsp; 시장: 일본·태국(운영) / 한국(준비 중) &nbsp;|&nbsp; 발행: 2026년 9월 &nbsp;|&nbsp; V1.2</div>
+    </div>
+    <div class="cover-logo">
+      <img src="file:///D:/Delopment/Dealmai/docs/logo-dealmai.png" alt="DEALMAI">
+    </div>
+  </div>
+  <div class="body">
+    <div class="warn-box" style="margin-bottom:28px;">
+      <strong>📋 문서 목적 요약</strong><br><br>
+      <table style="margin:8px 0 0;">
+        <tr><th>항목</th><th>내용</th></tr>
+        <tr><td>문서 성격</td><td>결제 제휴·심사 참고용 사업 소개서 (Confidential)</td></tr>
+        <tr><td>서비스 유형</td><td>AI 챗봇 기반 디지털 영업·예약·결제 SaaS (실물 오픈마켓 아님)</td></tr>
+        <tr><td>주요 결제 성격</td><td>패키지·구독·크레딧 등 서비스형 온라인 결제</td></tr>
+        <tr><td>운영 시장</td><td>일본·태국 운영 / 한국 서비스 준비 중</td></tr>
+      </table>
+    </div>
+    <div class="toc">
+      <h2>목 차</h2>
+      <ol>
+        <li><a href="#s1">사업 설명 (서비스 설명)</a></li>
+        <li><a href="#s2">수익 구조</a></li>
+        <li><a href="#s3">주요 마케팅 채널 및 적합 업종</a></li>
+        <li><a href="#s4">향후 사업 진행 방향</a></li>
+      </ol>
+    </div>
+    
+    <h2 class="section-title" id="s1">1. 사업 설명 (서비스 설명)</h2>
+
+    <h3 class="sub-title">1.1 개요</h3>
+    <p><strong>DealMai(딜마이)</strong>는 <strong>AI 세일즈 에이전트(AI Sales Agent) SaaS</strong>입니다.
+    사업자가 웹사이트·랜딩페이지에 AI 챗봇을 연동하여, 고객 상담부터 상품 안내,
+    <strong>예약·패키지 안내, 온라인 결제</strong>까지 이어지는 영업 흐름을 자동화·지원합니다.</p>
+    <p>고객은 패키지(크레딧·일회성·구독형)를 구매하고, 결제 완료 후 계정·AI 챗봇 워크스페이스가
+    자동으로 개설됩니다. 직접 결제(PG)와 파트너 채널(제휴 판매 웹훅)을 모두 지원하며,
+    영어·태국어·일본어·한국어 다국어 UI를 제공합니다.</p>
+    <ul>
+      <li>핵심 가치: ‘상담 → 제안 → 결제 → 계정 발급’을 하나의 디지털 영업 파이프로 연결</li>
+      <li>제공 형태: 클라우드 SaaS (웹 포털 + 관리자 콘솔 + AI 챗봇 워크스페이스)</li>
+      <li>결제 흐름: 직접 결제(PG) 및 파트너 판매 연동(웹훅)으로 주문·정산·계정 프로비저닝</li>
+      <li>운영 시장: <strong>일본·태국 중심 운영</strong> / <strong>한국은 서비스 준비 단계</strong></li>
+    </ul>
+
+    <div class="flow">
+      <div class="flow-row"><span class="flow-actor">고객</span><span class="flow-arrow">→</span><span class="flow-desc">AI 챗봇 상담 · 상품/예약 안내</span></div>
+      <div class="flow-row"><span class="flow-actor">고객</span><span class="flow-arrow">→</span><span class="flow-desc">패키지 선택 · 온라인 결제(PG/파트너)</span></div>
+      <div class="flow-row"><span class="flow-actor">DealMai</span><span class="flow-arrow">→</span><span class="flow-desc">주문 확정 · 계정/워크스페이스 자동 개통 · 안내 메일</span></div>
+      <div class="flow-row"><span class="flow-actor">고객</span><span class="flow-arrow">→</span><span class="flow-desc">포털 로그인 · AI 챗봇 서비스 이용 · 추가 충전/재구매</span></div>
+    </div>
+
+    <h3 class="sub-title">1.2 사업자(가맹·판매 사업자) 측면 장점</h3>
+    <ul>
+      <li>24시간 응대가 가능한 AI 챗봇으로 인건비 대비 상담·판매 처리량 확대</li>
+      <li>예약·패키지·크레딧형 상품처럼 ‘설명 후 결제’가 필요한 상품에 적합</li>
+      <li>결제 완료와 동시에 계정·챗봇 워크스페이스 자동 발급으로 이탈·수작업 감소</li>
+      <li>다국어(일/태/한/영)로 국가별 고객 접점 확장에 유리</li>
+      <li>관리자 콘솔에서 패키지·주문·파트너·결제 이벤트·브랜딩을 일원화 관리</li>
+      <li>오픈마켓형 중개 수수료 구조가 아니라, 자체 고객·자체 브랜드로 관계 유지 가능</li>
+      <li>고령·장애인·디지털 소외 계층까지 고객 접점을 넓혀 <strong>신규 수요층 확보</strong>에 유리</li>
+    </ul>
+
+    <h3 class="sub-title">1.3 고객(최종 이용자) 측면 장점 — 포용적·음성 중심 경험</h3>
+    <p>인구 고령화가 가속되고 스마트폰이 대중화되면서, 온라인 쇼핑·예약·결제의 수요는 늘었지만
+    <strong>복잡한 오픈마켓·일반 쇼핑몰 UI</strong>는 노인층·장애인·디지털 소외 계층에게 여전히 높은 진입 장벽입니다.
+    DealMai는 화면 클릭 중심이 아니라 <strong>말로 묻고 말로 안내받는 대화형 서비스</strong>로,
+    기존 ARS처럼 “상대가 받아 대화하며 진행하는” 친근하고 자연스러운 경험을 24시간 제공합니다.</p>
+
+    <div class="check-box">
+      <strong>핵심 고객 가치</strong>
+      <ul style="margin:8px 0 0;">
+        <li><strong>말하기·듣기 중심:</strong> 작은 글씨·복잡한 메뉴·다단계 장바구니 대신, 음성·대화로 상품·예약·결제를 안내</li>
+        <li><strong>ARS보다 자연스러운 대화:</strong> “1번을 누르세요”식 기계 응답이 아니라, 상담원이 응대하듯 질문·확인·안내를 이어감</li>
+        <li><strong>24시간·대기 없음:</strong> 야간·주말에도 끊기지 않는 응대 (인력 콜센터 대기열과 차별)</li>
+        <li><strong>반복 설명에 관대:</strong> 같은 질문을 여러 번 해도 친절하게 재안내 — 고령·초보 이용자에 적합</li>
+        <li><strong>스마트폰만 있으면 시작:</strong> 앱 설치·회원 가입 과정의 부담을 줄이고, 대화 속에서 필요한 단계만 유도</li>
+        <li><strong>디지털 포용:</strong> 시각·조작이 어려운 이용자도 소리 안내를 통해 서비스 이용 가능성 확대</li>
+      </ul>
+    </div>
+
+    <h3 class="sub-title">1.3.1 서비스 이용 예시 (대화형·음성 안내)</h3>
+    <table>
+      <tr><th>대상 고객</th><th>기존 플랫폼의 어려움</th><th>DealMai 대화형 서비스 예시</th></tr>
+      <tr>
+        <td>고령 이용자</td>
+        <td>작은 글씨, 많은 버튼, 장바구니·옵션 선택 혼란</td>
+        <td>“내일 오전 미용실 예약해 주세요.” → AI가 가능한 시간·요금 안내 → 확인 후 결제 링크/절차를 말로 안내</td>
+      </tr>
+      <tr>
+        <td>시각·조작 부담이 있는 장애인</td>
+        <td>터치 UI·다단계 화면 이동이 힘듦</td>
+        <td>음성으로 상품/패키지 설명 청취 → “그걸로 결제할게요” 의사표시 → 단계별 소리 안내로 진행</td>
+      </tr>
+      <tr>
+        <td>디지털 초보·소외 계층</td>
+        <td>회원가입·약관·쿠폰·검색 필터 등 절차 부담</td>
+        <td>필요한 정보만 대화로 질문(날짜·인원·상품) → 불필요한 화면을 건너뛰고 예약·결제까지 연결</td>
+      </tr>
+      <tr>
+        <td>야간·긴급 문의 고객</td>
+        <td>콜센터 종료·대기열·익일 회신</td>
+        <td>24시간 AI가 즉시 응대, 예약 변경·상품 문의·결제 안내를 끊김 없이 처리</td>
+      </tr>
+      <tr>
+        <td>외국어·다국어 이용자</td>
+        <td>자국어 UI·상담 인력 부족</td>
+        <td>일본어·태국어·한국어·영어 등 대화 언어로 동일하게 안내·결제 유도</td>
+      </tr>
+    </table>
+
+    <div class="flow">
+      <div class="flow-row"><span class="flow-actor">고객</span><span class="flow-arrow">→</span><span class="flow-desc">“이번 주 토요일 오후 진료 예약하고 싶어요.” (말·대화로 요청)</span></div>
+      <div class="flow-row"><span class="flow-actor">AI</span><span class="flow-arrow">→</span><span class="flow-desc">가능 시간·비용·준비물 안내 (소리/대화, 반복 질문 OK)</span></div>
+      <div class="flow-row"><span class="flow-actor">고객</span><span class="flow-arrow">→</span><span class="flow-desc">“2시로 해주세요. 결제할게요.”</span></div>
+      <div class="flow-row"><span class="flow-actor">AI</span><span class="flow-arrow">→</span><span class="flow-desc">예약 확정 안내 + 안전한 결제 단계 유도 (ARS처럼 상대가 받아 진행하는 감각)</span></div>
+      <div class="flow-row"><span class="flow-actor">시스템</span><span class="flow-arrow">→</span><span class="flow-desc">결제 완료 → 예약/이용권 확정 → 안내 메시지</span></div>
+    </div>
+
+    <div class="info-box">
+      <strong>전통 ARS와의 비교:</strong> 기존 ARS는 “숫자 키 입력” 중심의 기계적 메뉴인 반면,
+      DealMai는 <strong>실제 상담 대화에 가까운 자연어 응대</strong>로 상품 설명·예약·결제 안내를 이어갑니다.
+      이용자는 “버튼을 찾지 않아도” 되고, 사업자는 콜센터 인력을 24시간 상주시키지 않고도
+      <strong>친근하고 끊김 없는 고객 경험</strong>을 제공할 수 있습니다.
+    </div>
+
+    <h3 class="sub-title">1.4 단점 및 한계 (리스크 인식)</h3>
+    <div class="warn-box">
+      결제사 심사 관점에서 솔직히 공개하는 한계입니다.
+    </div>
+    <ul>
+      <li>AI 답변 품질·가드레일 설정에 따라 고객 경험이 좌우됨 (운영·튜닝 필요)</li>
+      <li>음성·대화 UX도 기기·환경(소음, 마이크)에 영향을 받을 수 있음</li>
+      <li>결제·본인확인·환불·차지백 등 PG/규제 요건을 국가별로 충족해야 함</li>
+      <li>물리 상품 물류·재고형 오픈마켓과 달리, 디지털/서비스형 상품에 최적화</li>
+      <li>한국 시장은 아직 준비 단계로, 초기에는 일본·태국 트래픽·매출 비중이 큼</li>
+      <li>파트너 채널 의존 시 제휴사 정책·정산 일정에 영향을 받을 수 있음</li>
+    </ul>
+
+    <h3 class="sub-title">1.5 기존 오픈마켓·일반 쇼핑몰과의 차이점</h3>
+    <table>
+      <tr><th>구분</th><th>오픈마켓 / 일반 쇼핑몰</th><th>DealMai</th></tr>
+      <tr><td class="center">판매 주체</td><td>플랫폼 또는 입점 셀러의 상품 나열</td><td>사업자 브랜드의 AI 영업·결제 경험</td></tr>
+      <tr><td class="center">핵심 기능</td><td>검색·장바구니·배송</td><td>상담·추천·예약/패키지 안내·즉시 결제</td></tr>
+      <tr><td class="center">이용 방식</td><td>화면 터치·다단계 UI 중심</td><td>대화·음성 안내 중심 (ARS형 친근 응대)</td></tr>
+      <tr><td class="center">접근성</td><td>고령·장애인·디지털 소외에 진입장벽</td><td>말로 안내받아 예약·결제까지 진행 가능</td></tr>
+      <tr><td class="center">상품 성격</td><td>실물·다품종 SKU 중심</td><td>디지털 구독·크레딧·예약성 서비스 중심</td></tr>
+      <tr><td class="center">고객 접점</td><td>상품 페이지 중심</td><td>AI 챗봇 + 웹 포털 중심 (24시간)</td></tr>
+      <tr><td class="center">수수료 구조</td><td>중개·광고·풀필먼트 수수료</td><td>SaaS 이용료·패키지 판매·크레딧 매출</td></tr>
+      <tr><td class="center">데이터 소유</td><td>플랫폼 정책에 종속</td><td>자사 고객·주문·상담 맥락 보유</td></tr>
+      <tr><td class="center">결제 목적</td><td>상품 대금 결제</td><td>서비스 이용권·크레딧·예약금 등 디지털 결제</td></tr>
+    </table>
+    <div class="info-box">
+      <strong>요약:</strong> DealMai는 ‘물건을 진열해 파는 마켓’이 아니라,
+      <strong>AI가 판매 상담을 수행하고 결제·서비스 개통까지 연결하는 B2B2C형 디지털 영업 인프라</strong>이며,
+      특히 <strong>화면 조작이 어려운 고객에게도 소리와 대화로 서비스를 열어 주는 포용적 채널</strong>입니다.
+    </div>
+    <hr class="section-rule">
+
+    <h2 class="section-title" id="s2">2. 수익 구조</h2>
+    <p>DealMai의 매출은 본질적으로 <strong>디지털 서비스·이용권(패키지) 판매</strong>와
+    <strong>AI 챗봇 운영에 필요한 크레딧/구독</strong>에서 발생합니다. 실물 재고 매입·물류 마진 구조가 아닙니다.</p>
+
+    <h3 class="sub-title">2.1 주요 수익원</h3>
+    <ul>
+      <li><span class="step-badge">1</span>패키지 판매 대금 — 크레딧형 / 일회성 / 구독형 플랜의 고객 결제액</li>
+      <li><span class="step-badge">2</span>반복 구매·크레딧 충전 — 사용량 기반 추가 구매(리필) 매출</li>
+      <li><span class="step-badge">3</span>파트너 채널 판매 — 제휴·에이전시 경로로 유입된 주문의 정산 매출</li>
+      <li><span class="step-badge">4</span>(향후) 부가 기능·상위 플랜·화이트라벨/에이전시 요금제 확대</li>
+    </ul>
+
+    <h3 class="sub-title">2.2 결제·정산 관점</h3>
+    <table>
+      <tr><th>항목</th><th>내용</th></tr>
+      <tr><td>결제 흐름</td><td>고객 → PG(또는 파트너 결제) → DealMai 주문 확정 → 서비스/계정 자동 개통</td></tr>
+      <tr><td>결제 수단·통화</td><td>시장별로 상이 (태국 로컬 PG, 파트너 경유 다통화 등)</td></tr>
+      <tr><td>이벤트 처리</td><td>환불·부분환불·실패 이벤트는 웹훅/콜백으로 기록·후속 처리</td></tr>
+      <tr><td>주요 비용</td><td>PG 수수료, 클라우드/인프라, AI·챗봇 공급 비용, 고객지원, 마케팅</td></tr>
+    </table>
+
+    <h3 class="sub-title">2.3 수익 모델 특징 (결제사 참고)</h3>
+    <div class="check-box">
+      <ul style="margin:0;">
+        <li>고빈도 소액~중액의 디지털 결제 성격 (구독·크레딧 충전 중심)</li>
+        <li>실물 배송 없는 서비스형 거래 → 물류 클레임보다 계정/이용권 이슈 비중</li>
+        <li>정상 결제 완료 시 즉각 서비스 제공으로 가맹점 이행 책임이 명확</li>
+        <li>국가별 확장 시 동일 SaaS 코어에 결제·언어·컴플라이언스만 지역화</li>
+      </ul>
+    </div>
+    <hr class="section-rule">
+
+    <h2 class="section-title" id="s3">3. 주요 마케팅 채널 및 적합 업종</h2>
+    <p>현재 <strong>일본·태국</strong>을 중심으로 서비스를 운영·확장하고 있으며,
+    <strong>한국은 서비스 준비 중</strong>입니다. 마케팅은 대규모 불특정 오픈마켓 광고보다
+    <strong>AI 챗봇으로 상담·예약·결제가 자연스러운 업종</strong>의 사업자·에이전시를 타깃합니다.</p>
+
+    <h3 class="sub-title">3.1 시장별 채널 방향</h3>
+    <table>
+      <tr><th class="center">시장</th><th class="center">상태</th><th>주요 채널·접근</th></tr>
+      <tr><td class="center">일본</td><td class="center">운영·확장</td><td>로컬 파트너/에이전시, SaaS·DX 커뮤니티, 업종별 세미나·데모, 검색·콘텐츠(일문), 기존 고객 리퍼럴</td></tr>
+      <tr><td class="center">태국</td><td class="center">운영·확장</td><td>로컬 PG·파트너 연동, 에이전시/리셀러, 업종 단체·워크숍, SNS·메신저 기반 리드, 태국어 랜딩</td></tr>
+      <tr><td class="center">한국</td><td class="center">준비 중</td><td>가맹·결제·약관 준비, 파일럿 업종 선정, 파트너십 사전 협의 후 정식 오픈 예정</td></tr>
+    </table>
+
+    <h3 class="sub-title">3.2 AI 챗봇·예약·결제 상품 판매에 적합한 업종</h3>
+    <p>아래 업종은 ‘상담이 필요하고, 표준화된 상품/패키지가 있으며, 온라인으로 예약금·이용권·회차권을
+    결제하기 쉬운’ 특성을 가집니다.</p>
+    <table>
+      <tr><th>업종</th><th>적합 사유</th><th>결제·상품 예시</th></tr>
+      <tr><td>미용·뷰티·클리닉</td><td>상담 후 시술/코스 선택, 야간 문의 多</td><td>시술 패키지, 예약금, 멤버십</td></tr>
+      <tr><td>교육·학원·온라인강의</td><td>커리큘럼 안내→등록 전환이 핵심</td><td>수강권, 월정액, 크레딧</td></tr>
+      <tr><td>헬스·필라테스·웰니스</td><td>체험·회원권 상담이 반복적</td><td>회원권, PT 패키지, 이용권</td></tr>
+      <tr><td>여행·투어·액티비티</td><td>일정·옵션 문의 후 예약 결제</td><td>투어 예약금, 옵션 추가금</td></tr>
+      <tr><td>숙박·민박·소규모 호텔</td><td>빈방·요금·옵션 FAQ가 정형화</td><td>숙박 예약, 조식/옵션</td></tr>
+      <tr><td>전문 서비스(법률·세무·컨설팅)</td><td>초기 상담 자동화 + 유료 전환</td><td>상담권, 리테이너, 패키지</td></tr>
+      <tr><td>IT·SaaS·디지털 구독</td><td>플랜 비교·업그레이드 안내</td><td>월/연 구독, 크레딧 충전</td></tr>
+      <tr><td>이벤트·티켓·워크숍</td><td>일정·좌석·조기등록 안내</td><td>참가비, Early-bird</td></tr>
+      <tr><td>렌탈·구독형 생활서비스</td><td>요금제·약정 설명 후 결제</td><td>월 구독, 보증/개시 비용</td></tr>
+      <tr><td>B2B 에이전시·리셀러</td><td>다계정·화이트라벨 판매</td><td>에이전시 패키지, 크레딧 일괄</td></tr>
+    </table>
+
+    <h3 class="sub-title">3.3 채널 운영 원칙</h3>
+    <ul>
+      <li>업종별 데모 봇·성공 사례로 ‘상담→결제’ 전환을 증명</li>
+      <li>파트너/에이전시 중심 확장으로 현지 영업·지원 효율화 (일·태)</li>
+      <li>유료 광고는 검증된 업종·랜딩에 집중하여 CAC 관리</li>
+      <li>한국 오픈 시에는 파일럿 업종 + 결제/본인확인 요건을 선행 충족</li>
+      <li>고령·장애인·디지털 소외 계층을 위한 <strong>음성·대화형 안내</strong> 사례를 업종별 데모에 반영</li>
+    </ul>
+    <hr class="section-rule">
+
+    <h2 class="section-title" id="s4">4. 향후 사업 진행 방향</h2>
+
+    <h3 class="sub-title">4.1 단기 — 인프라·안정화</h3>
+    <ul>
+      <li>서비스 인프라를 자체 통제 가능한 서버 환경으로 이전·고도화 (가용성·보안·운영 효율)</li>
+      <li>결제·웹훅·정산·알림 파이프라인 안정화 및 모니터링 강화</li>
+      <li>일본·태국 운영 품질 고도화 (다국어·현지 결제·고객지원)</li>
+    </ul>
+
+    <h3 class="sub-title">4.2 중기 — 상품·채널 확장</h3>
+    <ul>
+      <li>업종 템플릿(뷰티/교육/예약업 등) 확대로 온보딩 시간 단축</li>
+      <li>에이전시·리셀러 프로그램 강화로 파트너 매출 비중 확대</li>
+      <li>예약·크레딧·구독 상품의 자동 갱신·리마인드·재구매 기능 고도화</li>
+      <li>한국 시장 파일럿 → 정식 서비스 (결제사·약관·고객응대 체계 완비 후)</li>
+    </ul>
+
+    <h3 class="sub-title">4.3 장기 — 플랫폼화</h3>
+    <ul>
+      <li>AI 세일즈 에이전트를 ‘국가·업종·브랜드’ 단위로 확장 가능한 플랫폼으로 발전</li>
+      <li>화이트라벨·엔터프라이즈 기능 (권한, 감사로그, SLA) 강화</li>
+      <li>결제·정산·세무 리포팅 등 가맹점 운영 편의 기능 확장</li>
+      <li>컴플라이언스·보안 인증을 병행하여 대형 가맹·결제 파트너십 확대</li>
+    </ul>
+
+    <div class="info-box" style="margin-top:28px;">
+      <strong>결제 파트너사에 드리는 요약</strong><br><br>
+      DealMai는 실물 오픈마켓이 아닌, <strong>AI 챗봇 기반의 디지털 영업·예약·결제 SaaS</strong>입니다.
+      현재 일본·태국에서 서비스·판매가 이루어지고 있으며 한국은 준비 중입니다.
+      거래 성격은 주로 패키지·구독·크레딧 등 <strong>서비스형 온라인 결제</strong>이며,
+      결제 완료 후 계정/서비스가 자동 개통되는 구조입니다.
+      안정적인 PG 제휴를 통해 다국가 결제 수용력과 고객 신뢰도를 높이는 것이 핵심 성장 과제입니다.
+    </div>
+    
+  </div>
+  <div class="footer">
+    DealMai &nbsp;|&nbsp; https://dealmai.com &nbsp;|&nbsp; 본 자료는 결제 제휴 검토용이며 세부 재무·계약 조건은 별도 협의<br>
+    본 서비스는 <strong style="color:#fff;">주식회사 온더라인</strong>에서 제공합니다.
+  </div>
+</div>
+</body>
+</html>

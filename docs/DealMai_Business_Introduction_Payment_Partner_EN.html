@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DealMai Business Introduction (for Payment Partners) V1.2</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Segoe UI', sans-serif; font-size: 11pt; line-height: 1.7; color: #1a1a1a; background: #f5f6fa; }
+  .page-wrap { max-width: 860px; margin: 32px auto; background: #fff; border-radius: 10px; box-shadow: 0 2px 16px rgba(0,0,0,.10); overflow: hidden; }
+  .cover { background: linear-gradient(135deg, #1a3a5c 0%, #1565c0 60%, #1e88e5 100%); color: #fff; padding: 48px 52px 40px; display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; }
+  .cover-body { flex: 1; }
+  .cover-logo { flex-shrink: 0; display: flex; align-items: flex-start; padding-top: 4px; }
+  .cover-logo img { height: 72px; max-width: 260px; object-fit: contain; background: #fff; padding: 8px 14px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,.20); }
+  .cover .logo-line { font-size: 13pt; font-weight: 700; letter-spacing: 2px; opacity: .85; margin-bottom: 14px; }
+  .cover h1 { font-size: 26pt; font-weight: 900; line-height: 1.25; margin-bottom: 10px; }
+  .cover .subtitle { font-size: 11.5pt; opacity: .82; margin-bottom: 24px; }
+  .cover .meta { font-size: 9.5pt; opacity: .65; border-top: 1px solid rgba(255,255,255,.25); padding-top: 14px; }
+  .body { padding: 44px 52px 60px; }
+  .toc { background: #f0f4ff; border-left: 4px solid #1565c0; border-radius: 0 8px 8px 0; padding: 20px 26px; margin-bottom: 40px; }
+  .toc h2 { font-size: 12pt; font-weight: 700; color: #1565c0; margin-bottom: 12px; }
+  .toc ol { padding-left: 20px; }
+  .toc li { font-size: 10pt; line-height: 2.1; color: #1a3a5c; }
+  .toc a { color: #1565c0; text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  h2.section-title { font-size: 15pt; font-weight: 800; color: #1a3a5c; border-bottom: 2.5px solid #1565c0; padding-bottom: 7px; margin: 42px 0 16px; page-break-after: avoid; }
+  h3.sub-title { font-size: 12pt; font-weight: 700; color: #1565c0; margin: 24px 0 10px; page-break-after: avoid; }
+  p { margin-bottom: 10px; }
+  .info-box { background: #e3f0ff; border: 1px solid #90caf9; border-left: 4px solid #1565c0; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #1a3a5c; }
+  .warn-box { background: #fff8e1; border: 1px solid #ffe082; border-left: 4px solid #f9a825; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #5d4037; }
+  .check-box { background: #e8f5e9; border: 1px solid #a5d6a7; border-left: 4px solid #2e7d32; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #1b5e20; }
+  .hq-box { background: #fce4ec; border: 1px solid #f48fb1; border-left: 4px solid #c62828; border-radius: 6px; padding: 12px 16px; margin: 14px 0; font-size: 10pt; color: #b71c1c; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0 20px; font-size: 10pt; page-break-inside: avoid; }
+  th { background: #1565c0; color: #fff; font-weight: 700; padding: 9px 12px; text-align: left; border: 1px solid #1245a0; }
+  td { padding: 8px 12px; border: 1px solid #cfd8dc; vertical-align: top; }
+  tr:nth-child(even) td { background: #f4f7ff; }
+  td.center, th.center { text-align: center; }
+  .flow { background: #f8f9fd; border: 1px solid #dce3f5; border-radius: 8px; padding: 20px 24px; margin: 14px 0 20px; font-size: 10pt; page-break-inside: avoid; }
+  .flow-row { display: flex; align-items: flex-start; margin-bottom: 7px; }
+  .flow-actor { display: inline-block; min-width: 90px; font-weight: 700; color: #1565c0; flex-shrink: 0; padding-top: 1px; }
+  .flow-arrow { color: #888; margin: 0 10px; font-size: 13pt; flex-shrink: 0; }
+  .flow-desc { color: #37474f; }
+  .step-badge { display: inline-block; background: #1565c0; color: #fff; font-weight: 800; font-size: 9pt; padding: 2px 10px; border-radius: 20px; margin-right: 8px; vertical-align: middle; }
+  hr.section-rule { border: none; border-top: 1px dashed #c5cae9; margin: 36px 0; }
+  .footer { background: #1a3a5c; color: rgba(255,255,255,.65); text-align: center; font-size: 9pt; padding: 18px 24px; }
+  ul { padding-left: 20px; margin-bottom: 12px; }
+  li { margin-bottom: 4px; }
+  .print-btn { position: fixed; bottom: 28px; right: 28px; z-index: 9999; background: #1565c0; color: #fff; border: none; border-radius: 10px; padding: 11px 20px; font-size: 10.5pt; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(21,101,192,.45); }
+  @media print {
+    body { background: #fff; font-size: 10pt; }
+    .page-wrap { max-width: 100%; margin: 0; border-radius: 0; box-shadow: none; }
+    .cover { padding: 28px 36px 24px; }
+    .body { padding: 28px 36px 36px; }
+    table, .flow, .info-box, .warn-box, .check-box { page-break-inside: avoid; }
+    .footer, .no-print, .print-btn { display: none !important; }
+    @page { size: A4; margin: 14mm 12mm; }
+  }
+</style>
+</head>
+<body>
+<button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+<div class="page-wrap">
+  <div class="cover">
+    <div class="cover-body">
+      <div class="logo-line">DEALMAI · AI Sales Agent</div>
+      <h1>Business<br>Introduction</h1>
+      <div class="subtitle">For payment partners — service overview · revenue · marketing channels · roadmap</div>
+      <div class="meta">Service: https://dealmai.com &nbsp;|&nbsp; Markets: Japan &amp; Thailand (live) / Korea (in preparation) &nbsp;|&nbsp; Issued: September 2026 &nbsp;|&nbsp; V1.2</div>
+    </div>
+    <div class="cover-logo">
+      <img src="file:///D:/Delopment/Dealmai/docs/logo-dealmai.png" alt="DEALMAI">
+    </div>
+  </div>
+  <div class="body">
+    <div class="warn-box" style="margin-bottom:28px;">
+      <strong>📋 Document Purpose Summary</strong><br><br>
+      <table style="margin:8px 0 0;">
+        <tr><th>Item</th><th>Details</th></tr>
+        <tr><td>Document type</td><td>Business introduction for payment partnership / review (Confidential)</td></tr>
+        <tr><td>Service type</td><td>AI chatbot–based digital sales · booking · payment SaaS (not a physical open market)</td></tr>
+        <tr><td>Payment profile</td><td>Service-type online payments: packages, subscriptions, credits</td></tr>
+        <tr><td>Operating markets</td><td>Japan &amp; Thailand live / Korea in preparation</td></tr>
+      </table>
+    </div>
+    <div class="toc">
+      <h2>Table of Contents</h2>
+      <ol>
+        <li><a href="#s1">Business Overview (Service Description)</a></li>
+        <li><a href="#s2">Revenue Structure</a></li>
+        <li><a href="#s3">Marketing Channels &amp; Suitable Industries</a></li>
+        <li><a href="#s4">Future Roadmap</a></li>
+      </ol>
+    </div>
+    
+    <h2 class="section-title" id="s1">1. Business Overview (Service Description)</h2>
+
+    <h3 class="sub-title">1.1 Overview</h3>
+    <p><strong>DealMai</strong> is an <strong>AI Sales Agent SaaS</strong>.
+    Businesses connect an AI chatbot to their website or landing page to automate and support the sales flow—
+    from customer inquiry and product guidance to <strong>booking/package recommendations and online payment</strong>.</p>
+    <p>Customers purchase packages (credit-based, one-time, or subscription). After payment is completed,
+    an account and AI chatbot workspace are provisioned automatically. The platform supports both direct PG payments
+    and partner sales channels (affiliate webhooks), with a multilingual UI in English, Thai, Japanese, and Korean.</p>
+    <ul>
+      <li>Core value: connect “consult → recommend → pay → provision account” into one digital sales pipeline</li>
+      <li>Delivery model: cloud SaaS (web portal + admin console + AI chatbot workspace)</li>
+      <li>Payment flow: direct PG checkout and partner webhook sales for order settlement and account provisioning</li>
+      <li>Markets: <strong>Japan &amp; Thailand in operation</strong> / <strong>Korea in preparation</strong></li>
+    </ul>
+
+    <div class="flow">
+      <div class="flow-row"><span class="flow-actor">Customer</span><span class="flow-arrow">→</span><span class="flow-desc">AI chatbot consultation · product/booking guidance</span></div>
+      <div class="flow-row"><span class="flow-actor">Customer</span><span class="flow-arrow">→</span><span class="flow-desc">Select package · online payment (PG / partner)</span></div>
+      <div class="flow-row"><span class="flow-actor">DealMai</span><span class="flow-arrow">→</span><span class="flow-desc">Confirm order · auto-provision account/workspace · send guidance email</span></div>
+      <div class="flow-row"><span class="flow-actor">Customer</span><span class="flow-arrow">→</span><span class="flow-desc">Portal login · use AI chatbot service · top-up / repurchase</span></div>
+    </div>
+
+    <h3 class="sub-title">1.2 Benefits for Merchants / Selling Businesses</h3>
+    <ul>
+      <li>24/7 AI chatbot expands consultation and sales throughput versus staffing cost</li>
+      <li>Ideal for products that need explanation before payment (bookings, packages, credits)</li>
+      <li>Automatic account/workspace issuance after payment reduces drop-off and manual work</li>
+      <li>Multilingual support (JA/TH/KO/EN) helps expand customer touchpoints by country</li>
+      <li>Unified admin console for packages, orders, partners, payment events, and branding</li>
+      <li>Own customers and brand relationships—not an open-marketplace commission model</li>
+      <li>Broadens reach to seniors, persons with disabilities, and digitally excluded users—<strong>new demand segments</strong></li>
+    </ul>
+
+    <h3 class="sub-title">1.3 Benefits for End Customers — Inclusive, Voice-First Experience</h3>
+    <p>As populations age and smartphones become ubiquitous, demand for online shopping, booking, and payment grows.
+    Yet <strong>complex open-market and e-commerce UIs</strong> remain a high barrier for seniors, persons with disabilities,
+    and digitally excluded users. DealMai is not click-heavy UI first; it is a <strong>conversational service guided by speech and dialogue</strong>,
+    delivering a friendly, natural experience—similar to speaking with an agent on a traditional phone IVR/ARS line—available 24/7.</p>
+
+    <div class="check-box">
+      <strong>Core customer value</strong>
+      <ul style="margin:8px 0 0;">
+        <li><strong>Speak &amp; listen first:</strong> guide products, bookings, and payments by voice/conversation instead of tiny text, dense menus, and multi-step carts</li>
+        <li><strong>More natural than classic ARS:</strong> not “press 1”; conversational Q&amp;A like a live agent</li>
+        <li><strong>24/7 with no queue:</strong> continuous service nights and weekends (unlike staffed call-center wait times)</li>
+        <li><strong>Patient with repetition:</strong> re-explains kindly—well suited to seniors and first-time users</li>
+        <li><strong>Smartphone-ready:</strong> reduces app-install / signup friction; guides only the steps needed inside the dialogue</li>
+        <li><strong>Digital inclusion:</strong> voice guidance expands access for users who struggle with visual or touch interfaces</li>
+      </ul>
+    </div>
+
+    <h3 class="sub-title">1.3.1 Service Examples (Conversational / Voice Guidance)</h3>
+    <table>
+      <tr><th>Customer segment</th><th>Pain with existing platforms</th><th>DealMai conversational example</th></tr>
+      <tr>
+        <td>Senior users</td>
+        <td>Small text, many buttons, confusing cart/options</td>
+        <td>“Book a salon appointment tomorrow morning.” → AI offers times &amp; price → confirms and guides payment by voice</td>
+      </tr>
+      <tr>
+        <td>Users with visual/motor difficulties</td>
+        <td>Hard to navigate touch UI and multi-screen flows</td>
+        <td>Listen to package explanation → “I’ll take that.” → proceed with step-by-step audio guidance</td>
+      </tr>
+      <tr>
+        <td>Digital beginners / excluded users</td>
+        <td>Signup, terms, coupons, filters feel overwhelming</td>
+        <td>Ask only needed details in chat (date, party size, product) → skip unnecessary screens → complete booking/payment</td>
+      </tr>
+      <tr>
+        <td>Night / urgent inquiries</td>
+        <td>Call center closed, queues, next-day callback</td>
+        <td>Immediate 24/7 AI for booking changes, product Q&amp;A, and payment guidance</td>
+      </tr>
+      <tr>
+        <td>Multilingual users</td>
+        <td>Limited local-language UI or staff</td>
+        <td>Same guidance and payment flow in Japanese, Thai, Korean, English, etc.</td>
+      </tr>
+    </table>
+
+    <div class="flow">
+      <div class="flow-row"><span class="flow-actor">Customer</span><span class="flow-arrow">→</span><span class="flow-desc">“I’d like an afternoon appointment this Saturday.” (spoken / chat request)</span></div>
+      <div class="flow-row"><span class="flow-actor">AI</span><span class="flow-arrow">→</span><span class="flow-desc">Offers available times, cost, and prep notes (voice/chat; repeats OK)</span></div>
+      <div class="flow-row"><span class="flow-actor">Customer</span><span class="flow-arrow">→</span><span class="flow-desc">“2 PM please. I’ll pay now.”</span></div>
+      <div class="flow-row"><span class="flow-actor">AI</span><span class="flow-arrow">→</span><span class="flow-desc">Confirms booking + guides secure payment (agent-like ARS feel)</span></div>
+      <div class="flow-row"><span class="flow-actor">System</span><span class="flow-arrow">→</span><span class="flow-desc">Payment success → booking/entitlement confirmed → confirmation message</span></div>
+    </div>
+
+    <div class="info-box">
+      <strong>Compared with traditional ARS:</strong> classic ARS relies on keypad menus (“press 1”),
+      while DealMai continues product explanation, booking, and payment guidance with
+      <strong>natural-language conversation closer to a live agent</strong>.
+      Customers do not need to “find the right button,” and merchants can deliver a
+      <strong>friendly, always-on experience</strong> without staffing a 24/7 call center.
+    </div>
+
+    <h3 class="sub-title">1.4 Limitations &amp; Risks (Disclosed for Payment Review)</h3>
+    <div class="warn-box">
+      Limitations disclosed candidly for payment-partner due diligence.
+    </div>
+    <ul>
+      <li>Customer experience depends on AI answer quality and guardrail tuning</li>
+      <li>Voice/conversation UX can be affected by device/environment (noise, microphone)</li>
+      <li>PG / KYC / refund / chargeback requirements must be met per country</li>
+      <li>Optimized for digital/service goods—not physical inventory logistics marketplaces</li>
+      <li>Korea is still in preparation; early traffic/revenue skews to Japan &amp; Thailand</li>
+      <li>Partner-channel dependence may be affected by affiliate policy and settlement cycles</li>
+    </ul>
+
+    <h3 class="sub-title">1.5 Differences from Open Markets &amp; Typical E-commerce</h3>
+    <table>
+      <tr><th>Dimension</th><th>Open market / typical shop</th><th>DealMai</th></tr>
+      <tr><td class="center">Seller model</td><td>Platform or listed merchants’ catalogs</td><td>Brand-owned AI sales &amp; payment experience</td></tr>
+      <tr><td class="center">Core function</td><td>Search, cart, shipping</td><td>Consult, recommend, book/package guide, pay now</td></tr>
+      <tr><td class="center">Usage mode</td><td>Touch / multi-step UI</td><td>Conversation &amp; voice guidance (agent-like ARS feel)</td></tr>
+      <tr><td class="center">Accessibility</td><td>High barrier for seniors / disabilities / digital exclusion</td><td>Proceed to booking &amp; payment with spoken guidance</td></tr>
+      <tr><td class="center">Product type</td><td>Physical multi-SKU goods</td><td>Digital subscriptions, credits, booking-style services</td></tr>
+      <tr><td class="center">Customer touchpoint</td><td>Product pages</td><td>AI chatbot + web portal (24/7)</td></tr>
+      <tr><td class="center">Fee model</td><td>Marketplace / ads / fulfillment fees</td><td>SaaS fees, package sales, credit revenue</td></tr>
+      <tr><td class="center">Data ownership</td><td>Subject to platform policy</td><td>Merchant retains customers, orders, conversation context</td></tr>
+      <tr><td class="center">Payment purpose</td><td>Goods purchase</td><td>Service entitlements, credits, deposits, etc.</td></tr>
+    </table>
+    <div class="info-box">
+      <strong>Summary:</strong> DealMai is not a marketplace that “displays goods.”
+      It is a <strong>B2B2C digital sales infrastructure</strong> where AI conducts sales consultation and connects payment to service activation—
+      and an <strong>inclusive channel</strong> that opens services via voice and dialogue for customers who struggle with complex screens.
+    </div>
+    <hr class="section-rule">
+
+    <h2 class="section-title" id="s2">2. Revenue Structure</h2>
+    <p>DealMai revenue comes primarily from <strong>digital service / entitlement (package) sales</strong> and
+    <strong>credits/subscriptions required to operate AI chatbots</strong>—not physical inventory buy–sell margins.</p>
+
+    <h3 class="sub-title">2.1 Primary Revenue Sources</h3>
+    <ul>
+      <li><span class="step-badge">1</span>Package sales — customer payments for credit / one-time / subscription plans</li>
+      <li><span class="step-badge">2</span>Repeat purchase &amp; credit top-ups — usage-based refill revenue</li>
+      <li><span class="step-badge">3</span>Partner-channel sales — settled revenue from affiliate / agency orders</li>
+      <li><span class="step-badge">4</span>(Future) add-ons, higher tiers, white-label / agency pricing</li>
+    </ul>
+
+    <h3 class="sub-title">2.2 Payment &amp; Settlement Perspective</h3>
+    <table>
+      <tr><th>Item</th><th>Description</th></tr>
+      <tr><td>Payment flow</td><td>Customer → PG (or partner payment) → DealMai order confirmation → automatic service/account activation</td></tr>
+      <tr><td>Methods &amp; currencies</td><td>Vary by market (e.g., Thailand local PG; multi-currency via partners)</td></tr>
+      <tr><td>Event handling</td><td>Refunds, partial refunds, and failures logged via webhooks/callbacks</td></tr>
+      <tr><td>Key costs</td><td>PG fees, cloud/infra, AI/chatbot supply, support, marketing</td></tr>
+    </table>
+
+    <h3 class="sub-title">2.3 Revenue Model Traits (for Payment Partners)</h3>
+    <div class="check-box">
+      <ul style="margin:0;">
+        <li>High-frequency small-to-mid ticket digital payments (subscriptions &amp; credit top-ups)</li>
+        <li>No physical shipping → account/entitlement issues outweigh logistics claims</li>
+        <li>Clear merchant fulfillment: service is delivered immediately after successful payment</li>
+        <li>Same SaaS core with localized payments, language, and compliance for country expansion</li>
+      </ul>
+    </div>
+    <hr class="section-rule">
+
+    <h2 class="section-title" id="s3">3. Marketing Channels &amp; Suitable Industries</h2>
+    <p>DealMai currently operates and expands mainly in <strong>Japan and Thailand</strong>;
+    <strong>Korea is in preparation</strong>. Marketing focuses less on broad open-market advertising and more on
+    merchants/agencies in industries where <strong>AI chatbot consultation → booking → payment</strong> is a natural fit.</p>
+
+    <h3 class="sub-title">3.1 Channel Direction by Market</h3>
+    <table>
+      <tr><th class="center">Market</th><th class="center">Status</th><th>Primary channels / approach</th></tr>
+      <tr><td class="center">Japan</td><td class="center">Live / expanding</td><td>Local partners/agencies, SaaS·DX communities, industry demos, Japanese search/content, referrals</td></tr>
+      <tr><td class="center">Thailand</td><td class="center">Live / expanding</td><td>Local PG &amp; partner integrations, agencies/resellers, industry workshops, SNS/messenger leads, Thai landing pages</td></tr>
+      <tr><td class="center">Korea</td><td class="center">In preparation</td><td>Merchant/payment/terms readiness, pilot industries, partnership discussions before formal launch</td></tr>
+    </table>
+
+    <h3 class="sub-title">3.2 Industries Suited to AI Chatbot Booking &amp; Payment Sales</h3>
+    <p>These industries typically need consultation, offer standardized packages, and can collect deposits/passes/session packs online.</p>
+    <table>
+      <tr><th>Industry</th><th>Why it fits</th><th>Payment / product examples</th></tr>
+      <tr><td>Beauty / clinics</td><td>Consult then choose treatment/course; many after-hours inquiries</td><td>Treatment packages, deposits, memberships</td></tr>
+      <tr><td>Education / courses</td><td>Curriculum guidance → enrollment conversion</td><td>Course passes, monthly plans, credits</td></tr>
+      <tr><td>Fitness / wellness</td><td>Repeated trial &amp; membership consultation</td><td>Memberships, PT packages, passes</td></tr>
+      <tr><td>Travel / tours / activities</td><td>Schedule/option Q&amp;A then book</td><td>Tour deposits, add-on fees</td></tr>
+      <tr><td>Lodging / small hotels</td><td>Standard FAQs on rooms, rates, options</td><td>Stay bookings, breakfast/options</td></tr>
+      <tr><td>Professional services</td><td>Automate initial consult + paid conversion</td><td>Consult vouchers, retainers, packages</td></tr>
+      <tr><td>IT / SaaS / digital subscriptions</td><td>Plan comparison &amp; upgrades</td><td>Monthly/annual plans, credit top-ups</td></tr>
+      <tr><td>Events / tickets / workshops</td><td>Schedule, seats, early-bird guidance</td><td>Fees, early-bird tickets</td></tr>
+      <tr><td>Rental / lifestyle subscriptions</td><td>Explain plans/terms then pay</td><td>Monthly plans, deposits/setup fees</td></tr>
+      <tr><td>B2B agencies / resellers</td><td>Multi-account / white-label sales</td><td>Agency packages, bulk credits</td></tr>
+    </table>
+
+    <h3 class="sub-title">3.3 Channel Operating Principles</h3>
+    <ul>
+      <li>Prove consult→pay conversion with industry demo bots and case studies</li>
+      <li>Scale via partners/agencies for local sales &amp; support efficiency (JP/TH)</li>
+      <li>Focus paid ads on proven industries and landings to manage CAC</li>
+      <li>Before Korea launch: pilot industries + payment/KYC readiness</li>
+      <li>Include <strong>voice/conversational guidance</strong> demos for seniors, disabilities, and digital inclusion use cases</li>
+    </ul>
+    <hr class="section-rule">
+
+    <h2 class="section-title" id="s4">4. Future Roadmap</h2>
+
+    <h3 class="sub-title">4.1 Near Term — Infrastructure &amp; Stability</h3>
+    <ul>
+      <li>Migrate/harden infrastructure on controllable servers (availability, security, ops efficiency)</li>
+      <li>Stabilize payment, webhook, settlement, and notification pipelines with stronger monitoring</li>
+      <li>Improve JP/TH operating quality (multilingual, local payments, support)</li>
+    </ul>
+
+    <h3 class="sub-title">4.2 Mid Term — Product &amp; Channel Expansion</h3>
+    <ul>
+      <li>Industry templates (beauty/education/booking, etc.) to shorten onboarding</li>
+      <li>Strengthen agency/reseller programs to grow partner revenue share</li>
+      <li>Enhance auto-renewal, reminders, and repurchase for booking/credit/subscription products</li>
+      <li>Korea pilot → full launch after payment partners, terms, and support readiness</li>
+    </ul>
+
+    <h3 class="sub-title">4.3 Long Term — Platformization</h3>
+    <ul>
+      <li>Evolve the AI sales agent into a platform expandable by country, industry, and brand</li>
+      <li>Strengthen white-label and enterprise features (roles, audit logs, SLA)</li>
+      <li>Expand merchant ops tools for payments, settlement, and tax reporting</li>
+      <li>Pair compliance/security certifications with larger merchant and payment partnerships</li>
+    </ul>
+
+    <div class="info-box" style="margin-top:28px;">
+      <strong>Summary for Payment Partners</strong><br><br>
+      DealMai is not a physical open marketplace; it is an <strong>AI chatbot–based SaaS for digital sales, booking, and payment</strong>.
+      It is live in Japan and Thailand, with Korea in preparation.
+      Transactions are mainly <strong>service-type online payments</strong> (packages, subscriptions, credits),
+      with automatic account/service activation after successful payment.
+      Reliable PG partnerships are a core growth priority for multi-country acceptance and customer trust.
+    </div>
+    
+  </div>
+  <div class="footer">
+    DealMai &nbsp;|&nbsp; https://dealmai.com &nbsp;|&nbsp; This document is for payment partnership review; financial and contractual details are provided separately<br>
+    This service is provided by <strong style="color:#fff;">On the Line Co., Ltd. (주식회사 온더라인)</strong>.
+  </div>
+</div>
+</body>
+</html>
