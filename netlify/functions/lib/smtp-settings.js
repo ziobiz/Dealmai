@@ -9,7 +9,7 @@
 async function loadSmtpSettings(db, accountId) {
   let settings = {};
   try {
-    const snap = await db.collection('config').document('smtp').get();
+    const snap = await db.collection('config').doc('smtp').get();
     if (snap.exists) settings = snap.data() || {};
   } catch (e) {
     console.warn('[smtp] config/smtp read failed:', e.message || e);

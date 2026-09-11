@@ -29,7 +29,10 @@ const FUNCTION_NAMES = [
   'provision-dmchamp',
   'send-queued-emails',
   'server-manage',
-  'settle-pending-payments'
+  'settle-pending-payments',
+  'admin-otp',
+  'customer-auth',
+  'password-reset'
 ];
 
 const API_ALIASES = {
@@ -44,6 +47,9 @@ const API_ALIASES = {
   '/api/provision-dmchamp': 'provision-dmchamp',
   '/api/convert-currency': 'convert-currency',
   '/api/server-manage': 'server-manage',
+  '/api/admin-otp': 'admin-otp',
+  '/api/customer-auth': 'customer-auth',
+  '/api/password-reset': 'password-reset',
   '/payment-result': 'payment-result'
 };
 
@@ -194,6 +200,20 @@ app.get('/healthz', (_req, res) => {
     smtpConfigured: Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS),
     loadedFunctions: Object.keys(handlerCache),
     time: new Date().toISOString()
+  });
+});
+
+/** Client session meta for admin top bar (IP + server clock). */
+app.get('/api/session-info', (req, res) => {
+  const fwd = req.headers['x-forwarded-for'];
+  const ip = (typeof fwd === 'string' && fwd.split(',')[0].trim())
+    || req.headers['x-real-ip']
+    || req.socket?.remoteAddress
+    || '';
+  res.json({
+    ok: true,
+    ip: String(ip).replace(/^::ffff:/, ''),
+    serverTime: new Date().toISOString()
   });
 });
 

@@ -35,6 +35,9 @@ _seed_*.py
 WhatsApp Image*.jpeg
 WhatsApp Image*.jpg
 
+# Local site backups / exports (may contain secrets & PII)
+down/
+
 __pycache__/
 docs/__pycache__/
 

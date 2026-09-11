@@ -51,9 +51,11 @@ const DEFAULT_STRINGS = {
   // Navigation
   "nav.home":"Home",
   "nav.packages":"Packages",
-  "nav.admin":"Admin Console",
+  "nav.admin":"Admin",
   "nav.login":"Sign In",
   "nav.signout":"Sign Out",
+  "session.ip":"Access IP",
+  "session.accessAt":"Access time",
 
   // Drawer (mobile)
   "drawer.title":"Menu",
@@ -65,8 +67,8 @@ const DEFAULT_STRINGS = {
   "hero.title-html":'Sell<br/>while you <span class="grad">sleep.</span><br/><span class="outline">Literally.</span>',
   "hero.lede":"{brand} is an autonomous AI sales agent that qualifies leads, handles objections, books meetings and closes deals across WhatsApp, Instagram, Messenger and your site — 24 hours a day, in four languages.",
   "hero.cta-primary":"Browse Packages",
-  "hero.cta-secondary":"Open Admin Console",
-  "hero.cta-admin":"Open Admin Console",
+  "hero.cta-secondary":"Open Admin",
+  "hero.cta-admin":"Open Admin",
   "hero.cta-account":"Go to My Account",
   "hero.cta-signin":"Sign In",
 
@@ -104,7 +106,7 @@ const DEFAULT_STRINGS = {
   "pkg.configure":"Configure",
   "pkg.featured":"Most Picked",
   "pkg.manual.title":"Manual Input",
-  "pkg.manual.desc":"Enter your own amount — used for top-ups and ontheline remainders.",
+  "pkg.manual.desc":"Enter a custom amount for credit top-ups and ontheline balance adjustments.",
   "pkg.manual.label":"Enter amount (USD)",
 
   // Credit Purchase packages
@@ -304,10 +306,12 @@ const DEFAULT_STRINGS = {
   // Admin · sidebar
   "admin.side.console":"Console",
   "admin.side.orders":"Orders",
-  "admin.side.users":"Users",
+  "admin.side.users":"User Management",
+  "admin.side.staff":"User Management",
+  "admin.side.customers":"Customer Management",
   "admin.side.packages":"Packages",
-  "admin.side.webhook":"Webhook",
-  "admin.side.partners":"Partner List",
+  "admin.side.webhook":"Webhooks",
+  "admin.side.partners":"Partner Management",
   "admin.side.paygw":"PG List",
   "admin.side.currencies":"Currencies",
   "admin.currencies.title":"ontheline Currencies",
@@ -373,12 +377,67 @@ const DEFAULT_STRINGS = {
   "toast.paymentgw.failed":"Could not save: {error}",
   "admin.side.emails":"Email Queue",
   "admin.side.smtp":"Email SMTP",
-  "admin.side.languages":"Languages",
+  "admin.side.languages":"Languages (disabled)",
   "admin.side.branding":"Branding",
-  "admin.side.dmchamp":"AI API",
+  "admin.side.dmchamp":"API Settings",
+  "admin.langs.disabled.title":"Language editing disabled",
+  "admin.langs.disabled.sub":"UI copy is maintained in the product build so phrasing stays natural in each language. Firestore translation overrides are no longer applied over bundled strings.",
+  "admin.langs.disabled.note":"Language picker (EN / TH / KR / JP / CH) still works for end users.",
   "admin.side.account":"Account",
   "admin.side.password":"Change Password",
   "admin.side.signout":"Sign Out",
+  "admin.group.users":"Customer Info",
+  "admin.group.customers":"Customer Info",
+  "admin.group.ops":"Operations",
+  "admin.group.sales":"Sales",
+  "admin.group.settings":"Settings",
+  "admin.tabs.max":"Maximum 12 open menus. The oldest tab was closed.",
+  "login.otp.title":"Two-factor authentication",
+  "login.otp.totpHint":"Enter the 6-digit code from your authenticator app.",
+  "login.otp.enrollTitle":"OTP Enrollment — Email verification",
+  "login.otp.emailHint":"Enter the 6-digit code sent to {email}.",
+  "login.otp.googleTitle":"Google Authenticator setup",
+  "login.otp.scanHint":"Scan the QR with Google Authenticator, then enter the 6-digit code.",
+  "login.otp.code":"OTP Code",
+  "login.otp.verify":"Verify",
+  "login.otp.activate":"Activate OTP",
+  "login.otp.resend":"Resend code",
+  "login.otp.back":"Back to login",
+  "login.otp.required":"Admin accounts require OTP verification.",
+  "login.otp.checking":"Checking…",
+  "toast.otp.expired":"Code expired — please resend.",
+  "toast.otp.busy":"Already verifying — please wait.",
+  "toast.otp.next":"Continuing to the next step.",
+  "toast.otp.invalid":"Invalid OTP code.",
+  "toast.otp.sent":"Verification code sent.",
+  "toast.otp.activated":"OTP activated. Welcome.",
+  "login.noAccount":"No account?",
+  "login.createAccount":"Create account",
+  "login.help":"Customers: sign in with your account, or create one with email verification.",
+  "signup.title":"Create account",
+  "signup.sub":"Sign up with email and password. We'll send a verification code to your inbox.",
+  "signup.passwordConfirm":"Confirm password",
+  "signup.sendCode":"Send verification code",
+  "signup.verifyTitle":"Verify email",
+  "signup.codeHint":"Enter the 6-digit code sent to {email}.",
+  "signup.code":"Verification code",
+  "signup.complete":"Complete signup",
+  "signup.haveAccount":"Already have an account?",
+  "toast.signup.codeSent":"Verification code sent.",
+  "toast.signup.needMatch":"Passwords do not match.",
+  "toast.signup.ok":"Account created — please sign in.",
+  "toast.signup.fail":"Signup failed.",
+  "profile.complete.title":"Complete your profile",
+  "profile.complete.sub":"Name, nationality, and phone are required before purchasing a package.",
+  "profile.field.name":"Full name",
+  "profile.field.nationality":"Nationality / Country",
+  "profile.field.phoneCode":"Country code",
+  "profile.field.phone":"Phone number",
+  "profile.complete.cta":"Save and continue",
+  "toast.profile.needLogin":"Please sign in to continue.",
+  "toast.profile.needComplete":"Please complete your profile before purchasing.",
+  "toast.profile.saved":"Profile saved.",
+  "toast.profile.fail":"Could not save profile.",
 
   // Admin · branding
   "admin.branding.crumbs":"Console / Branding",
@@ -546,9 +605,18 @@ const DEFAULT_STRINGS = {
   "admin.orders.expires.expired":"Expired",
 
   // Admin · users
-  "admin.users.title-html":'Users & <span class="grad">customers</span>',
+  "admin.users.title-html":'User <span class="grad">management</span>',
   "admin.users.add":"Add User",
-  "admin.users.h":"All users",
+  "admin.users.h":"Operations users (admins)",
+  "admin.users.empty":"No operations users yet.",
+  "admin.users.modal.title-html":'Add new <span class="grad">user</span>',
+  "admin.users.modal.sub":"Operations users only. End customers are managed under Customer Management.",
+  "admin.customers.title-html":'Customer <span class="grad">management</span>',
+  "admin.customers.add":"Add Customer",
+  "admin.customers.h":"Service customers",
+  "admin.customers.empty":"No customers yet.",
+  "admin.customers.modal.title-html":'Add new <span class="grad">customer</span>',
+  "admin.customers.modal.sub":"Customer will receive credentials by email and must change the password on first sign-in.",
   "admin.users.col.name":"Name",
   "admin.users.col.email":"Email",
   "admin.users.col.role":"Role",
@@ -567,14 +635,12 @@ const DEFAULT_STRINGS = {
   "admin.users.activePackage.none":"—",
   "admin.users.activePackage.daysLeft":"{n} days left",
   "admin.users.activePackage.expiringSoon":"Expiring in {n}d",
-  "admin.users.empty":"No users yet.",
-  "admin.users.modal.title-html":'Add new <span class="grad">user</span>',
-  "admin.users.modal.sub":"User will receive credentials by email and must change the password on first sign-in.",
   "admin.users.modal.name":"Full Name",
   "admin.users.modal.email":"Email",
   "admin.users.modal.role":"Role",
   "admin.users.modal.password":"Initial Password",
   "admin.users.modal.cta":"Create User",
+  "admin.customers.modal.cta":"Create Customer",
 
   // Admin · webhook
   "admin.webhook.title-html":'ontheline <span class="grad">integration</span>',
@@ -710,8 +776,8 @@ const DEFAULT_STRINGS = {
   "toast.smtp.default.set":"Default SMTP account updated",
 
   // Admin · Domain & SSL / Server (PG HQ Policy port)
-  "admin.side.domain":"Domain & SSL",
-  "admin.side.server":"Server Management",
+  "admin.side.domain":"Domain / SSL",
+  "admin.side.server":"Server",
   "admin.domain.crumbs":"Console / Domain & SSL",
   "admin.domain.title-html":'Domain <span class="grad">& SSL</span>',
   "admin.domain.sub":"Public site URLs and Let's Encrypt SAN linkage — same idea as PG HQ Policy → Domain & SSL.",
@@ -843,6 +909,8 @@ const DEFAULT_STRINGS = {
   "toast.password.updated":"Password updated",
   "toast.password.wrong":"Current password is incorrect",
   "toast.password.mismatch":"New passwords do not match",
+  "toast.password.resetSent":"Password reset email sent to {email}. Check inbox and spam.",
+  "toast.password.resetSmtp":"SMTP is not configured. Set Admin → Email SMTP first, then try again.",
   "toast.translation.saved":"Translation saved",
   "toast.webhook.fired":"Webhook processed · order #{ref}",
   "toast.webhook.firedEvent":"Webhook processed · {event} · order #{ref}",
@@ -906,25 +974,27 @@ const FULL_TRANSLATIONS = {
     // Navigation
     "nav.home":"หน้าหลัก",
     "nav.packages":"แพ็คเกจ",
-    "nav.admin":"แผงควบคุมผู้ดูแล",
+    "nav.admin":"ระบบหลังบ้าน",
     "nav.login":"เข้าสู่ระบบ",
     "nav.signout":"ออกจากระบบ",
+    "session.ip":"IP ที่เข้าใช้งาน",
+    "session.accessAt":"เวลาเข้าใช้งาน",
     // Drawer
     "drawer.title":"เมนู",
     "drawer.lang":"ภาษา",
     "drawer.account":"บัญชี",
     // Hero
-    "hero.eyebrow":"AI ตัวแทนขายอัจฉริยะ · ระบบทำงานสด",
-    "hero.title-html":'ขายของ<br/>ขณะที่คุณ<span class="grad">หลับ</span><br/><span class="outline">ได้จริง</span>',
-    "hero.lede":"{brand} คือ AI ตัวแทนขายอัจฉริยะที่คัดกรองลูกค้า รับมือข้อโต้แย้ง นัดหมาย และปิดการขายผ่าน WhatsApp, Instagram, Messenger และเว็บไซต์ของคุณ — ตลอด 24 ชั่วโมง รองรับ 4 ภาษา",
+    "hero.eyebrow":"AI ช่วยขาย · พร้อมทำงานตลอดเวลา",
+    "hero.title-html":'ปิดการขายได้<br/>แม้ตอนคุณ<span class="grad">หลับ</span><br/><span class="outline">ได้จริง</span>',
+    "hero.lede":"{brand} คือ AI ช่วยขายที่คัดกรองลูกค้า ตอบข้อสงสัย นัดหมาย และปิดการขายผ่าน WhatsApp, Instagram, Messenger และเว็บไซต์ของคุณ ทำงานตลอด 24 ชั่วโมง รองรับ 4 ภาษา",
     "hero.cta-primary":"ดูแพ็คเกจ",
     "hero.cta-secondary":"เปิดแผงผู้ดูแล",
     "hero.cta-admin":"เปิดแผงผู้ดูแล",
-    "hero.cta-account":"ไปยังบัญชีของฉัน",
+    "hero.cta-account":"ไปที่บัญชีของฉัน",
     "hero.cta-signin":"เข้าสู่ระบบ",
     // Capabilities
     "caps.num":"01 / ความสามารถ",
-    "caps.title-html":'ไม่ใช่บอท แต่คือ<span class="grad">นักปิดการขาย</span>',
+    "caps.title-html":'ไม่ใช่แค่บอท แต่คือ<span class="grad">นักขายมืออาชีพ</span>',
     "caps.lede":"แค่วาง URL เว็บไซต์ของคุณ AI จะอ่านสินค้า ราคา และจุดขาย แล้วเริ่มขายภายใน 15 นาที ไม่ต้องเขียนโค้ดหรือ Prompt",
     "cap.01.t":"สนทนาเหมือนมนุษย์",
     "cap.01.d":"สนทนาได้ทั้งข้อความเสียง รูปภาพ วิดีโอ และ PDF เสมือนนักขายมือทองของคุณ",
@@ -941,21 +1011,21 @@ const FULL_TRANSLATIONS = {
     "cap.07.t":"แคมเปญและติดตาม",
     "cap.07.d":"ส่งข้อความ Outbound ติดตามอัตโนมัติ และ Comment-to-DM บน IG และ Facebook",
     "cap.08.t":"พัฒนาตัวเอง",
-    "cap.08.d":"One-click optimization วิเคราะห์บทสนทนาที่ปิดการขายได้ดีที่สุด เพื่อยกระดับอัตรา Conversion",
+    "cap.08.d":"ปรับประสิทธิภาพในคลิกเดียว โดยวิเคราะห์บทสนทนาที่ปิดการขายได้ดีเพื่อเพิ่มอัตราการซื้อ",
     // Packages
     "pkg.num":"02 / ราคา",
     "pkg.title-html":'สามวิธีในการ<span class="grad">เริ่มต้น</span>',
     "pkg.lede":"จ่ายตามการใช้งาน เข้าใช้ไม่จำกัดเป็นรายวัน หรือสมัครสมาชิก ทุกแพ็คเกจเปิดใช้งานทันทีพร้อมข้อมูลเข้าใช้ทางอีเมล",
     "pkg.tab.credit":"ซื้อเครดิต",
-    "pkg.tab.onetime":"เข้าใช้ครั้งเดียว",
-    "pkg.tab.sub":"สมาชิก",
+    "pkg.tab.onetime":"ซื้อสิทธิ์ใช้งาน",
+    "pkg.tab.sub":"รายเดือน",
     "pkg.sub.note":"เครดิตของสมาชิกจะหมดอายุเมื่อสิ้นรอบ หากใช้หมดก่อนกำหนด สามารถเติมเครดิตเพิ่มได้",
     "pkg.select":"เลือก",
     "pkg.subscribe":"สมัครสมาชิก",
     "pkg.configure":"กำหนดเอง",
     "pkg.featured":"ยอดนิยม",
     "pkg.manual.title":"กำหนดจำนวนเอง",
-    "pkg.manual.desc":"ใส่จำนวนเงินที่ต้องการ ใช้สำหรับการเติมเครดิตและรับยอดจาก ontheline",
+    "pkg.manual.desc":"ระบุจำนวนเงินที่ต้องการสำหรับเติมเครดิตหรือปรับยอดจาก ontheline",
     "pkg.manual.label":"ใส่จำนวน (USD)",
     // Credit Purchase packages
     "pkg.credit.5.t":"เริ่มต้น",
@@ -1143,15 +1213,17 @@ const FULL_TRANSLATIONS = {
     "orders.toast.resent":"อีเมลถูกจัดคิวเพื่อส่งใหม่",
     "orders.toast.resendFailed":"ไม่สามารถจัดคิวอีเมลได้: {error}",
     // Admin · sidebar
-    "admin.side.console":"แผงควบคุม",
+    "admin.side.console":"ภาพรวม",
     "admin.side.orders":"รายการสั่งซื้อ",
     "admin.side.users":"ผู้ใช้งาน",
+    "admin.side.staff":"จัดการผู้ใช้",
+    "admin.side.customers":"จัดการลูกค้า",
     "admin.side.packages":"จัดการแพ็คเกจ",
     "admin.side.webhook":"Webhook",
-    "admin.side.partners":"รายชื่อพาร์ทเนอร์",
+    "admin.side.partners":"จัดการพาร์ทเนอร์",
     "admin.side.paygw":"รายการ PG",
     "admin.side.currencies":"สกุลเงิน",
-    "admin.currencies.title":"สกุลเงิน ontheline",
+    "admin.currencies.title":"จัดการสกุลเงิน",
     "admin.currencies.sub":"จัดการรหัสสกุลเงินที่ ontheline อาจส่งมาในฟิลด์ <code>currency</code> ของ webhook ถ้าสกุลเงินที่ส่งมาไม่ตรงกับที่กำหนดไว้ webhook จะถูกปฏิเสธ สัญลักษณ์จะแสดงในหน้า Orders ข้างจำนวนเงิน ส่วนมูลค่า USD (สำหรับคำนวณเครดิต) จะคำนวณจากอัตราแลกเปลี่ยนสด",
     "admin.currencies.add":"เพิ่มสกุลเงิน",
     "admin.currencies.empty":"ยังไม่มีสกุลเงิน เพิ่มรายการ (เช่น USD $) เพื่อเริ่มรับ webhook ของ ontheline",
@@ -1164,13 +1236,13 @@ const FULL_TRANSLATIONS = {
     "admin.currencies.symbol.ph":"เช่น $, ฿, ¥, ₩",
     "admin.currencies.label.ph":"เช่น ดอลลาร์สหรัฐ",
     "admin.currencies.hint":"รหัสจะถูกเทียบแบบไม่สนตัวพิมพ์กับค่า currency ใน webhook และใช้แปลงเป็น USD ควรใช้รหัส ISO 4217 มาตรฐาน 3 ตัวอักษร เพื่อให้ API อัตราแลกเปลี่ยนรู้จัก",
-    "admin.partners.title":"พาร์ทเนอร์ ontheline",
+    "admin.partners.title":"จัดการพาร์ทเนอร์",
     "admin.partners.sub":"จัดการรหัสพาร์ทเนอร์ที่ ontheline อาจส่งมาใน webhook ถ้าค่า <code>partner</code> ที่ส่งมาไม่ตรงกับรหัสเหล่านี้ webhook จะถูกปฏิเสธ",
     "admin.partners.add":"เพิ่มพาร์ทเนอร์",
     "admin.partners.empty":"ยังไม่มีพาร์ทเนอร์ เพิ่มรายการเพื่อเริ่มรับ webhook ของ ontheline ที่มีรหัสพาร์ทเนอร์",
     "admin.partners.add.title":"เพิ่มพาร์ทเนอร์",
     "admin.partners.edit.title":"แก้ไขพาร์ทเนอร์",
-    "admin.paygw.title":"Payment Gateway ontheline",
+    "admin.paygw.title":"รายการ PG",
     "admin.paygw.sub":"จัดการรหัส payment gateway ที่ ontheline อาจส่งมาใน webhook ถ้าค่า <code>paygw</code> ที่ส่งมาไม่ตรงกับรหัสเหล่านี้ webhook จะถูกปฏิเสธ",
     "admin.paygw.add":"เพิ่ม Payment Gateway",
     "admin.paygw.empty":"ยังไม่มี payment gateway เพิ่มรายการเพื่อเริ่มรับ webhook ของ ontheline ที่มีรหัส paygw",
@@ -1187,8 +1259,8 @@ const FULL_TRANSLATIONS = {
     "admin.codelist.code.hint":"รหัสจะถูกเทียบแบบตรงตัว (ไม่สนตัวพิมพ์เล็ก-ใหญ่) กับค่าใน webhook ส่วนชื่อบริษัทไว้อ้างอิงและแสดงในหน้า Orders",
     "admin.side.chillpay":"เหตุการณ์ PG",
     "admin.side.paymentgw":"จัดการ PG",
-    "admin.paymentgw.crumbs":"คอนโซล / Payment Gateway",
-    "admin.paymentgw.title-html":"Payment <span class=\"grad\">gateway</span>",
+    "admin.paymentgw.crumbs":"ภาพรวม / ระบบรับชำระเงิน",
+    "admin.paymentgw.title-html":"ตั้งค่า<span class=\"grad\">ระบบรับชำระเงิน</span>",
     "admin.paymentgw.sub":"เลือกผู้ให้บริการที่จะรับชำระเงินสำหรับรายการขายตรงใหม่ ส่วนรายการที่กำลังดำเนินการอยู่จะยังใช้ gateway เดิมที่สร้างไว้",
     "admin.paymentgw.note-html":"ข้อมูลลับ (credentials) เก็บอยู่ใน environment variables ของ Netlify ไม่ได้เก็บในฐานข้อมูล หน้านี้บันทึกเพียงว่า<em>เลือกใช้</em> gateway ใด กรุณาตั้งค่า key ใน Netlify ก่อน แล้วจึงมาเปิดใช้งานที่นี่",
     "admin.paymentgw.note.default":"ยังไม่ได้บันทึกการเลือก ระบบจะใช้ gateway ค่าเริ่มต้น เลือกจากด้านล่างเพื่อกำหนดให้ชัดเจน",
@@ -1216,12 +1288,63 @@ const FULL_TRANSLATIONS = {
     "admin.side.smtp":"Email SMTP",
     "admin.side.domain":"Domain & SSL",
     "admin.side.server":"จัดการเซิร์ฟเวอร์",
-    "admin.side.languages":"ภาษา",
+    "admin.side.languages":"ภาษา (แก้ไขไม่ได้)",
     "admin.side.branding":"แบรนด์",
-    "admin.side.dmchamp":"AI API",
+    "admin.side.dmchamp":"ตั้งค่า API",
     "admin.side.account":"บัญชี",
     "admin.side.password":"เปลี่ยนรหัสผ่าน",
     "admin.side.signout":"ออกจากระบบ",
+    "admin.group.users":"ข้อมูลผู้ใช้",
+    "admin.group.customers":"ข้อมูลลูกค้า",
+    "admin.group.ops":"การดำเนินงาน",
+    "admin.group.sales":"การขาย",
+    "admin.group.settings":"การตั้งค่า",
+    "admin.tabs.max":"เปิดเมนูได้สูงสุด 12 รายการ แท็บที่เก่าที่สุดถูกปิดแล้ว",
+    "admin.langs.disabled.title":"ปิดการแก้ไขภาษาแล้ว",
+    "admin.langs.disabled.sub":"ข้อความในระบบจัดการจากตัวโปรแกรมโดยตรง เพื่อให้แต่ละภาษาเป็นธรรมชาติและสม่ำเสมอ ระบบจะไม่ใช้คำแปลที่แก้ไขไว้ใน Firestore ทับข้อความเหล่านี้",
+    "admin.langs.disabled.note":"ผู้ใช้ยังเลือกภาษา EN / TH / KR / JP / CH ได้ตามปกติ",
+    "login.otp.title":"ยืนยันตัวตนสองขั้นตอน",
+    "login.otp.totpHint":"กรอกรหัส 6 หลักจากแอป Authenticator",
+    "login.otp.enrollTitle":"ลงทะเบียน OTP — ยืนยันอีเมล",
+    "login.otp.emailHint":"กรอกรหัส 6 หลักที่ส่งไปยัง {email}",
+    "login.otp.googleTitle":"ตั้งค่า Google Authenticator",
+    "login.otp.scanHint":"สแกน QR ด้วย Google Authenticator แล้วกรอกรหัส 6 หลัก",
+    "login.otp.code":"รหัส OTP",
+    "login.otp.verify":"ยืนยัน",
+    "login.otp.activate":"เปิดใช้ OTP",
+    "login.otp.resend":"ส่งรหัสอีกครั้ง",
+    "login.otp.back":"กลับไปเข้าสู่ระบบ",
+    "login.otp.required":"บัญชีผู้ดูแลต้องยืนยัน OTP",
+    "toast.otp.invalid":"รหัส OTP ไม่ถูกต้อง",
+    "toast.otp.sent":"ส่งรหัสยืนยันแล้ว",
+    "toast.otp.activated":"เปิดใช้ OTP แล้ว ยินดีต้อนรับ",
+    "login.noAccount":"ยังไม่มีบัญชี?",
+    "login.createAccount":"สร้างบัญชี",
+    "login.help":"ลูกค้าสามารถเข้าสู่ระบบ หรือสร้างบัญชีใหม่โดยยืนยันอีเมล",
+    "signup.title":"สร้างบัญชี",
+    "signup.sub":"สมัครด้วยอีเมลและรหัสผ่าน เราจะส่งรหัสยืนยันไปที่อีเมลของคุณ",
+    "signup.passwordConfirm":"ยืนยันรหัสผ่าน",
+    "signup.sendCode":"ส่งรหัสยืนยัน",
+    "signup.verifyTitle":"ยืนยันอีเมล",
+    "signup.codeHint":"กรอกรหัส 6 หลักที่ส่งไปยัง {email}",
+    "signup.code":"รหัสยืนยัน",
+    "signup.complete":"สมัครให้เสร็จสิ้น",
+    "signup.haveAccount":"มีบัญชีอยู่แล้ว?",
+    "toast.signup.codeSent":"ส่งรหัสยืนยันแล้ว",
+    "toast.signup.needMatch":"รหัสผ่านไม่ตรงกัน",
+    "toast.signup.ok":"สร้างบัญชีแล้ว กรุณาเข้าสู่ระบบ",
+    "toast.signup.fail":"สมัครสมาชิกไม่สำเร็จ",
+    "profile.complete.title":"กรอกข้อมูลให้ครบ",
+    "profile.complete.sub":"กรุณากรอกชื่อ สัญชาติ และเบอร์โทรศัพท์ก่อนซื้อแพ็คเกจ",
+    "profile.field.name":"ชื่อ-นามสกุล",
+    "profile.field.nationality":"สัญชาติ / ประเทศ",
+    "profile.field.phoneCode":"รหัสประเทศ",
+    "profile.field.phone":"เบอร์โทรศัพท์",
+    "profile.complete.cta":"บันทึกและดำเนินการต่อ",
+    "toast.profile.needLogin":"กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ",
+    "toast.profile.needComplete":"กรุณากรอกข้อมูลให้ครบก่อนซื้อแพ็คเกจ",
+    "toast.profile.saved":"บันทึกข้อมูลแล้ว",
+    "toast.profile.fail":"บันทึกข้อมูลไม่สำเร็จ",
     // Admin · branding
     "admin.branding.crumbs":"แผงควบคุม / แบรนด์",
     "admin.branding.title-html":'การจัดการ<span class="grad">แบรนด์</span>',
@@ -1612,6 +1735,79 @@ const FULL_TRANSLATIONS = {
     "admin.packages.modal.duration.hint":"จำนวนวันที่ลูกค้าสามารถใช้แพ็คเกจนี้ ปล่อยว่างสำหรับแพ็คเกจเครดิตที่ไม่มีกำหนดอายุ",
     "admin.packages.duration.none":"ไม่มีกำหนดอายุ",
     "admin.packages.duration.days":"{n} วัน",
+    // Customer management
+    "admin.customers.title-html":'จัดการ<span class="grad">ลูกค้า</span>',
+    "admin.customers.add":"เพิ่มลูกค้า",
+    "admin.customers.h":"ลูกค้าที่ใช้บริการ",
+    "admin.customers.empty":"ยังไม่มีลูกค้า",
+    "admin.customers.modal.title-html":'เพิ่ม<span class="grad">ลูกค้าใหม่</span>',
+    "admin.customers.modal.sub":"ลูกค้าจะได้รับข้อมูลเข้าใช้ทางอีเมล และต้องเปลี่ยนรหัสผ่านเมื่อเข้าสู่ระบบครั้งแรก",
+    "admin.customers.modal.cta":"สร้างลูกค้า",
+    // SMTP
+    "admin.smtp.crumbs":"ระบบหลังบ้าน / SMTP อีเมล",
+    "admin.smtp.title-html":'SMTP <span class="grad">อีเมล</span>',
+    "admin.smtp.sub":"จัดการบัญชี SMTP สำหรับส่งใบเสร็จ ข้อมูลเข้าใช้ และอีเมลแจ้งเตือน หากไม่ได้ระบุบัญชี ระบบจะใช้บัญชีเริ่มต้น",
+    "admin.smtp.global.title":"ตัวเลือกอีเมลส่วนกลาง",
+    "admin.smtp.global.replyTo":"อีเมลตอบกลับ",
+    "admin.smtp.global.supportBcc":"BCC ฝ่ายสนับสนุน / กล่อง ontheline",
+    "admin.smtp.global.testRewrite":"เปลี่ยนผู้รับสำหรับทดสอบ (ไม่บังคับ)",
+    "admin.smtp.global.testRewrite.hint":"เมื่อตั้งค่า อีเมลขาออกทั้งหมดจะถูกส่งไปยังที่อยู่นี้และติดป้ายในหัวข้อ ควรเว้นว่างในระบบจริง",
+    "admin.smtp.global.default":"บัญชีเริ่มต้น",
+    "admin.smtp.global.save":"บันทึกตัวเลือก",
+    "admin.smtp.accounts.title":"บัญชี SMTP",
+    "admin.smtp.accounts.add":"เพิ่มบัญชี",
+    "admin.smtp.accounts.empty":"ยังไม่มีบัญชี SMTP กรุณาเพิ่มบัญชีเพื่อส่งอีเมลจากคิว",
+    "admin.smtp.col.name":"ชื่อ",
+    "admin.smtp.col.host":"โฮสต์",
+    "admin.smtp.col.user":"ชื่อผู้ใช้",
+    "admin.smtp.col.from":"ผู้ส่ง",
+    "admin.smtp.col.status":"สถานะ",
+    "admin.smtp.status.enabled":"เปิดใช้งาน",
+    "admin.smtp.status.disabled":"ปิดใช้งาน",
+    "admin.smtp.status.default":"ค่าเริ่มต้น",
+    "admin.smtp.action.edit":"แก้ไข",
+    "admin.smtp.action.delete":"ลบ",
+    "admin.smtp.action.setDefault":"ตั้งเป็นค่าเริ่มต้น",
+    "admin.smtp.modal.add":"เพิ่มบัญชี SMTP",
+    "admin.smtp.modal.edit":"แก้ไขบัญชี SMTP",
+    "admin.smtp.field.name":"ชื่อที่แสดง",
+    "admin.smtp.field.host":"โฮสต์ SMTP",
+    "admin.smtp.field.port":"พอร์ต",
+    "admin.smtp.field.secure":"SSL/TLS (ปกติเปิดสำหรับพอร์ต 465)",
+    "admin.smtp.field.user":"ชื่อผู้ใช้ (อีเมล)",
+    "admin.smtp.field.pass":"รหัสผ่าน / App password",
+    "admin.smtp.field.pass.keep":"เว้นว่างเพื่อใช้รหัสผ่านเดิม",
+    "admin.smtp.field.from":"ส่วนหัว From",
+    "admin.smtp.field.from.hint":"เช่น Deal Mai <noreply@dealmai.com>",
+    "admin.smtp.field.enabled":"เปิดใช้งาน",
+    "admin.smtp.btn.save":"บันทึกบัญชี",
+    "admin.smtp.btn.test":"ส่งอีเมลทดสอบ",
+    "admin.smtp.test.to":"ผู้รับอีเมลทดสอบ",
+    "toast.smtp.saved":"บันทึกตัวเลือก SMTP แล้ว",
+    "toast.smtp.account.saved":"บันทึกบัญชี SMTP แล้ว",
+    "toast.smtp.account.deleted":"ลบบัญชี SMTP แล้ว",
+    "toast.smtp.default.set":"อัปเดตบัญชี SMTP เริ่มต้นแล้ว",
+    // Domain & SSL
+    "admin.domain.crumbs":"ระบบหลังบ้าน / โดเมนและ SSL",
+    "admin.domain.title-html":'โดเมน <span class="grad">และ SSL</span>',
+    "admin.domain.sub":"จัดการ URL สาธารณะและตรวจสอบการเชื่อมโยง SAN ของใบรับรอง Let’s Encrypt",
+    "admin.domain.global.title":"URL สาธารณะ",
+    "admin.domain.global.hint":"ใช้ตรวจสอบ HTTPS SAN และเอกสารการดูแลระบบ หากไม่ระบุ scheme ระบบจะเติม https:// ให้",
+    "admin.domain.field.site":"URL เว็บไซต์สาธารณะ",
+    "admin.domain.field.www":"URL www",
+    "admin.domain.field.api":"URL หลักของ API",
+    "admin.domain.save":"บันทึก URL",
+    "admin.domain.ssl.title":"Let’s Encrypt · การเชื่อมโยง SAN",
+    "admin.domain.ssl.intro":"เปรียบเทียบ hostname จาก URL ด้านล่างกับรายการ SAN ใน fullchain.pem ของเซิร์ฟเวอร์ หากไม่ตรงกัน browser อาจแสดงคำเตือนใบรับรอง",
+    "admin.domain.ssl.loading":"กำลังโหลด…",
+    "admin.domain.ssl.empty":"ยังไม่ได้ตั้งค่า hostname",
+    "admin.domain.col.host":"Hostname",
+    "admin.domain.col.source":"แหล่งที่มา",
+    "admin.domain.col.inCert":"อยู่ในใบรับรอง",
+    "admin.domain.sanOnly":"มีเฉพาะใน SAN แต่ไม่มี URL ที่ตรงกัน:",
+    "admin.domain.missing":"ไม่อยู่ในใบรับรอง:",
+    "admin.domain.yes":"ใช่",
+    "admin.domain.no":"ไม่",
     // Misc
     "footer.tag":"AI ตัวแทนขายที่ปิดการขายให้คุณ 24/7"
   },
@@ -1620,56 +1816,58 @@ const FULL_TRANSLATIONS = {
     // Navigation
     "nav.home":"홈",
     "nav.packages":"패키지",
-    "nav.admin":"관리자 콘솔",
+    "nav.admin":"관리자",
     "nav.login":"로그인",
     "nav.signout":"로그아웃",
+    "session.ip":"접속 IP",
+    "session.accessAt":"접속 시간",
     // Drawer
     "drawer.title":"메뉴",
     "drawer.lang":"언어",
     "drawer.account":"계정",
     // Hero
-    "hero.eyebrow":"AI 영업 에이전트 · 실시간 네트워크",
-    "hero.title-html":'잠자는 동안에도<br/><span class="grad">판매하세요.</span><br/><span class="outline">정말로.</span>',
-    "hero.lede":"{brand}는 WhatsApp, Instagram, Messenger 및 귀하의 웹사이트에서 잠재 고객을 검증하고 반대 의견을 처리하며 미팅을 예약하고 거래를 성사시키는 자율 AI 영업 에이전트입니다 — 24시간, 4개 언어 지원.",
-    "hero.cta-primary":"패키지 둘러보기",
-    "hero.cta-secondary":"관리자 콘솔 열기",
-    "hero.cta-admin":"관리자 콘솔 열기",
-    "hero.cta-account":"내 계정으로 이동",
+    "hero.eyebrow":"AI 영업 에이전트 · 24시간",
+    "hero.title-html":'잠든 사이에도<br/><span class="grad">판매는 계속됩니다</span><br/><span class="outline">정말로.</span>',
+    "hero.lede":"{brand}는 WhatsApp, Instagram, Messenger와 자사 사이트에서 상담·미팅·계약까지 대신 처리하는 AI 영업 에이전트입니다. 하루 종일, 여러 언어로 응대합니다.",
+    "hero.cta-primary":"패키지 보기",
+    "hero.cta-secondary":"관리자 열기",
+    "hero.cta-admin":"관리자 열기",
+    "hero.cta-account":"내 계정",
     "hero.cta-signin":"로그인",
     // Capabilities
     "caps.num":"01 / 주요 기능",
-    "caps.title-html":'챗봇이 아닙니다. <span class="grad">클로저입니다.</span>',
-    "caps.lede":"URL만 입력하세요. 에이전트가 제품, 가격 및 가치 제안을 읽고 15분 안에 판매를 시작합니다. 코드도, 프롬프트도 필요 없습니다.",
-    "cap.01.t":"진짜 인간 같은",
-    "cap.01.d":"음성 메모, 이미지, 비디오 및 PDF로 대화 가능. 최고의 클로저처럼 들립니다.",
-    "cap.02.t":"멀티 채널",
-    "cap.02.d":"WhatsApp · Instagram · Messenger · 웹 채팅 — 모든 채널에서 하나의 메모리.",
-    "cap.03.t":"15분 설치",
-    "cap.03.d":"웹사이트 URL을 붙여넣으세요. AI가 제품과 가격을 자동으로 읽습니다. 코드도 프롬프트도 없이.",
-    "cap.04.t":"멀티모달",
-    "cap.04.d":"음성 메모, 이미지, 문서/PDF 및 비디오 이해 — 텍스트뿐만 아니라.",
-    "cap.05.t":"채팅 내 예약",
-    "cap.05.d":"구매 신호를 감지하고 대화 내에서 약속을 예약합니다. 외부 링크 없이.",
-    "cap.06.t":"메모리 & 컨텍스트",
-    "cap.06.d":"이전 대화와 선호도를 기억하여 장기적인 관계를 구축합니다.",
-    "cap.07.t":"캠페인 & 후속 조치",
-    "cap.07.d":"아웃바운드 메시징, 자동 후속 조치, IG 및 Facebook에서 Comment-to-DM.",
-    "cap.08.t":"자기 개선",
-    "cap.08.d":"원클릭 최적화로 가장 잘 성사된 대화를 분석하여 전환율을 향상시킵니다.",
+    "caps.title-html":'단순 챗봇이 아닙니다<br/><span class="grad">영업을 마무리합니다</span>',
+    "caps.lede":"웹사이트 주소만 넣으면 됩니다. 제품과 가격, 제안을 읽고 15분 안에 판매를 시작합니다. 별도 코드나 프롬프트는 필요 없습니다.",
+    "cap.01.t":"사람처럼 대화",
+    "cap.01.d":"음성 메모, 이미지, 영상, PDF까지 주고받으며 자연스럽게 응대합니다.",
+    "cap.02.t":"여러 채널 한곳에서",
+    "cap.02.d":"WhatsApp · Instagram · Messenger · 웹 채팅 — 채널이 달라도 대화 맥락은 하나로.",
+    "cap.03.t":"15분 만에 시작",
+    "cap.03.d":"사이트 URL만 붙여넣으면 AI가 제품과 가격을 읽습니다. 코드·프롬프트 불필요.",
+    "cap.04.t":"다양한 형식 이해",
+    "cap.04.d":"텍스트뿐 아니라 음성, 이미지, 문서/PDF, 영상까지 이해합니다.",
+    "cap.05.t":"채팅에서 바로 예약",
+    "cap.05.d":"구매 의도를 감지하면 대화 안에서 약속을 잡습니다. 외부 링크 없이.",
+    "cap.06.t":"맥락을 기억",
+    "cap.06.d":"이전 대화와 선호를 기억해 오래 가는 관계를 만듭니다.",
+    "cap.07.t":"캠페인·후속 연락",
+    "cap.07.d":"아웃바운드 메시지, 자동 후속, IG·Facebook 댓글→DM까지.",
+    "cap.08.t":"스스로 개선",
+    "cap.08.d":"잘 된 대화를 분석해 전환율을 올립니다. 한 번의 최적화로.",
     // Packages
-    "pkg.num":"02 / 가격",
+    "pkg.num":"02 / 요금",
     "pkg.title-html":'시작하는 <span class="grad">세 가지 방법</span>',
-    "pkg.lede":"사용한 만큼 지불하는 크레딧, 일일 무제한 액세스 또는 롤링 구독. 모든 플랜은 이메일로 즉시 자격 증명과 함께 제공됩니다.",
+    "pkg.lede":"쓴 만큼 쓰는 크레딧, 일정 기간 무제한, 또는 정기 구독. 모든 플랜은 이메일로 바로 계정 정보를 받습니다.",
     "pkg.tab.credit":"크레딧 구매",
-    "pkg.tab.onetime":"1회 액세스",
+    "pkg.tab.onetime":"기간권",
     "pkg.tab.sub":"구독",
-    "pkg.sub.note":"구독의 크레딧은 각 주기 종료 시 만료됩니다. 크레딧이 고갈된 후 주기 중에 계속하려면 크레딧 구매 충전을 추가하세요.",
+    "pkg.sub.note":"구독 크레딧은 각 주기 종료 시 소멸합니다. 중간에 크레딧이 부족하면 크레딧 충전이 필요합니다.",
     "pkg.select":"선택",
     "pkg.subscribe":"구독하기",
-    "pkg.configure":"구성하기",
-    "pkg.featured":"가장 인기",
-    "pkg.manual.title":"수동 입력",
-    "pkg.manual.desc":"원하는 금액을 입력하세요 — 충전 및 ontheline 차액에 사용됩니다.",
+    "pkg.configure":"설정하기",
+    "pkg.featured":"인기",
+    "pkg.manual.title":"직접 입력",
+    "pkg.manual.desc":"원하는 금액을 입력하세요. 충전·차액 정산에 사용됩니다.",
     "pkg.manual.label":"금액 입력 (USD)",
     // Credit Purchase packages
     "pkg.credit.5.t":"스타터",
@@ -1796,59 +1994,126 @@ const FULL_TRANSLATIONS = {
     // Admin · sidebar
     "admin.side.console":"콘솔",
     "admin.side.orders":"주문",
-    "admin.side.users":"사용자",
     "admin.side.packages":"패키지",
     "admin.side.webhook":"웹훅",
-    "admin.side.partners":"파트너 목록",
+    "admin.side.partners":"파트너관리",
     "admin.side.paygw":"PG 목록",
     "admin.side.currencies":"통화",
-    "admin.currencies.title":"ontheline 통화",
-    "admin.currencies.sub":"ontheline이 웹훅 <code>currency</code> 필드에 보낼 수 있는 통화 코드를 관리합니다. 일치하지 않는 통화의 웹훅은 거부됩니다. 기호는 주문에서 금액 옆에 표시되며 USD 값(크레딧 계산용)은 실시간 환율로 변환됩니다.",
+    "admin.side.users":"사용자관리",
+    "admin.side.staff":"사용자관리",
+    "admin.side.customers":"고객관리",
+    "admin.currencies.title":"통화 관리",
+    "admin.currencies.sub":"웹훅 <code>currency</code>로 받을 수 있는 통화 코드를 관리합니다. 목록에 없는 통화는 거절됩니다. 기호는 주문 금액 옆에 표시되며, 크레딧 계산용 USD 환산은 실시간 환율을 씁니다.",
     "admin.currencies.add":"통화 추가",
-    "admin.currencies.empty":"통화가 없습니다. 추가하세요(예: USD $).",
+    "admin.currencies.empty":"등록된 통화가 없습니다. 예: USD $",
     "admin.currencies.add.title":"통화 추가",
-    "admin.currencies.edit.title":"통화 편집",
+    "admin.currencies.edit.title":"통화 수정",
     "admin.currencies.col.code":"코드 (ISO 4217)",
     "admin.currencies.col.symbol":"기호",
     "admin.currencies.col.label":"이름",
     "admin.currencies.code.ph":"예: USD, THB, JPY, KRW",
     "admin.currencies.symbol.ph":"예: $, ฿, ¥, ₩",
     "admin.currencies.label.ph":"예: 미국 달러",
-    "admin.currencies.hint":"코드는 웹훅 통화 값과 대소문자 구분 없이 일치하며 USD 변환에 사용됩니다. 환율 API가 인식하도록 표준 3자리 ISO 4217 코드를 사용하세요.",
-    "admin.partners.title":"ontheline 파트너",
-    "admin.partners.sub":"ontheline이 웹훅 호출에서 보낼 수 있는 파트너 코드를 관리합니다. 들어오는 웹훅의 <code>partner</code> 값이 이 코드 중 하나와 일치하지 않으면 거부됩니다.",
+    "admin.currencies.hint":"코드는 웹훅 통화와 대소문자 구분 없이 맞추며 USD 환산에 사용됩니다. 환율 API가 인식하도록 표준 3자리 ISO 코드를 쓰세요.",
+    "admin.partners.title":"파트너 관리",
+    "admin.partners.sub":"웹훅 <code>partner</code>로 허용할 파트너 코드를 관리합니다. 목록에 없으면 요청이 거절됩니다.",
     "admin.partners.add":"파트너 추가",
-    "admin.partners.empty":"파트너가 없습니다. 파트너 코드로 ontheline 웹훅을 수락하려면 추가하세요.",
+    "admin.partners.empty":"등록된 파트너가 없습니다. 웹훅을 받으려면 파트너 코드를 추가하세요.",
     "admin.partners.add.title":"파트너 추가",
-    "admin.partners.edit.title":"파트너 편집",
-    "admin.paygw.title":"ontheline 결제 게이트웨이",
-    "admin.paygw.sub":"ontheline이 웹훅 호출에서 보낼 수 있는 결제 게이트웨이 코드를 관리합니다. 들어오는 웹훅의 <code>paygw</code> 값이 이 코드 중 하나와 일치하지 않으면 거부됩니다.",
-    "admin.paygw.add":"결제 게이트웨이 추가",
-    "admin.paygw.empty":"결제 게이트웨이가 없습니다. paygw 코드로 ontheline 웹훅을 수락하려면 추가하세요.",
-    "admin.paygw.add.title":"결제 게이트웨이 추가",
-    "admin.paygw.edit.title":"결제 게이트웨이 편집",
+    "admin.partners.edit.title":"파트너 수정",
+    "admin.paygw.title":"PG 목록",
+    "admin.paygw.sub":"웹훅 <code>paygw</code>로 허용할 결제 게이트웨이 코드를 관리합니다. 목록에 없으면 요청이 거절됩니다.",
+    "admin.paygw.add":"PG 추가",
+    "admin.paygw.empty":"등록된 PG가 없습니다. 웹훅을 받으려면 PG 코드를 추가하세요.",
+    "admin.paygw.add.title":"PG 추가",
+    "admin.paygw.edit.title":"PG 수정",
     "admin.codelist.col.code":"코드",
     "admin.codelist.col.company":"회사명",
     "admin.codelist.col.actions":"작업",
-    "admin.codelist.edit":"편집",
+    "admin.codelist.edit":"수정",
     "admin.codelist.delete":"삭제",
     "admin.codelist.save":"저장",
     "admin.codelist.code.ph":"예: PARTNER01",
     "admin.codelist.company.ph":"예: Acme Travel Co., Ltd.",
-    "admin.codelist.code.hint":"코드는 웹훅 값과 정확히(대소문자 구분 없이) 일치해야 합니다. 회사명은 참고용이며 주문에 표시됩니다.",
+    "admin.codelist.code.hint":"코드는 웹훅 값과 대소문자 구분 없이 정확히 일치해야 합니다. 회사명은 참고용이며 주문에 표시됩니다.",
     "admin.side.chillpay":"PG 이벤트",
     "admin.side.paymentgw":"PG 관리",
+    "admin.side.emails":"메일 대기함",
+    "admin.side.smtp":"이메일 SMTP",
+    "admin.side.domain":"도메인/SSL",
+    "admin.side.server":"서버",
+    "admin.side.languages":"언어 설정(사용 안 함)",
+    "admin.side.branding":"브랜딩",
+    "admin.side.dmchamp":"API 설정",
+    "admin.side.account":"계정",
+    "admin.side.password":"비밀번호 변경",
+    "admin.group.users":"고객정보",
+    "admin.group.customers":"고객정보",
+    "admin.group.ops":"운영정보",
+    "admin.group.sales":"판매정보",
+    "admin.group.settings":"기본설정",
+    "admin.tabs.max":"메뉴는 최대 12개까지 열 수 있습니다. 가장 오래된 탭을 닫았습니다.",
+    "admin.langs.disabled.title":"언어 편집 기능 종료",
+    "admin.langs.disabled.sub":"화면 문구는 제품 코드에서 언어별로 자연스럽게 관리합니다. Firestore로 덮어쓰던 방식은 어색한 번역이 생기기 쉬워 더 이상 적용하지 않습니다.",
+    "admin.langs.disabled.note":"상단 언어 선택(EN/TH/KR/JP/CH)은 그대로 사용할 수 있습니다.",
+    "login.otp.title":"2단계 인증",
+    "login.otp.totpHint":"인증 앱에 표시된 6자리 코드를 입력하세요.",
+    "login.otp.enrollTitle":"OTP 등록 · 이메일 확인",
+    "login.otp.emailHint":"{email}로 보낸 6자리 코드를 입력하세요.",
+    "login.otp.googleTitle":"Google Authenticator 설정",
+    "login.otp.scanHint":"Google Authenticator로 QR을 스캔한 뒤, 앱에 표시된 6자리 코드를 입력하세요.",
+    "login.otp.code":"인증 코드",
+    "login.otp.verify":"확인",
+    "login.otp.activate":"OTP 사용 시작",
+    "login.otp.resend":"코드 다시 받기",
+    "login.otp.back":"로그인으로",
+    "login.otp.required":"관리자 계정은 OTP 인증이 필요합니다.",
+    "login.otp.checking":"확인 중…",
+    "toast.otp.invalid":"인증 코드가 올바르지 않습니다.",
+    "toast.otp.expired":"코드가 만료되었습니다. 다시 받아 주세요.",
+    "toast.otp.sent":"인증 코드를 이메일로 보냈습니다.",
+    "toast.otp.activated":"OTP 설정이 완료되었습니다.",
+    "toast.otp.busy":"잠시만요. 이미 확인 중입니다.",
+    "toast.otp.next":"다음 단계로 이동합니다.",
+    "login.noAccount":"계정이 없으신가요?",
+    "login.createAccount":"회원가입",
+    "login.help":"고객은 계정으로 로그인하거나, 이메일 인증으로 가입할 수 있습니다.",
+    "signup.title":"회원가입",
+    "signup.sub":"이메일과 비밀번호로 가입합니다. 인증번호를 메일로 보내 드립니다.",
+    "signup.passwordConfirm":"비밀번호 확인",
+    "signup.sendCode":"인증번호 보내기",
+    "signup.verifyTitle":"이메일 인증",
+    "signup.codeHint":"{email}으로 보낸 6자리 코드를 입력하세요.",
+    "signup.code":"인증번호",
+    "signup.complete":"가입 완료",
+    "signup.haveAccount":"이미 계정이 있으신가요?",
+    "toast.signup.codeSent":"인증번호를 보냈습니다.",
+    "toast.signup.needMatch":"비밀번호가 일치하지 않습니다.",
+    "toast.signup.ok":"가입이 완료되었습니다. 로그인해 주세요.",
+    "toast.signup.fail":"가입에 실패했습니다.",
+    "profile.complete.title":"기본 정보 입력",
+    "profile.complete.sub":"패키지 구매 전에 이름, 국적, 전화번호가 필요합니다.",
+    "profile.field.name":"이름",
+    "profile.field.nationality":"국적 / 국가",
+    "profile.field.phoneCode":"국가번호",
+    "profile.field.phone":"전화번호",
+    "profile.complete.cta":"저장 후 계속",
+    "toast.profile.needLogin":"계속하려면 로그인해 주세요.",
+    "toast.profile.needComplete":"구매 전에 기본 정보를 입력해 주세요.",
+    "toast.profile.saved":"프로필이 저장되었습니다.",
+    "toast.profile.fail":"프로필을 저장하지 못했습니다.",
+    "admin.side.signout":"로그아웃",
     "admin.paymentgw.crumbs":"콘솔 / 결제 게이트웨이",
     "admin.paymentgw.title-html":"결제 <span class=\"grad\">게이트웨이</span>",
-    "admin.paymentgw.sub":"새로운 직접(웹) 결제를 처리할 제공업체를 선택하세요. 이미 진행 중인 주문은 생성 당시의 게이트웨이를 그대로 사용합니다.",
-    "admin.paymentgw.note-html":"자격 증명은 Netlify 환경 변수에만 저장되며 데이터베이스에는 저장되지 않습니다. 이 페이지는 <em>어떤</em> 게이트웨이를 사용할지만 기록합니다. 먼저 Netlify에 키를 설정한 뒤 여기서 활성화하세요.",
-    "admin.paymentgw.note.default":"아직 선택이 저장되지 않아 기본 게이트웨이가 사용됩니다. 아래에서 선택하면 명시적으로 지정됩니다.",
-    "admin.paymentgw.state.ready":"설정 완료, 사용 준비됨.",
-    "admin.paymentgw.state.missing":"설정 미완료. 누락된 환경 변수: {list}",
+    "admin.paymentgw.sub":"웹 결제에 사용할 게이트웨이를 선택하세요. 이미 진행 중인 주문은 생성 당시 게이트웨이를 유지합니다.",
+    "admin.paymentgw.note-html":"키는 Netlify 환경 변수에만 두고 DB에는 저장하지 않습니다. 이 화면은 <em>어느</em> 게이트웨이를 쓸지만 기록합니다. 먼저 Netlify에 키를 넣은 뒤 여기서 활성화하세요.",
+    "admin.paymentgw.note.default":"아직 선택이 없어 기본 게이트웨이를 씁니다. 아래에서 고르면 명시적으로 지정됩니다.",
+    "admin.paymentgw.state.ready":"설정 완료, 사용 가능합니다.",
+    "admin.paymentgw.state.missing":"설정이 부족합니다. 없는 환경 변수: {list}",
     "admin.paymentgw.badge.active":"사용 중",
     "admin.paymentgw.btn.use":"이 게이트웨이 사용",
     "admin.paymentgw.btn.inuse":"사용 중",
-    "admin.paymentgw.btn.needenv":"먼저 Netlify에서 이 게이트웨이의 환경 변수를 설정하세요",
+    "admin.paymentgw.btn.needenv":"먼저 Netlify에서 이 게이트웨이 환경 변수를 설정하세요",
     "admin.paymentgw.btn.copy":"복사",
     "admin.paymentgw.lbl.channels":"결제 채널",
     "admin.paymentgw.lbl.callback":"콜백 URL — 제공업체 대시보드에 등록하세요",
@@ -1863,18 +2128,9 @@ const FULL_TRANSLATIONS = {
     "toast.paymentgw.confirm":"모든 신규 결제를 {name}(으)로 처리할까요?\n\n진행 중인 주문은 영향을 받지 않으며, 각각 시작한 게이트웨이로 완료됩니다.",
     "toast.paymentgw.saved":"이제 신규 결제는 {name}(으)로 처리됩니다",
     "toast.paymentgw.failed":"저장하지 못했습니다: {error}",
-    "admin.side.emails":"이메일 대기열",
-    "admin.side.smtp":"이메일 SMTP",
-    "admin.side.domain":"도메인 · SSL",
-    "admin.side.server":"서버 관리",
-    "admin.side.languages":"언어",
-    "admin.side.branding":"브랜딩",
-    "admin.side.dmchamp":"AI API",
-    "admin.side.account":"계정",
-    "admin.side.password":"비밀번호 변경",
     "admin.domain.crumbs":"콘솔 / 도메인 · SSL",
     "admin.domain.title-html":'도메인 <span class="grad">· SSL</span>',
-    "admin.domain.sub":"공개 사이트 URL과 Let's Encrypt SAN 대조 — PG 본사정책 → 도메인·SSL과 동일한 개념입니다.",
+    "admin.domain.sub":"공개 사이트 URL과 Let's Encrypt SAN 대조 — PG와 같은 도메인·SSL 관리입니다.",
     "admin.domain.global.title":"공개 URL",
     "admin.domain.global.hint":"HTTPS SAN 확인과 운영 안내에 사용합니다. 스킴이 없으면 https:// 를 붙입니다.",
     "admin.domain.field.site":"공개 사이트 URL",
@@ -2119,9 +2375,19 @@ const FULL_TRANSLATIONS = {
     "admin.orders.export.empty":"현재 보기에서 내보낼 주문이 없습니다",
     "admin.orders.export.done":"{count}건의 주문을 CSV로 내보냈습니다",
     // Admin · users
-    "admin.users.title-html":'사용자 & <span class="grad">고객</span>',
+    "admin.users.title-html":'사용자 <span class="grad">관리</span>',
     "admin.users.add":"사용자 추가",
-    "admin.users.h":"모든 사용자",
+    "admin.users.h":"운영 사용자(관리자)",
+    "admin.users.empty":"운영 사용자가 없습니다",
+    "admin.users.modal.title-html":'<span class="grad">새 사용자</span> 추가',
+    "admin.users.modal.sub":"운영 사용자만 등록합니다. 서비스 고객은 고객관리에서 처리합니다.",
+    "admin.customers.title-html":'고객 <span class="grad">관리</span>',
+    "admin.customers.add":"고객 추가",
+    "admin.customers.h":"서비스 이용 고객",
+    "admin.customers.empty":"고객이 없습니다",
+    "admin.customers.modal.title-html":'<span class="grad">새 고객</span> 추가',
+    "admin.customers.modal.sub":"고객은 이메일로 자격 증명을 받으며 첫 로그인 시 비밀번호를 변경해야 합니다.",
+    "admin.customers.modal.cta":"고객 만들기",
     "admin.users.col.name":"이름",
     "admin.users.col.email":"이메일",
     "admin.users.col.role":"역할",
@@ -2137,9 +2403,6 @@ const FULL_TRANSLATIONS = {
     "admin.users.status.pendingPassword":"비밀번호 대기",
     "admin.users.status.disabled":"비활성",
     "admin.users.activePackage.daysLeft":"{n}일 남음",
-    "admin.users.empty":"사용자가 없습니다",
-    "admin.users.modal.title-html":'<span class="grad">새 사용자</span> 추가',
-    "admin.users.modal.sub":"사용자는 이메일로 자격 증명을 받게 되며 첫 로그인 시 비밀번호를 변경해야 합니다.",
     "admin.users.modal.name":"성명",
     "admin.users.modal.email":"이메일",
     "admin.users.modal.role":"역할",
@@ -2280,6 +2543,8 @@ const FULL_TRANSLATIONS = {
     "toast.password.updated":"비밀번호 업데이트됨",
     "toast.password.wrong":"현재 비밀번호가 올바르지 않습니다",
     "toast.password.mismatch":"새 비밀번호가 일치하지 않습니다",
+    "toast.password.resetSent":"{email}으로 비밀번호 재설정 메일을 보냈습니다. 받은편지함/스팸함을 확인하세요.",
+    "toast.password.resetSmtp":"SMTP가 설정되지 않았습니다. 관리자 → 이메일 SMTP를 먼저 설정한 뒤 다시 시도하세요.",
     "toast.translation.saved":"번역 저장됨",
     "toast.webhook.fired":"웹훅 처리됨 · 주문 #{ref}",
     "toast.webhook.firedEvent":"웹훅 처리됨 · {event} · 주문 #{ref}",
@@ -2397,92 +2662,94 @@ const FULL_TRANSLATIONS = {
     // Navigation
     "nav.home":"ホーム",
     "nav.packages":"パッケージ",
-    "nav.admin":"管理コンソール",
+    "nav.admin":"管理画面",
     "nav.login":"ログイン",
     "nav.signout":"ログアウト",
+    "session.ip":"接続元IP",
+    "session.accessAt":"アクセス日時",
     // Drawer
     "drawer.title":"メニュー",
     "drawer.lang":"言語",
     "drawer.account":"アカウント",
     // Hero
-    "hero.eyebrow":"AI営業エージェント · ライブネットワーク",
-    "hero.title-html":'眠っている間に<br/><span class="grad">販売しましょう。</span><br/><span class="outline">文字通り。</span>',
-    "hero.lede":"{brand}は、WhatsApp、Instagram、Messenger、およびあなたのサイトでリードの選別、異議処理、ミーティング予約、取引成立を行う自律型AI営業エージェントです — 24時間、4言語対応。",
+    "hero.eyebrow":"AI営業エージェント · 24時間稼働",
+    "hero.title-html":'眠っている間も<br/><span class="grad">商談を前へ。</span><br/><span class="outline">24時間、自動で。</span>',
+    "hero.lede":"{brand}は、見込み顧客への対応から質問への回答、商談予約、成約までを自動化するAI営業エージェントです。WhatsApp、Instagram、Messenger、Webサイトで24時間対応し、4言語をサポートします。",
     "hero.cta-primary":"パッケージを見る",
-    "hero.cta-secondary":"管理コンソールを開く",
-    "hero.cta-admin":"管理コンソールを開く",
-    "hero.cta-account":"マイアカウントへ",
+    "hero.cta-secondary":"管理画面を開く",
+    "hero.cta-admin":"管理画面を開く",
+    "hero.cta-account":"マイページへ",
     "hero.cta-signin":"ログイン",
     // Capabilities
     "caps.num":"01 / 機能",
-    "caps.title-html":'ボットではありません。<span class="grad">クローザーです。</span>',
-    "caps.lede":"URLを入力するだけ。エージェントが製品、価格、価値提案を読み取り、15分で販売を開始します。コードもプロンプトも不要。",
-    "cap.01.t":"本当に人間のような",
-    "cap.01.d":"音声メモ、画像、動画、PDFで会話可能。最高のクローザーのように聞こえます。",
+    "caps.title-html":'ただのボットではない。<span class="grad">成約につなげるAI。</span>',
+    "caps.lede":"WebサイトのURLを入力するだけ。商品、料金、強みをAIが読み取り、最短15分で接客を始めます。コードもプロンプトも不要です。",
+    "cap.01.t":"人らしい自然な応対",
+    "cap.01.d":"音声メッセージ、画像、動画、PDFにも対応。優秀な営業担当者のように自然に会話します。",
     "cap.02.t":"マルチチャネル",
-    "cap.02.d":"WhatsApp · Instagram · Messenger · ウェブチャット — すべての面で1つのメモリ。",
-    "cap.03.t":"15分セットアップ",
-    "cap.03.d":"ウェブサイトのURLを貼り付けるだけ。AIが製品と価格を自動的に読み取ります。コードもプロンプトも不要。",
+    "cap.02.d":"WhatsApp · Instagram · Messenger · Webチャットの履歴をまとめて引き継ぎます。",
+    "cap.03.t":"最短15分で導入",
+    "cap.03.d":"WebサイトのURLを貼り付けるだけで、AIが商品と料金を自動で読み取ります。専門知識は不要です。",
     "cap.04.t":"マルチモーダル",
-    "cap.04.d":"音声メモ、画像、ドキュメント/PDF、動画を理解 — テキストだけではありません。",
+    "cap.04.d":"テキストだけでなく、音声メッセージ、画像、PDF、動画も理解します。",
     "cap.05.t":"チャット内予約",
-    "cap.05.d":"購入シグナルを検出し、会話内で予約を行います。外部リンクなし。",
-    "cap.06.t":"メモリ & コンテキスト",
-    "cap.06.d":"以前の会話や好みを記憶し、長期的な関係を構築します。",
-    "cap.07.t":"キャンペーン & フォローアップ",
-    "cap.07.d":"アウトバウンドメッセージング、自動フォローアップ、IGやFacebookでのComment-to-DM。",
-    "cap.08.t":"自己改善",
-    "cap.08.d":"ワンクリック最適化により、最も成約した会話を分析し、コンバージョン率を向上させます。",
+    "cap.05.d":"購入意向を捉え、そのままチャット内で予約を確定します。外部リンクは不要です。",
+    "cap.06.t":"会話履歴を記憶",
+    "cap.06.d":"過去の会話や好みを記憶し、一人ひとりに合った継続的な対応を行います。",
+    "cap.07.t":"キャンペーン・追客",
+    "cap.07.d":"一斉配信、自動フォロー、InstagramやFacebookのコメントからDMへの誘導に対応します。",
+    "cap.08.t":"継続的に最適化",
+    "cap.08.d":"成約につながった会話をワンクリックで分析し、応対とコンバージョン率を改善します。",
     // Packages
     "pkg.num":"02 / 価格",
-    "pkg.title-html":'始める<span class="grad">3つの方法</span>',
-    "pkg.lede":"従量制のクレジット、日単位の無制限アクセス、またはローリングサブスクリプション。すべてのプランは、認証情報を含めてメールで即座にプロビジョニングされます。",
+    "pkg.title-html":'選べる<span class="grad">3つのプラン</span>',
+    "pkg.lede":"必要な分だけ使えるクレジット、期間限定の使い放題、定期購入からお選びいただけます。お申し込み後、ログイン情報をメールでお送りします。",
     "pkg.tab.credit":"クレジット購入",
-    "pkg.tab.onetime":"1回アクセス",
-    "pkg.tab.sub":"サブスクリプション",
-    "pkg.sub.note":"サブスクリプションのクレジットは各サイクルの終了時に失効します。クレジットが枯渇した後にサイクル中に継続するには、クレジット購入のトップアップを追加してください。",
-    "pkg.select":"選択",
-    "pkg.subscribe":"登録",
-    "pkg.configure":"設定",
+    "pkg.tab.onetime":"期間利用",
+    "pkg.tab.sub":"定期購入",
+    "pkg.sub.note":"定期購入のクレジットは各更新日に失効します。更新日前に使い切った場合は、クレジットを追加購入できます。",
+    "pkg.select":"選ぶ",
+    "pkg.subscribe":"申し込む",
+    "pkg.configure":"金額を指定",
     "pkg.featured":"人気No.1",
-    "pkg.manual.title":"手動入力",
-    "pkg.manual.desc":"金額を入力してください — トップアップとonthelineの残高に使用されます。",
+    "pkg.manual.title":"金額を指定",
+    "pkg.manual.desc":"クレジット追加やonthelineの差額調整に使う金額を入力してください。",
     "pkg.manual.label":"金額を入力 (USD)",
     // Credit Purchase packages
     "pkg.credit.5.t":"スターター",
-    "pkg.credit.5.d":"トライアルや小規模キャンペーン向けの軽量クレジットトップアップ。",
-    "pkg.credit.10.t":"エッセンシャル",
-    "pkg.credit.10.d":"中程度のアクティビティで1週間使用可能なクレジット。",
-    "pkg.credit.20.t":"スタジオ",
+    "pkg.credit.5.d":"お試しや小規模なキャンペーンにおすすめです。",
+    "pkg.credit.10.t":"ベーシック",
+    "pkg.credit.10.d":"通常利用で約1週間分のクレジットです。",
+    "pkg.credit.20.t":"プロ",
     "pkg.credit.20.d":"個人事業主やコンサルタントに最適。",
-    "pkg.credit.50.t":"アトリエ",
+    "pkg.credit.50.t":"チーム",
     "pkg.credit.50.d":"同時にキャンペーンを実行する小規模チーム向け。",
-    "pkg.credit.100.t":"ハウス",
-    "pkg.credit.100.d":"代理店および大量販売者向けのパワーティア。",
+    "pkg.credit.100.t":"ビジネス",
+    "pkg.credit.100.d":"代理店や利用量の多い事業者向けです。",
     // 1-Time Access
     "pkg.onetime.3d.t":"3日間",
     "pkg.onetime.3d.d":"72時間の無制限クレジット。",
     "pkg.onetime.7d.t":"7日間",
-    "pkg.onetime.7d.d":"無制限アクセスの1週間。",
+    "pkg.onetime.7d.d":"1週間、制限なくご利用いただけます。",
     "pkg.onetime.14d.t":"14日間",
-    "pkg.onetime.14d.d":"無制限アクティビティの2週間。",
+    "pkg.onetime.14d.d":"2週間、制限なくご利用いただけます。",
     "pkg.onetime.1m.t":"1か月",
     "pkg.onetime.1m.d":"月次キャンペーンサイクルに最適。",
     "pkg.onetime.3m.t":"3か月",
-    "pkg.onetime.3m.d":"四半期アクセス — ほとんどの代理店が選択。",
+    "pkg.onetime.3m.d":"3か月利用できる、代理店に人気のプランです。",
     "pkg.onetime.6m.t":"6か月",
     "pkg.onetime.6m.d":"優先サポート付きの半年契約。",
     "pkg.onetime.12m.t":"12か月",
     "pkg.onetime.12m.d":"年間アクセス — 主力プラン。",
     "pkg.onetime.24m.t":"24か月",
-    "pkg.onetime.24m.d":"2年契約 — 日割り最高価値。",
+    "pkg.onetime.24m.d":"1日あたりの料金が最もお得な2年プランです。",
     // Subscription
     "pkg.sub.1m.t":"1か月",
     "pkg.sub.1m.d":"月次更新。いつでもキャンセル可能。",
     "pkg.sub.3m.t":"3か月",
-    "pkg.sub.3m.d":"四半期 — 最も人気のあるティア。",
+    "pkg.sub.3m.d":"最も人気のある3か月プランです。",
     "pkg.sub.6m.t":"6か月",
-    "pkg.sub.6m.d":"優先キュー付きの半年契約。",
+    "pkg.sub.6m.d":"優先対応付きの6か月プランです。",
     "pkg.sub.12m.t":"12か月",
     "pkg.sub.12m.d":"年間サブスクリプション — 推奨。",
     "pkg.sub.24m.t":"24か月",
@@ -2571,16 +2838,18 @@ const FULL_TRANSLATIONS = {
     "confirm.cta-portal":"ポータルを開く",
     "confirm.cta-back":"パッケージに戻る",
     // Admin · sidebar
-    "admin.side.console":"コンソール",
+    "admin.side.console":"ダッシュボード",
     "admin.side.orders":"注文",
-    "admin.side.users":"ユーザー",
+    "admin.side.users":"顧客管理",
+    "admin.side.staff":"ユーザー管理",
+    "admin.side.customers":"顧客管理",
     "admin.side.packages":"パッケージ",
     "admin.side.webhook":"Webhook",
-    "admin.side.partners":"パートナー一覧",
+    "admin.side.partners":"パートナー管理",
     "admin.side.paygw":"PG一覧",
     "admin.side.currencies":"通貨",
-    "admin.currencies.title":"ontheline通貨",
-    "admin.currencies.sub":"onthelineがウェブフックの<code>currency</code>フィールドに送信する可能性のある通貨コードを管理します。一致しない通貨のウェブフックは拒否されます。記号は注文の金額の横に表示され、USD値（クレジット計算用）はライブ為替レートで変換されます。",
+    "admin.currencies.title":"通貨管理",
+    "admin.currencies.sub":"onthelineのWebhookで受け付ける通貨コードを設定します。登録されていない通貨は拒否されます。通貨記号は注文金額に表示され、クレジット計算用のUSD額は最新の為替レートで換算されます。",
     "admin.currencies.add":"通貨を追加",
     "admin.currencies.empty":"通貨がありません。追加してください（例: USD $）。",
     "admin.currencies.add.title":"通貨を追加",
@@ -2591,17 +2860,17 @@ const FULL_TRANSLATIONS = {
     "admin.currencies.code.ph":"例: USD, THB, JPY, KRW",
     "admin.currencies.symbol.ph":"例: $, ฿, ¥, ₩",
     "admin.currencies.label.ph":"例: 米ドル",
-    "admin.currencies.hint":"コードはウェブフック通貨値と大文字小文字を区別せず一致し、USD変換に使用されます。為替レートAPIが認識できるよう標準の3文字ISO 4217コードを使用してください。",
-    "admin.partners.title":"onthelineパートナー",
-    "admin.partners.sub":"onthelineがウェブフック呼び出しで送信する可能性のあるパートナーコードを管理します。受信ウェブフックの<code>partner</code>値がこれらのコードのいずれにも一致しない場合は拒否されます。",
+    "admin.currencies.hint":"Webhookのcurrency値と大文字・小文字を区別せず照合し、USD換算にも使用します。ISO 4217の3文字コードを入力してください。",
+    "admin.partners.title":"パートナー管理",
+    "admin.partners.sub":"onthelineのWebhookで受け付けるパートナーコードを設定します。登録されていない<code>partner</code>値は拒否されます。",
     "admin.partners.add":"パートナーを追加",
-    "admin.partners.empty":"パートナーがありません。パートナーコード付きのonthelineウェブフックを受け入れるには追加してください。",
+    "admin.partners.empty":"パートナーが登録されていません。",
     "admin.partners.add.title":"パートナーを追加",
     "admin.partners.edit.title":"パートナーを編集",
-    "admin.paygw.title":"ontheline決済ゲートウェイ",
-    "admin.paygw.sub":"onthelineがウェブフック呼び出しで送信する可能性のある決済ゲートウェイコードを管理します。受信ウェブフックの<code>paygw</code>値がこれらのコードのいずれにも一致しない場合は拒否されます。",
+    "admin.paygw.title":"PG一覧",
+    "admin.paygw.sub":"onthelineのWebhookで受け付ける決済ゲートウェイコードを設定します。登録されていない<code>paygw</code>値は拒否されます。",
     "admin.paygw.add":"決済ゲートウェイを追加",
-    "admin.paygw.empty":"決済ゲートウェイがありません。paygwコード付きのonthelineウェブフックを受け入れるには追加してください。",
+    "admin.paygw.empty":"決済ゲートウェイが登録されていません。",
     "admin.paygw.add.title":"決済ゲートウェイを追加",
     "admin.paygw.edit.title":"決済ゲートウェイを編集",
     "admin.codelist.col.code":"コード",
@@ -2612,14 +2881,14 @@ const FULL_TRANSLATIONS = {
     "admin.codelist.save":"保存",
     "admin.codelist.code.ph":"例: PARTNER01",
     "admin.codelist.company.ph":"例: Acme Travel Co., Ltd.",
-    "admin.codelist.code.hint":"コードはウェブフック値と完全に（大文字小文字を区別せず）一致します。会社名は参照用で注文に表示されます。",
+    "admin.codelist.code.hint":"Webhookの値と大文字・小文字を区別せず照合します。会社名は注文画面にも表示されます。",
     "admin.side.chillpay":"PGイベント",
     "admin.side.paymentgw":"PG管理",
-    "admin.paymentgw.crumbs":"コンソール / 決済ゲートウェイ",
-    "admin.paymentgw.title-html":"決済<span class=\"grad\">ゲートウェイ</span>",
-    "admin.paymentgw.sub":"新規の直接（ウェブ）決済を処理する事業者を選択します。進行中の注文は作成時のゲートウェイをそのまま使用します。",
+    "admin.paymentgw.crumbs":"管理画面 / PG管理",
+    "admin.paymentgw.title-html":"<span class=\"grad\">決済ゲートウェイ</span>設定",
+    "admin.paymentgw.sub":"Webからの新規決済に使用する事業者を選択します。処理中の注文には変更前のゲートウェイが引き続き適用されます。",
     "admin.paymentgw.note-html":"認証情報は Netlify の環境変数にのみ保存され、データベースには保存されません。このページは<em>どの</em>ゲートウェイを使うかだけを記録します。先に Netlify でキーを設定してから、ここで有効化してください。",
-    "admin.paymentgw.note.default":"まだ選択が保存されていないため、既定のゲートウェイが使用されます。下から選ぶと明示的に指定できます。",
+    "admin.paymentgw.note.default":"ゲートウェイが未選択のため、既定の設定を使用します。下から使用するゲートウェイを選択してください。",
     "admin.paymentgw.state.ready":"設定済み・利用可能です。",
     "admin.paymentgw.state.missing":"未設定です。不足している環境変数: {list}",
     "admin.paymentgw.badge.active":"使用中",
@@ -2644,12 +2913,63 @@ const FULL_TRANSLATIONS = {
     "admin.side.smtp":"Email SMTP",
     "admin.side.domain":"Domain & SSL",
     "admin.side.server":"サーバー管理",
-    "admin.side.languages":"言語",
+    "admin.side.languages":"言語（編集不可）",
     "admin.side.branding":"ブランディング",
-    "admin.side.dmchamp":"AI API",
+    "admin.side.dmchamp":"API設定",
     "admin.side.account":"アカウント",
     "admin.side.password":"パスワード変更",
     "admin.side.signout":"ログアウト",
+    "admin.group.users":"顧客情報",
+    "admin.group.customers":"顧客情報",
+    "admin.group.ops":"運用",
+    "admin.group.sales":"販売",
+    "admin.group.settings":"設定",
+    "admin.tabs.max":"同時に開けるメニューは12件までです。最も古いタブを閉じました。",
+    "admin.langs.disabled.title":"言語の編集はできません",
+    "admin.langs.disabled.sub":"自然で統一された表現を保つため、画面の文言は製品側で管理しています。Firestoreの翻訳データで上書きされることはありません。",
+    "admin.langs.disabled.note":"ユーザーは引き続き EN / TH / KR / JP / CH を選択できます。",
+    "login.otp.title":"二段階認証",
+    "login.otp.totpHint":"認証アプリの6桁コードを入力してください。",
+    "login.otp.enrollTitle":"OTP登録 — メール認証",
+    "login.otp.emailHint":"{email} に送信された6桁コードを入力してください。",
+    "login.otp.googleTitle":"Google Authenticator 設定",
+    "login.otp.scanHint":"Google AuthenticatorでQRをスキャンし、6桁コードを入力してください。",
+    "login.otp.code":"OTPコード",
+    "login.otp.verify":"認証",
+    "login.otp.activate":"OTPを有効化",
+    "login.otp.resend":"コード再送信",
+    "login.otp.back":"ログインに戻る",
+    "login.otp.required":"管理者アカウントはOTP認証が必要です。",
+    "toast.otp.invalid":"OTPコードが正しくありません。",
+    "toast.otp.sent":"認証コードを送信しました。",
+    "toast.otp.activated":"OTPが有効になりました。ようこそ。",
+    "login.noAccount":"アカウントをお持ちでない方",
+    "login.createAccount":"新規登録",
+    "login.help":"メール認証で新規登録するか、お持ちのアカウントでログインしてください。",
+    "signup.title":"アカウント作成",
+    "signup.sub":"メールアドレスとパスワードを入力してください。確認コードをメールでお送りします。",
+    "signup.passwordConfirm":"パスワード（確認）",
+    "signup.sendCode":"確認コードを送信",
+    "signup.verifyTitle":"メールアドレスの確認",
+    "signup.codeHint":"{email} に届いた6桁の確認コードを入力してください。",
+    "signup.code":"確認コード",
+    "signup.complete":"登録を完了",
+    "signup.haveAccount":"アカウントをお持ちですか？",
+    "toast.signup.codeSent":"確認コードを送信しました。",
+    "toast.signup.needMatch":"パスワードが一致しません。",
+    "toast.signup.ok":"アカウントを作成しました。ログインしてください。",
+    "toast.signup.fail":"アカウントを作成できませんでした。",
+    "profile.complete.title":"お客様情報の入力",
+    "profile.complete.sub":"パッケージを購入する前に、氏名、国籍、電話番号を入力してください。",
+    "profile.field.name":"氏名",
+    "profile.field.nationality":"国籍 / 国",
+    "profile.field.phoneCode":"国番号",
+    "profile.field.phone":"電話番号",
+    "profile.complete.cta":"保存して次へ",
+    "toast.profile.needLogin":"続けるにはログインしてください。",
+    "toast.profile.needComplete":"購入前にお客様情報を入力してください。",
+    "toast.profile.saved":"お客様情報を保存しました。",
+    "toast.profile.fail":"お客様情報を保存できませんでした。",
     // Admin · branding
     "admin.branding.crumbs":"コンソール / ブランディング",
     "admin.branding.title-html":'サイト<span class="grad">ブランディング</span>',
@@ -3105,6 +3425,79 @@ const FULL_TRANSLATIONS = {
     "admin.packages.modal.duration.hint":"このパッケージが付与するアクセス日数。期限のないクレジットパッケージの場合は空白にしてください。",
     "admin.packages.duration.none":"期限なし",
     "admin.packages.duration.days":"{n}日",
+    // Customer management
+    "admin.customers.title-html":'顧客<span class="grad">管理</span>',
+    "admin.customers.add":"顧客を追加",
+    "admin.customers.h":"サービス利用顧客",
+    "admin.customers.empty":"顧客はまだ登録されていません。",
+    "admin.customers.modal.title-html":'<span class="grad">新規顧客</span>を追加',
+    "admin.customers.modal.sub":"顧客にはログイン情報がメールで届き、初回ログイン時にパスワードの変更が必要です。",
+    "admin.customers.modal.cta":"顧客を作成",
+    // SMTP
+    "admin.smtp.crumbs":"管理画面 / メールSMTP",
+    "admin.smtp.title-html":'メール <span class="grad">SMTP</span>',
+    "admin.smtp.sub":"領収書やログイン情報などの送信に使用するSMTPアカウントを管理します。送信元の指定がない場合は既定のアカウントを使用します。",
+    "admin.smtp.global.title":"共通メール設定",
+    "admin.smtp.global.replyTo":"返信先",
+    "admin.smtp.global.supportBcc":"サポートBCC / ontheline受信先",
+    "admin.smtp.global.testRewrite":"テスト送信先の置換（任意）",
+    "admin.smtp.global.testRewrite.hint":"設定すると、すべての送信メールがこのアドレスに転送され、件名にテスト用の印が付きます。本番環境では空欄にしてください。",
+    "admin.smtp.global.default":"既定のアカウント",
+    "admin.smtp.global.save":"設定を保存",
+    "admin.smtp.accounts.title":"SMTPアカウント",
+    "admin.smtp.accounts.add":"アカウントを追加",
+    "admin.smtp.accounts.empty":"SMTPアカウントがありません。メールを送信するにはアカウントを追加してください。",
+    "admin.smtp.col.name":"表示名",
+    "admin.smtp.col.host":"ホスト",
+    "admin.smtp.col.user":"ユーザー名",
+    "admin.smtp.col.from":"送信元",
+    "admin.smtp.col.status":"状態",
+    "admin.smtp.status.enabled":"有効",
+    "admin.smtp.status.disabled":"無効",
+    "admin.smtp.status.default":"既定",
+    "admin.smtp.action.edit":"編集",
+    "admin.smtp.action.delete":"削除",
+    "admin.smtp.action.setDefault":"既定に設定",
+    "admin.smtp.modal.add":"SMTPアカウントを追加",
+    "admin.smtp.modal.edit":"SMTPアカウントを編集",
+    "admin.smtp.field.name":"表示名",
+    "admin.smtp.field.host":"SMTPホスト",
+    "admin.smtp.field.port":"ポート",
+    "admin.smtp.field.secure":"SSL/TLS（通常はポート465で有効）",
+    "admin.smtp.field.user":"ユーザー名（メールアドレス）",
+    "admin.smtp.field.pass":"パスワード / アプリパスワード",
+    "admin.smtp.field.pass.keep":"現在のパスワードを維持する場合は空欄",
+    "admin.smtp.field.from":"Fromヘッダー",
+    "admin.smtp.field.from.hint":"例: Deal Mai <noreply@dealmai.com>",
+    "admin.smtp.field.enabled":"有効",
+    "admin.smtp.btn.save":"アカウントを保存",
+    "admin.smtp.btn.test":"テストメールを送信",
+    "admin.smtp.test.to":"テストメールの送信先",
+    "toast.smtp.saved":"SMTP設定を保存しました",
+    "toast.smtp.account.saved":"SMTPアカウントを保存しました",
+    "toast.smtp.account.deleted":"SMTPアカウントを削除しました",
+    "toast.smtp.default.set":"既定のSMTPアカウントを更新しました",
+    // Domain & SSL
+    "admin.domain.crumbs":"管理画面 / ドメイン・SSL",
+    "admin.domain.title-html":'ドメイン <span class="grad">・ SSL</span>',
+    "admin.domain.sub":"公開URLとLet’s Encrypt証明書のSAN登録状況を管理します。",
+    "admin.domain.global.title":"公開URL",
+    "admin.domain.global.hint":"HTTPS証明書のSAN確認と運用資料に使用します。スキームがない場合は https:// を補います。",
+    "admin.domain.field.site":"公開サイトURL",
+    "admin.domain.field.www":"www URL",
+    "admin.domain.field.api":"APIベースURL",
+    "admin.domain.save":"URLを保存",
+    "admin.domain.ssl.title":"Let’s Encrypt · SAN連携",
+    "admin.domain.ssl.intro":"以下のURLのホスト名と、このサーバーのfullchain.pemに含まれるSANを照合します。不一致があるとブラウザに証明書警告が表示される場合があります。",
+    "admin.domain.ssl.loading":"読み込み中…",
+    "admin.domain.ssl.empty":"ホスト名がまだ設定されていません。",
+    "admin.domain.col.host":"ホスト名",
+    "admin.domain.col.source":"登録元",
+    "admin.domain.col.inCert":"証明書に登録",
+    "admin.domain.sanOnly":"SANにのみ登録されているホスト:",
+    "admin.domain.missing":"証明書に未登録のホスト:",
+    "admin.domain.yes":"はい",
+    "admin.domain.no":"いいえ",
     // Misc
     "footer.tag":"24/7取引を成立させるAI営業エージェント。"
   },
@@ -3112,25 +3505,27 @@ const FULL_TRANSLATIONS = {
   zh: {
     "nav.home":"首页",
     "nav.packages":"套餐",
-    "nav.admin":"管理控制台",
+    "nav.admin":"管理后台",
     "nav.login":"登录",
     "nav.signout":"退出",
+    "session.ip":"访问 IP",
+    "session.accessAt":"访问时间",
     "drawer.title":"菜单",
     "drawer.lang":"语言",
     "drawer.account":"账户",
-    "hero.eyebrow":"AI 销售代理 · 实时网络",
-    "hero.title-html":'在你<span class="grad">睡觉</span>时<br/>也能成交。<br/><span class="outline">真的。</span>',
-    "hero.lede":"{brand} 是自主 AI 销售代理，可筛选线索、处理异议、预约会议并完成成交 — 覆盖 WhatsApp、Instagram、Messenger 与您的网站，全天候四语服务。",
+    "hero.eyebrow":"AI 销售助手 · 全天在线",
+    "hero.title-html":'即使你在<span class="grad">休息</span><br/>生意也能继续。<br/><span class="outline">全天自动推进。</span>',
+    "hero.lede":"{brand} 是自主 AI 销售助手，可筛选潜在客户、解答疑问、预约洽谈并促成交易。支持 WhatsApp、Instagram、Messenger 和网站，全天候提供四种语言服务。",
     "hero.cta-primary":"浏览套餐",
-    "hero.cta-secondary":"打开管理控制台",
-    "hero.cta-admin":"打开管理控制台",
+    "hero.cta-secondary":"进入管理后台",
+    "hero.cta-admin":"进入管理后台",
     "hero.cta-account":"进入我的账户",
     "hero.cta-signin":"登录",
-    "caps.num":"01 / 能力",
-    "caps.title-html":'不是机器人。是<span class="grad">成交高手</span>',
-    "caps.lede":"放入您的网址。代理会读取产品、价格与卖点 — 15 分钟内开始销售。无需代码，无需提示词。",
-    "cap.01.t":"真正像人",
-    "cap.01.d":"支持语音、图片、视频与 PDF 对话，像您最好的销售顾问。",
+    "caps.num":"01 / 核心能力",
+    "caps.title-html":'不只是机器人，更是<span class="grad">成交助手</span>',
+    "caps.lede":"输入网站地址，AI 即可读取产品、价格和卖点，最快 15 分钟开始接待客户。无需编程，也无需编写提示词。",
+    "cap.01.t":"自然沟通",
+    "cap.01.d":"支持语音、图片、视频和 PDF，像优秀销售顾问一样自然交流。",
     "cap.02.t":"多渠道",
     "cap.02.d":"WhatsApp · Instagram · Messenger · 网页聊天 — 全渠道同一记忆。",
     "cap.03.t":"15 分钟上线",
@@ -3141,21 +3536,60 @@ const FULL_TRANSLATIONS = {
     "cap.05.d":"识别购买信号并在对话中预约，无需外部链接。",
     "cap.06.t":"记忆与上下文",
     "cap.06.d":"记住过往对话与偏好，建立长期关系。",
-    "cap.07.t":"活动与跟进",
-    "cap.07.d":"外呼消息、自动跟进，以及 IG / Facebook 评论转私信。",
+    "cap.07.t":"营销与跟进",
+    "cap.07.d":"支持主动触达、自动跟进，以及 Instagram / Facebook 评论转私信。",
     "cap.08.t":"自我优化",
     "cap.08.d":"一键优化：学习高成交对话并提升转化率。",
     "pkg.num":"02 / 价格",
-    "pkg.title-html":'三种方式<span class="grad">开始</span>',
-    "pkg.lede":"按量付费积分、按日不限量，或滚动订阅。每个方案即时开通，凭证发送至邮箱。",
+    "pkg.title-html":'三种<span class="grad">使用方式</span>',
+    "pkg.lede":"可选择按需购买积分、限时不限量使用或定期订阅。付款后立即开通，登录信息将发送至邮箱。",
     "pkg.tab.credit":"购买积分",
-    "pkg.tab.onetime":"一次性访问",
+    "pkg.tab.onetime":"限时使用",
     "pkg.tab.sub":"订阅",
     "pkg.sub.note":"订阅周期内的积分在周期结束时过期。中途用尽可另购积分补齐。",
     "pkg.select":"选择",
     "pkg.subscribe":"订阅",
     "pkg.configure":"自定义",
     "pkg.featured":"热门",
+    "pkg.manual.title":"自定义金额",
+    "pkg.manual.desc":"输入用于积分充值或调整 ontheline 差额的金额。",
+    "pkg.manual.label":"输入金额（USD）",
+    "pkg.credit.5.t":"入门版",
+    "pkg.credit.5.d":"适合试用和小型营销活动。",
+    "pkg.credit.10.t":"基础版",
+    "pkg.credit.10.d":"满足约一周的常规使用。",
+    "pkg.credit.20.t":"专业版",
+    "pkg.credit.20.d":"适合个体经营者和顾问。",
+    "pkg.credit.50.t":"团队版",
+    "pkg.credit.50.d":"适合同时开展多个活动的小团队。",
+    "pkg.credit.100.t":"企业版",
+    "pkg.credit.100.d":"适合代理商和高用量商家。",
+    "pkg.onetime.3d.t":"3 天",
+    "pkg.onetime.3d.d":"72 小时不限积分使用。",
+    "pkg.onetime.7d.t":"7 天",
+    "pkg.onetime.7d.d":"一周不限量使用。",
+    "pkg.onetime.14d.t":"14 天",
+    "pkg.onetime.14d.d":"两周不限量使用。",
+    "pkg.onetime.1m.t":"1 个月",
+    "pkg.onetime.1m.d":"适合月度营销活动。",
+    "pkg.onetime.3m.t":"3 个月",
+    "pkg.onetime.3m.d":"深受代理商欢迎的季度方案。",
+    "pkg.onetime.6m.t":"6 个月",
+    "pkg.onetime.6m.d":"含优先支持的半年方案。",
+    "pkg.onetime.12m.t":"12 个月",
+    "pkg.onetime.12m.d":"稳定实用的年度方案。",
+    "pkg.onetime.24m.t":"24 个月",
+    "pkg.onetime.24m.d":"日均价格最优惠的两年方案。",
+    "pkg.sub.1m.t":"1 个月",
+    "pkg.sub.1m.d":"按月续订，可随时取消。",
+    "pkg.sub.3m.t":"3 个月",
+    "pkg.sub.3m.d":"最受欢迎的季度订阅。",
+    "pkg.sub.6m.t":"6 个月",
+    "pkg.sub.6m.d":"含优先支持的半年订阅。",
+    "pkg.sub.12m.t":"12 个月",
+    "pkg.sub.12m.d":"推荐的年度订阅。",
+    "pkg.sub.24m.t":"24 个月",
+    "pkg.sub.24m.d":"两年锁定价格。",
     "checkout.num":"03 / 结算",
     "checkout.title-html":'即将<span class="grad">完成</span>',
     "checkout.section.customer":"客户资料",
@@ -3182,25 +3616,138 @@ const FULL_TRANSLATIONS = {
     "login.password":"密码",
     "login.cta":"登录",
     "footer.tag":"全天候成交的 AI 销售代理。",
+    "admin.side.console":"概览",
     "admin.side.orders":"订单",
-    "admin.side.users":"用户",
+    "admin.side.users":"客户管理",
+    "admin.side.staff":"用户管理",
+    "admin.side.customers":"客户管理",
     "admin.side.packages":"套餐",
     "admin.side.webhook":"Webhook",
-    "admin.side.partners":"合作伙伴列表",
+    "admin.side.partners":"合作伙伴管理",
     "admin.side.paygw":"PG 列表",
     "admin.side.currencies":"货币",
     "admin.side.paymentgw":"PG 管理",
     "admin.side.chillpay":"PG 事件",
-    "admin.side.languages":"语言",
-    "admin.side.branding":"品牌",
+    "admin.side.languages":"语言（不可编辑）",
+    "admin.side.branding":"品牌设置",
     "admin.side.smtp":"邮件 SMTP",
     "admin.side.emails":"邮件队列",
     "admin.side.domain":"域名与 SSL",
-    "admin.side.server":"服务器管理",
-    "admin.side.dmchamp":"AI API",
+    "admin.side.server":"服务器设置",
+    "admin.side.dmchamp":"API 设置",
     "admin.side.account":"账户",
     "admin.side.password":"修改密码",
     "admin.side.signout":"退出",
+    "admin.group.users":"客户信息",
+    "admin.group.customers":"客户信息",
+    "admin.group.ops":"运营",
+    "admin.group.sales":"销售",
+    "admin.group.settings":"设置",
+    "admin.tabs.max":"最多可打开 12 个菜单。已关闭最早的标签。",
+    "admin.currencies.title":"货币管理",
+    "admin.currencies.sub":"设置 ontheline Webhook 可接收的货币代码。未登记的货币将被拒绝。货币符号显示在订单金额旁，积分所需的美元金额按实时汇率换算。",
+    "admin.currencies.add":"添加货币",
+    "admin.currencies.empty":"暂无货币，请先添加。",
+    "admin.currencies.add.title":"添加货币",
+    "admin.currencies.edit.title":"编辑货币",
+    "admin.currencies.col.code":"代码（ISO 4217）",
+    "admin.currencies.col.symbol":"符号",
+    "admin.currencies.col.label":"名称",
+    "admin.currencies.code.ph":"例如 USD、THB、JPY、KRW",
+    "admin.currencies.symbol.ph":"例如 $、฿、¥、₩",
+    "admin.currencies.label.ph":"例如 美元",
+    "admin.currencies.hint":"系统将忽略大小写，与 Webhook 的 currency 值进行匹配，并用于换算美元。请使用 ISO 4217 三位代码。",
+    "admin.partners.title":"合作伙伴管理",
+    "admin.partners.sub":"设置 ontheline Webhook 可接收的合作伙伴代码。未登记的 <code>partner</code> 值将被拒绝。",
+    "admin.partners.add":"添加合作伙伴",
+    "admin.partners.empty":"暂无合作伙伴。",
+    "admin.partners.add.title":"添加合作伙伴",
+    "admin.partners.edit.title":"编辑合作伙伴",
+    "admin.paygw.title":"PG 列表",
+    "admin.paygw.sub":"设置 ontheline Webhook 可接收的支付网关代码。未登记的 <code>paygw</code> 值将被拒绝。",
+    "admin.paygw.add":"添加支付网关",
+    "admin.paygw.empty":"暂无支付网关。",
+    "admin.paygw.add.title":"添加支付网关",
+    "admin.paygw.edit.title":"编辑支付网关",
+    "admin.codelist.col.code":"代码",
+    "admin.codelist.col.company":"公司名称",
+    "admin.codelist.col.actions":"操作",
+    "admin.codelist.edit":"编辑",
+    "admin.codelist.delete":"删除",
+    "admin.codelist.save":"保存",
+    "admin.codelist.code.ph":"例如 PARTNER01",
+    "admin.codelist.company.ph":"例如 Acme Travel Co., Ltd.",
+    "admin.codelist.code.hint":"系统将忽略大小写，与 Webhook 值精确匹配。公司名称用于内部参考，并显示在订单中。",
+    "admin.paymentgw.crumbs":"管理后台 / PG 管理",
+    "admin.paymentgw.title-html":"<span class=\"grad\">支付网关</span>设置",
+    "admin.paymentgw.sub":"选择新的网站订单使用的支付服务商。处理中的订单仍使用创建时的网关。",
+    "admin.paymentgw.note-html":"密钥仅保存在 Netlify 环境变量中，不会写入数据库。本页面只记录<em>当前使用的</em>网关。请先在 Netlify 配置密钥，再在此启用。",
+    "admin.paymentgw.note.default":"尚未选择网关，新付款将使用默认网关。请在下方选择。",
+    "admin.paymentgw.state.ready":"配置完成，可以使用。",
+    "admin.paymentgw.state.missing":"尚未配置，缺少环境变量：{list}",
+    "admin.paymentgw.badge.active":"使用中",
+    "admin.paymentgw.btn.use":"使用此网关",
+    "admin.paymentgw.btn.inuse":"使用中",
+    "admin.paymentgw.btn.needenv":"请先在 Netlify 配置此网关的环境变量",
+    "admin.paymentgw.btn.copy":"复制",
+    "admin.paymentgw.lbl.channels":"支付渠道",
+    "admin.paymentgw.lbl.callback":"回调 URL — 请在服务商后台登记",
+    "admin.paymentgw.hint.callback":"服务器间回调，是支付状态的最终依据。请为所有启用的渠道登记为 URL Background / Webhook。",
+    "admin.paymentgw.lbl.returnurl":"返回 URL（URL Result）— 也需要登记",
+    "admin.paymentgw.hint.returnurl":"客户付款后浏览器返回的页面。所有网关均使用同一地址。",
+    "admin.paymentgw.lbl.env":"环境变量",
+    "admin.paymentgw.empty":"暂无已登记的支付网关。",
+    "admin.paymentgw.err.diag":"无法连接支付功能。请部署网站后刷新本页。",
+    "toast.paymentgw.unknown":"该网关尚未登记",
+    "toast.paymentgw.needenv":"请先配置环境变量，缺少：{list}",
+    "toast.paymentgw.confirm":"确定将所有新付款切换至 {name} 吗？\n\n处理中的订单不受影响，仍由原网关完成。",
+    "toast.paymentgw.saved":"新付款已切换至 {name}",
+    "toast.paymentgw.failed":"保存失败：{error}",
+    "admin.langs.disabled.title":"语言编辑已关闭",
+    "admin.langs.disabled.sub":"为确保各语言自然且一致，界面文案由产品版本统一维护，不再使用 Firestore 翻译覆盖内置文案。",
+    "admin.langs.disabled.note":"用户仍可正常选择 EN / TH / KR / JP / CH。",
+    "login.otp.title":"两步验证",
+    "login.otp.totpHint":"请输入认证应用中的6位验证码。",
+    "login.otp.enrollTitle":"OTP注册 — 邮箱验证",
+    "login.otp.emailHint":"请输入发送至 {email} 的6位验证码。",
+    "login.otp.googleTitle":"Google Authenticator 注册",
+    "login.otp.scanHint":"使用 Google Authenticator 扫描二维码，然后输入6位代码。",
+    "login.otp.code":"验证码",
+    "login.otp.verify":"验证",
+    "login.otp.activate":"启用 OTP",
+    "login.otp.resend":"重新发送",
+    "login.otp.back":"返回登录",
+    "login.otp.required":"管理员账户需要 OTP 验证。",
+    "toast.otp.invalid":"验证码不正确。",
+    "toast.otp.sent":"验证码已发送。",
+    "toast.otp.activated":"OTP 已启用。欢迎。",
+    "login.noAccount":"还没有账户？",
+    "login.createAccount":"创建账户",
+    "login.help":"客户可登录现有账户，或通过邮箱验证创建新账户。",
+    "signup.title":"创建账户",
+    "signup.sub":"使用邮箱和密码注册，我们会向你的邮箱发送验证码。",
+    "signup.passwordConfirm":"确认密码",
+    "signup.sendCode":"发送验证码",
+    "signup.verifyTitle":"验证邮箱",
+    "signup.codeHint":"请输入发送至 {email} 的 6 位验证码。",
+    "signup.code":"验证码",
+    "signup.complete":"完成注册",
+    "signup.haveAccount":"已有账户？",
+    "toast.signup.codeSent":"验证码已发送。",
+    "toast.signup.needMatch":"两次输入的密码不一致。",
+    "toast.signup.ok":"账户已创建，请登录。",
+    "toast.signup.fail":"注册失败。",
+    "profile.complete.title":"完善资料",
+    "profile.complete.sub":"购买套餐前，请填写姓名、国籍和手机号。",
+    "profile.field.name":"姓名",
+    "profile.field.nationality":"国籍 / 国家",
+    "profile.field.phoneCode":"国家代码",
+    "profile.field.phone":"手机号码",
+    "profile.complete.cta":"保存并继续",
+    "toast.profile.needLogin":"请先登录后继续。",
+    "toast.profile.needComplete":"购买前请先完善资料。",
+    "toast.profile.saved":"资料已保存。",
+    "toast.profile.fail":"资料保存失败。",
     "admin.users.status.active":"正常",
     "admin.users.status.pendingPassword":"待设密码",
     "admin.users.status.disabled":"已停用",
@@ -3213,7 +3760,391 @@ const FULL_TRANSLATIONS = {
     "orders.status.pending":"待处理",
     "orders.status.failed":"失败",
     "toast.login.ok":"欢迎回来，{name}",
-    "toast.login.fail":"邮箱或密码不正确"
+    "toast.login.fail":"邮箱或密码不正确",
+    // Checkout details
+    "checkout.field.taxid":"纳税人识别号",
+    "checkout.field.optional":"选填",
+    "checkout.field.taxid.hint":"用于开具完整税务发票。泰国企业请填写 13 位税号。",
+    "checkout.ph.name":"例如：王晓明",
+    "checkout.ph.email":"例如：xiaoming@example.com",
+    "checkout.ph.company":"例如：明日科技有限公司",
+    "checkout.ph.taxid":"例如：0105564016423",
+    "checkout.terms.intro-html":"付款前，请阅读我们的<a class=\"terms-link\" onclick=\"App.openTermsModal()\">服务条款与隐私政策</a>。",
+    "checkout.terms.consent":"我确认本次购买用于商业用途，并已阅读并同意服务条款与隐私政策。我了解充值积分将在购买后 24 小时自动到期，且不予退款。",
+    "toast.checkout.needName":"请输入姓名",
+    "toast.checkout.needEmail":"请输入邮箱地址",
+    "toast.checkout.badEmail":"请输入有效的邮箱地址",
+    "toast.checkout.needTerms":"付款前请阅读并同意服务条款",
+    "checkout.field.card":"银行卡号",
+    "checkout.field.expiry":"有效期",
+    "checkout.field.cvc":"安全码",
+    "checkout.payment.intro":"即将跳转至支付服务商的安全页面完成付款。",
+    "checkout.channel.any":"下一步选择",
+    "checkout.channel.card":"信用卡 / 借记卡",
+    "checkout.channel.qr":"PromptPay 二维码",
+    "checkout.channel.mobile":"手机银行",
+    "checkout.channel.ewallet":"电子钱包",
+    "checkout.summary.redirecting":"正在跳转至支付页面…",
+    "checkout.summary.powered":"由支付服务商提供 · 泰国支付服务",
+    // About and legal
+    "about.eyebrow":"关于 ONTHELINE 与 DealMai",
+    "about.heading-html":"让每一次咨询都成为<em>增长机会</em>。",
+    "about.teaser-html":"<strong>ONTHELINE</strong> 发现，传统聊天机器人和回复延迟每天都在让企业错失宝贵商机。因此我们打造了 <strong>DealMai</strong>，通过全天候 AI 沟通弥补这一缺口。DealMai 覆盖 WhatsApp、Instagram 和 LINE 等主流渠道，以符合品牌语气的自然对话筛选客户、安排预约并重新激活沉睡客户。依托覆盖泰国、日本和韩国的 ONTHELINE 网络，我们帮助企业持续把咨询转化为增长。",
+    "about.readmore":"了解我们的故事",
+    "about.modal.kicker":"关于我们",
+    "about.modal.title":"ONTHELINE 与 DealMai",
+    "about.modal.sub":"连接全球客户互动 · 泰国 · 日本 · 韩国",
+    "terms.modal.kicker":"法律条款",
+    "terms.modal.title":"服务条款与隐私政策",
+    "terms.modal.sub":"DealMai 服务条款与平台协议 · 2026 年 7 月 31 日生效",
+    "doc.close":"关闭",
+    // Payment result and confirmation
+    "result.pending.title-html":'付款<span class="grad">处理中</span>',
+    "result.pending.sub":"付款正在处理中。支付服务商确认后，我们会向 {email} 发送确认邮件，通常不超过一分钟。",
+    "result.success.title-html":'付款<span class="grad">已确认</span>',
+    "result.success.sub":"感谢购买。收据和登录信息将发送至 {email}，通常五分钟内即可开始使用。",
+    "result.failed.title-html":'付款<span class="grad">未完成</span>',
+    "result.failed.sub":"付款已取消或被拒绝，未产生扣款。您可以重试或选择其他支付方式。",
+    "result.notfound.title-html":'未找到<span class="grad">订单</span>',
+    "result.notfound.sub":"暂时找不到该订单。如果您刚完成付款，请稍等片刻，支付确认可能仍在传输中。",
+    "result.ref":"订单编号",
+    "result.amount":"金额",
+    "result.method":"支付方式",
+    "result.status":"状态",
+    "result.cta-retry":"重新尝试",
+    "result.cta-back":"返回套餐",
+    "result.cta-home":"返回首页",
+    "confirm.title-html":'欢迎加入，<span class="grad">{name}</span>',
+    "confirm.sub":"您的 AI 销售助手正在开通。登录信息和收据已发送至 {email}，通常五分钟内即可完成。",
+    "confirm.ref":"订单编号",
+    "confirm.package":"套餐",
+    "confirm.amount":"实付金额",
+    "confirm.portal":"工作台链接",
+    "confirm.invoice":"发票 / 收据",
+    "confirm.invoice-val":"PDF · 邮件发送",
+    "confirm.cta-portal":"打开工作台",
+    "confirm.cta-back":"返回套餐",
+    // Customer account and orders
+    "nav.account":"我的账户",
+    "nav.orders":"我的订单",
+    "account.crumbs":"客户中心 / 我的账户",
+    "account.welcome":"欢迎回来，{name}。",
+    "account.sub":"集中查看套餐、订单与账户信息。",
+    "account.active.title-html":'当前<span class="grad">有效套餐</span>',
+    "account.active.none":"暂无有效套餐。请选择套餐开始使用。",
+    "account.active.status.active":"使用中",
+    "account.active.status.expired":"已过期",
+    "account.active.status.expiring":"即将到期",
+    "account.active.expires":"{date} 到期",
+    "account.active.expiredOn":"已于 {date} 到期",
+    "account.active.noExpiry":"长期有效 · 积分余额",
+    "account.stats.orders":"订单总数",
+    "account.stats.spent":"累计消费",
+    "account.stats.credits":"累计获得积分",
+    "account.stats.member":"注册时间",
+    "account.credits.note":"这里显示通过购买获得的累计积分。剩余积分和实时用量请在 AI 工作台中查看。",
+    "account.cta.browse":"浏览套餐",
+    "account.cta.changePassword":"修改密码",
+    "account.changePw.title":"修改密码",
+    "account.changePw.sub":"请输入当前密码，然后设置新密码。",
+    "account.changePw.cta":"更新密码",
+    "account.cta.orders":"查看我的订单",
+    "account.passwordPrompt.title":"请修改密码",
+    "account.passwordPrompt.sub":"为保障账户安全，请先设置新密码再继续。",
+    "account.passwordPrompt.cta":"更新密码",
+    "orders.crumbs":"客户中心 / 我的订单",
+    "orders.title-html":'我的<span class="grad">订单</span>',
+    "orders.sub":"查看全部历史与当前购买记录。",
+    "orders.empty":"暂无订单。请选择套餐完成首次购买。",
+    "orders.col.ref":"订单编号",
+    "orders.col.date":"日期",
+    "orders.col.package":"套餐",
+    "orders.col.amount":"金额",
+    "orders.col.credits":"积分",
+    "orders.col.expires":"有效期",
+    "orders.col.status":"状态",
+    "orders.col.actions":"操作",
+    "orders.action.view":"查看详情",
+    "orders.status.expired":"已过期",
+    "orders.status.cancelled":"已取消",
+    "orders.modal.title":"订单详情",
+    "orders.modal.customer":"客户",
+    "orders.modal.items":"项目",
+    "orders.modal.subtotal":"小计",
+    "orders.modal.vat":"增值税 7%",
+    "orders.modal.total":"合计",
+    "orders.modal.paymentMethod":"支付方式",
+    "orders.modal.paidAt":"付款时间",
+    "orders.modal.expiresAt":"到期时间",
+    "orders.modal.resendInvoice":"重发发票",
+    "orders.modal.resendCredentials":"重发登录信息",
+    "orders.modal.close":"关闭",
+    "orders.toast.resent":"邮件已加入发送队列",
+    "orders.toast.resendFailed":"无法加入邮件队列：{error}",
+    // Admin orders
+    "admin.orders.title-html":'最近<span class="grad">订单</span>',
+    "admin.orders.export":"导出 CSV",
+    "admin.orders.stat.today":"今日 · 订单",
+    "admin.orders.stat.month":"本月 · 订单",
+    "admin.orders.stat.yesterday":"昨日 · 订单",
+    "admin.orders.stat.lastMonth":"上月 · 订单",
+    "admin.orders.stat.period":"所选时段 · 订单",
+    "admin.orders.stat.online":"来自 ontheline",
+    "admin.orders.stat.direct":"网站直购",
+    "admin.orders.stat.revenue":"今日收入",
+    "admin.orders.stat.revenue.month":"本月收入",
+    "admin.orders.stat.revenue.yesterday":"昨日收入",
+    "admin.orders.stat.revenue.lastMonth":"上月收入",
+    "admin.orders.stat.revenue.period":"所选时段收入",
+    "admin.orders.h":"全部交易",
+    "admin.orders.col.ref":"订单编号",
+    "admin.orders.col.txId":"交易编号",
+    "admin.orders.col.customer":"客户",
+    "admin.orders.col.email":"邮箱",
+    "admin.orders.col.source":"来源",
+    "admin.orders.col.partnerGw":"合作伙伴 / PayGW",
+    "admin.orders.filter.partner.all":"全部合作伙伴",
+    "admin.orders.filter.partner.title":"按合作伙伴筛选",
+    "admin.orders.filter.paygw.all":"全部支付网关",
+    "admin.orders.filter.currency.all":"全部货币",
+    "admin.orders.filter.currency.title":"按货币筛选",
+    "admin.orders.filter.paygw.title":"按支付网关筛选",
+    "admin.orders.col.package":"套餐",
+    "admin.orders.col.amount":"金额",
+    "admin.orders.col.credits":"积分",
+    "admin.orders.col.status":"状态",
+    "admin.orders.col.date":"日期",
+    "admin.orders.col.expires":"有效期",
+    "admin.orders.col.actions":"操作",
+    "admin.orders.view.credits.label":"累计积分",
+    "admin.orders.view.credits.note":"该客户所有已付款订单获得的累计积分。余额与实时用量可在 AI 工作台查看。",
+    "admin.orders.view.credits.topup":"已充值 {credits} 积分",
+    "admin.orders.view.credits.new":"新建子账户 · 发放 {credits} 积分",
+    "admin.orders.view.credits.linked":"已关联现有子账户 · 自动充值失败，需手动处理",
+    "admin.orders.action.view":"查看",
+    "admin.orders.action.resend":"重新发送",
+    "admin.orders.filter.all":"全部",
+    "admin.orders.filter.online":"ontheline",
+    "admin.orders.filter.direct":"网站直购",
+    "admin.orders.filter.chillpay":"支付网关",
+    "admin.orders.filter.paid":"已支付",
+    "admin.orders.filter.pending":"待处理",
+    "admin.orders.filter.email.placeholder":"按客户邮箱筛选…",
+    "admin.orders.filter.email.clear":"清除",
+    "admin.orders.date.today":"今天",
+    "admin.orders.date.yesterday":"昨天",
+    "admin.orders.date.lastMonth":"上个月",
+    "admin.orders.date.month":"本月",
+    "admin.orders.date.period":"自定义时段",
+    "admin.orders.date.label":"时段：",
+    "admin.orders.unit.orders":"笔订单",
+    "admin.orders.period.title-html":'选择<span class="grad">时段</span>',
+    "admin.orders.period.start":"开始日期",
+    "admin.orders.period.end":"结束日期",
+    "admin.orders.period.apply":"应用",
+    "admin.orders.period.summary":"显示 {start} 至 {end} 的订单",
+    "admin.orders.export.empty":"当前筛选条件下没有可导出的订单",
+    "admin.orders.export.done":"已将 {count} 笔订单导出为 CSV",
+    "admin.orders.expires.never":"—",
+    // Admin users and customers
+    "admin.users.title-html":'用户<span class="grad">管理</span>',
+    "admin.users.add":"添加用户",
+    "admin.users.h":"运营人员",
+    "admin.users.modal.title-html":'添加<span class="grad">新用户</span>',
+    "admin.users.modal.sub":"此处仅管理运营人员，终端客户请在客户管理中维护。",
+    "admin.customers.title-html":'客户<span class="grad">管理</span>',
+    "admin.customers.add":"添加客户",
+    "admin.customers.h":"服务客户",
+    "admin.customers.empty":"暂无客户。",
+    "admin.customers.modal.title-html":'添加<span class="grad">新客户</span>',
+    "admin.customers.modal.sub":"登录信息将通过邮件发送给客户，首次登录时须修改密码。",
+    "admin.users.col.name":"姓名",
+    "admin.users.col.email":"邮箱",
+    "admin.users.col.role":"角色",
+    "admin.users.col.plan":"套餐",
+    "admin.users.col.activePackage":"当前套餐",
+    "admin.users.col.credits":"积分",
+    "admin.users.col.created":"创建时间",
+    "admin.users.col.status":"状态",
+    "admin.users.action.reset":"重置密码",
+    "admin.users.action.delete":"删除",
+    "admin.users.role.admin":"管理员",
+    "admin.users.role.customer":"客户",
+    "admin.users.activePackage.none":"—",
+    "admin.users.activePackage.expiringSoon":"{n} 天后到期",
+    "admin.users.modal.name":"姓名",
+    "admin.users.modal.email":"邮箱",
+    "admin.users.modal.role":"角色",
+    "admin.users.modal.password":"初始密码",
+    "admin.users.modal.cta":"创建用户",
+    "admin.customers.modal.cta":"创建客户",
+    // Admin packages
+    "admin.packages.title-html":'套餐<span class="grad">管理</span>',
+    "admin.packages.add":"添加套餐",
+    "admin.packages.bucket.credit":"购买积分",
+    "admin.packages.bucket.onetime":"限时使用",
+    "admin.packages.bucket.sub":"定期订阅",
+    "admin.packages.col.order":"排序",
+    "admin.packages.col.id":"编号",
+    "admin.packages.col.title":"名称",
+    "admin.packages.col.desc":"说明",
+    "admin.packages.col.price":"价格",
+    "admin.packages.col.duration":"有效天数",
+    "admin.packages.col.featured":"推荐",
+    "admin.packages.col.actions":"操作",
+    "admin.packages.action.edit":"编辑",
+    "admin.packages.action.delete":"删除",
+    "admin.packages.intro":"可在三个类别中添加、编辑或删除套餐，变更会实时显示在公开套餐页面。",
+    "admin.packages.modal.duration":"有效天数",
+    "admin.packages.modal.duration.hint":"此套餐可使用的天数。无固定期限的积分套餐请留空。",
+    "admin.packages.duration.none":"长期有效",
+    "admin.packages.duration.days":"{n} 天",
+    // Passwords and common notifications
+    "admin.password.title-html":'修改<span class="grad">密码</span>',
+    "admin.password.current":"当前密码",
+    "admin.password.new":"新密码",
+    "admin.password.confirm":"确认新密码",
+    "admin.password.cta":"更新密码",
+    "toast.order.created":"订单已创建 · 发票已加入发送队列",
+    "toast.user.created":"用户已创建 · 密码已发送至邮箱",
+    "toast.user.deleted":"用户已删除",
+    "toast.email.queued":"邮件已加入发送队列",
+    "toast.password.updated":"密码已更新",
+    "toast.password.wrong":"当前密码不正确",
+    "toast.password.mismatch":"两次输入的新密码不一致",
+    "toast.password.resetSent":"密码重置邮件已发送至 {email}，请检查收件箱和垃圾邮件。",
+    "toast.password.resetSmtp":"尚未配置 SMTP。请先前往管理后台 → 邮件 SMTP 完成设置。",
+    "toast.translation.saved":"翻译已保存",
+    "toast.packages.added":"已添加 {n} 个新套餐",
+    "toast.packages.edited":"已更新 {n} 个套餐",
+    "toast.packages.removed":"已删除 {n} 个套餐",
+    "toast.checkout.price.updated":"所选套餐价格已更新，请确认后继续",
+    "toast.checkout.package.removed":"该套餐已下架，请重新选择",
+    "toast.codelist.codeRequired":"请输入代码",
+    "toast.codelist.companyRequired":"请输入公司名称",
+    "toast.codelist.dupCode":"代码“{code}”已存在",
+    "toast.codelist.added":"添加成功",
+    "toast.currencies.symbolRequired":"请输入货币符号",
+    "toast.codelist.updated":"更新成功",
+    "toast.codelist.deleted":"删除成功",
+    "toast.codelist.deleteConfirm":"确定删除“{code}”吗？此操作无法撤销。",
+    // SMTP
+    "admin.smtp.crumbs":"管理后台 / 邮件 SMTP",
+    "admin.smtp.title-html":'邮件 <span class="grad">SMTP</span>',
+    "admin.smtp.sub":"管理发送收据、登录信息和通知邮件的 SMTP 账户。未指定发送账户时使用默认账户。",
+    "admin.smtp.global.title":"全局邮件设置",
+    "admin.smtp.global.replyTo":"回复地址",
+    "admin.smtp.global.supportBcc":"客服密送 / ontheline 收件箱",
+    "admin.smtp.global.testRewrite":"测试收件地址（选填）",
+    "admin.smtp.global.testRewrite.hint":"设置后，所有外发邮件都会改发至此地址，并在主题中标记测试。正式环境请留空。",
+    "admin.smtp.global.default":"默认账户",
+    "admin.smtp.global.save":"保存设置",
+    "admin.smtp.accounts.title":"SMTP 账户",
+    "admin.smtp.accounts.add":"添加账户",
+    "admin.smtp.accounts.empty":"暂无 SMTP 账户。请先添加账户以发送队列中的邮件。",
+    "admin.smtp.col.name":"名称",
+    "admin.smtp.col.host":"服务器",
+    "admin.smtp.col.user":"用户名",
+    "admin.smtp.col.from":"发件人",
+    "admin.smtp.col.status":"状态",
+    "admin.smtp.status.enabled":"已启用",
+    "admin.smtp.status.disabled":"已停用",
+    "admin.smtp.status.default":"默认",
+    "admin.smtp.action.edit":"编辑",
+    "admin.smtp.action.delete":"删除",
+    "admin.smtp.action.setDefault":"设为默认",
+    "admin.smtp.modal.add":"添加 SMTP 账户",
+    "admin.smtp.modal.edit":"编辑 SMTP 账户",
+    "admin.smtp.field.name":"显示名称",
+    "admin.smtp.field.host":"SMTP 服务器",
+    "admin.smtp.field.port":"端口",
+    "admin.smtp.field.secure":"SSL/TLS（端口 465 通常启用）",
+    "admin.smtp.field.user":"用户名（邮箱）",
+    "admin.smtp.field.pass":"密码 / 应用专用密码",
+    "admin.smtp.field.pass.keep":"留空则保留当前密码",
+    "admin.smtp.field.from":"From 发件人",
+    "admin.smtp.field.from.hint":"例如：Deal Mai <noreply@dealmai.com>",
+    "admin.smtp.field.enabled":"启用",
+    "admin.smtp.btn.save":"保存账户",
+    "admin.smtp.btn.test":"发送测试邮件",
+    "admin.smtp.test.to":"测试收件人",
+    "toast.smtp.saved":"SMTP 设置已保存",
+    "toast.smtp.account.saved":"SMTP 账户已保存",
+    "toast.smtp.account.deleted":"SMTP 账户已删除",
+    "toast.smtp.default.set":"默认 SMTP 账户已更新",
+    // Domain & SSL
+    "admin.domain.crumbs":"管理后台 / 域名与 SSL",
+    "admin.domain.title-html":'域名 <span class="grad">与 SSL</span>',
+    "admin.domain.sub":"管理公开网址并检查 Let’s Encrypt 证书的 SAN 关联状态。",
+    "admin.domain.global.title":"公开网址",
+    "admin.domain.global.hint":"用于 HTTPS SAN 检查和运维文档。未填写协议时会自动补上 https://。",
+    "admin.domain.field.site":"公开网站 URL",
+    "admin.domain.field.www":"www URL",
+    "admin.domain.field.api":"API 基础 URL",
+    "admin.domain.save":"保存 URL",
+    "admin.domain.ssl.title":"Let’s Encrypt · SAN 关联",
+    "admin.domain.ssl.intro":"将下方 URL 的主机名与服务器 fullchain.pem 中的 SAN 列表进行比较。不一致可能导致浏览器显示证书警告。",
+    "admin.domain.ssl.loading":"加载中…",
+    "admin.domain.ssl.empty":"尚未配置主机名。",
+    "admin.domain.col.host":"主机名",
+    "admin.domain.col.source":"来源",
+    "admin.domain.col.inCert":"已加入证书",
+    "admin.domain.sanOnly":"仅存在于 SAN、没有对应 URL 的主机：",
+    "admin.domain.missing":"证书中缺少的主机：",
+    "admin.domain.yes":"是",
+    "admin.domain.no":"否",
+    "toast.domain.saved":"域名设置已保存",
+    "toast.domain.loadFail":"无法加载域名设置：{error}",
+    // Webhook operations
+    "admin.webhook.title-html":'ontheline <span class="grad">集成</span>',
+    "admin.webhook.regen":"重新生成密钥",
+    "admin.webhook.secret.title":"Webhook 密钥",
+    "admin.webhook.secret.hint":"用于验证 ontheline 请求签名。请复制到 ontheline 后台；如怀疑泄露，请立即重新生成。",
+    "admin.webhook.secret.show":"显示",
+    "admin.webhook.secret.hide":"隐藏",
+    "admin.webhook.secret.copy":"复制",
+    "admin.webhook.secret.copied":"密钥已复制",
+    "admin.webhook.secret.none":"尚未生成密钥，请点击“重新生成密钥”。",
+    "admin.webhook.secret.regenConfirm":"确定生成新 Webhook 密钥吗？旧密钥将立即失效，现有 ontheline 集成也需同步更新。",
+    "admin.webhook.secret.regenerated":"新密钥已生成",
+    "admin.webhook.flow.title":"接口与处理流程",
+    "admin.webhook.flow.sub":"收到的购买金额会匹配最接近的套餐，剩余金额将按自定义积分充值处理。",
+    "admin.webhook.flow.s1.t":"接收",
+    "admin.webhook.flow.s1.d":"ontheline 将客户资料和实付金额发送至安全接口。",
+    "admin.webhook.flow.s2.t":"匹配",
+    "admin.webhook.flow.s2.d":"系统选择不超过实付金额的最高套餐。",
+    "admin.webhook.flow.s3.t":"处理差额",
+    "admin.webhook.flow.s3.d":"剩余金额将转换为自定义积分充值。",
+    "admin.webhook.flow.s4.t":"开通",
+    "admin.webhook.flow.s4.d":"创建用户、生成登录信息并准备工作台链接。",
+    "admin.webhook.flow.s5.t":"发送",
+    "admin.webhook.flow.s5.d":"通过邮件发送发票和收据，并将记录保存到 ontheline 订单。",
+    "admin.webhook.endpoint.title":"接口 URL",
+    "admin.webhook.test.title":"模拟 ontheline Webhook",
+    "admin.webhook.test.hint":"输入客户资料与实付金额，测试套餐匹配流程。",
+    "admin.webhook.test.fire":"发送测试 Webhook",
+    "admin.webhook.events.h":"最近的 Webhook 事件",
+    "admin.webhook.events.col.time":"时间",
+    "admin.webhook.events.col.customer":"客户",
+    "admin.webhook.events.col.txId":"交易编号",
+    "admin.webhook.events.col.amount":"金额",
+    "admin.webhook.events.col.partnerGw":"合作伙伴 / PayGW",
+    "admin.webhook.events.col.matched":"匹配结果",
+    "admin.webhook.events.col.status":"状态",
+    "toast.webhook.fired":"Webhook 已处理 · 订单 #{ref}",
+    "toast.webhook.firedEvent":"Webhook 已处理 · {event} · 订单 #{ref}",
+    "toast.webhook.badPartner":"未知合作伙伴代码：{code}，请先在合作伙伴管理中添加",
+    "toast.webhook.badPaygw":"未知支付网关代码：{code}，请先在 PG 列表中添加",
+    "toast.webhook.badCurrency":"未知货币：{code}，请先在货币管理中添加",
+    "toast.webhook.dupEvent":"该交易已处于“{event}”状态，已忽略重复事件",
+    "toast.webhook.needPaidFirst":"“{event}”需要已有已付款交易。请先用此交易编号发送 Paid。",
+    "toast.webhook.fromPaid":"Paid 状态只能变更为 Unpaid、Refund 或 Partial Refund，不能变更为“{event}”",
+    "toast.webhook.finalState":"“{state}”是最终状态，该交易不能再变更",
+    "toast.webhook.fromFail":"Fail 状态只能变更为 Paid，不能变更为“{event}”",
+    "toast.webhook.refundTooBig":"部分退款金额必须小于实付金额（${paid}）",
+    "toast.webhook.reversed":"{event} 已处理 · 扣除 {deducted} 积分 · 剩余 {remaining}",
+    "admin.webhook.test.txid.ph":"留空则自动生成",
+    "admin.webhook.test.txid.hint":"可重复使用同一交易编号测试事件流程，例如先发送 Paid，再用相同编号发送 Refund。留空则创建新交易。"
   }
 };
 
@@ -3280,7 +4211,11 @@ const TERMINAL_LINES = [
 // STATE
 // ===========================================================
 const State = {
-  user: null,                     // logged-in admin {email, name}
+  user: null,                     // logged-in user {email, name, role, ...}
+  adminOtpPending: null,          // {uid,email,name,...} while admin OTP gate is open
+  adminOpenTabs: ["orders"],      // PG/Crypto-style open menu tabs (max 12)
+  pendingPurchase: null,          // resume package buy after login/profile
+  signupDraft: null,              // { email, password } between send-code and register
   currentLang: "en",
   langs: SUPPORTED_LANGS,
   strings: {},                    // {en:{key:val}, th:{...}, ...}
@@ -3497,10 +4432,10 @@ const STALE_VALUE_OVERRIDES = {
   },
   "admin.side.partners": {
     en: { "ontheline Partners": "Partner List" },
-    th: { "พาร์ทเนอร์ ontheline": "รายชื่อพาร์ทเนอร์", "ontheline Partners": "รายชื่อพาร์ทเนอร์" },
+    th: { "พาร์ทเนอร์ ontheline": "จัดการพาร์ทเนอร์", "ontheline Partners": "จัดการพาร์ทเนอร์", "รายชื่อพาร์ทเนอร์": "จัดการพาร์ทเนอร์" },
     ko: { "ontheline 파트너": "파트너 목록" },
-    ja: { "onthelineパートナー": "パートナー一覧" },
-    zh: { "ontheline Partners": "合作伙伴列表" }
+    ja: { "onthelineパートナー": "パートナー管理", "パートナー一覧": "パートナー管理" },
+    zh: { "ontheline Partners": "合作伙伴管理", "合作伙伴列表": "合作伙伴管理" }
   },
   "admin.side.paygw": {
     en: { "ontheline Payment Gateways": "PG List" },
@@ -3531,11 +4466,11 @@ const STALE_VALUE_OVERRIDES = {
     zh: { "Server": "服务器管理", "服务器": "服务器管理" }
   },
   "admin.side.dmchamp": {
-    en: { "DM Champ": "AI API" },
-    th: { "DM Champ": "AI API" },
-    ko: { "DM Champ": "AI API" },
-    ja: { "DM Champ": "AI API" },
-    zh: { "DM Champ": "AI API" }
+    en: { "DM Champ": "API Settings", "AI API": "API Settings" },
+    th: { "DM Champ": "ตั้งค่า API", "AI API": "ตั้งค่า API" },
+    ko: { "DM Champ": "API 설정", "AI API": "API 설정" },
+    ja: { "DM Champ": "API設定", "AI API": "API設定" },
+    zh: { "DM Champ": "API 设置", "AI API": "API 设置" }
   },
   "admin.orders.filter.chillpay": {
     en: { "ChillPay": "Payment Gateway" },
@@ -3606,8 +4541,13 @@ const I = {
   //      {credits} etc. Caller-supplied values win if a key collides.
   t(key, ph={}){
     const lang = State.currentLang;
-    let v = (State.strings[lang] && State.strings[lang][key])
-         || (typeof FULL_TRANSLATIONS !== "undefined" && FULL_TRANSLATIONS[lang] && FULL_TRANSLATIONS[lang][key])
+    // Bundled FULL_TRANSLATIONS win over Firestore so Language Management
+    // edits cannot reintroduce awkward machine translations.
+    const bundled = (typeof FULL_TRANSLATIONS !== "undefined" && FULL_TRANSLATIONS[lang]) || null;
+    const bundledEn = (typeof FULL_TRANSLATIONS !== "undefined" && FULL_TRANSLATIONS.en) || null;
+    let v = (bundled && bundled[key])
+         || (State.strings[lang] && State.strings[lang][key])
+         || (bundledEn && bundledEn[key])
          || (State.strings.en && State.strings.en[key])
          || DEFAULT_STRINGS[key]
          || key;
@@ -3809,11 +4749,10 @@ async function loadOrSeedTranslations(){
     console.warn("load translations failed, using defaults:", e.code || e.message);
     State.strings = { en: { ...DEFAULT_STRINGS } };
   }
-  // Layer bundled FULL_TRANSLATIONS under Firestore so TH/JP/CH work even when
-  // Firestore coverage is incomplete (Firestore values still win on conflict).
+  // Bundled FULL_TRANSLATIONS win over Firestore (natural copy in code).
   if(typeof FULL_TRANSLATIONS === "object" && FULL_TRANSLATIONS){
     for(const lc of Object.keys(FULL_TRANSLATIONS)){
-      State.strings[lc] = { ...FULL_TRANSLATIONS[lc], ...(State.strings[lc] || {}) };
+      State.strings[lc] = { ...(State.strings[lc] || {}), ...FULL_TRANSLATIONS[lc] };
     }
   }
   I.recalcStatus();
@@ -3899,55 +4838,55 @@ async function syncMissingTranslationsToFirestore(){
     th: {
       "nav.login": { oldValues: ["เข้าสู่ระบบผู้ดูแล"], newValue: "เข้าสู่ระบบ" },
       "admin.side.webhook": { oldValues: ["ontheline Webhook"], newValue: "Webhook" },
-      "admin.side.partners": { oldValues: ["พาร์ทเนอร์ ontheline", "ontheline Partners"], newValue: "รายชื่อพาร์ทเนอร์" },
+      "admin.side.partners": { oldValues: ["พาร์ทเนอร์ ontheline", "ontheline Partners", "รายชื่อพาร์ทเนอร์"], newValue: "จัดการพาร์ทเนอร์" },
       "admin.side.paygw": { oldValues: ["Payment Gateway ontheline", "ontheline Payment Gateways"], newValue: "รายการ PG" },
       "admin.side.currencies": { oldValues: ["สกุลเงิน ontheline", "ontheline Currencies"], newValue: "สกุลเงิน" },
       "admin.side.paymentgw": { oldValues: ["Payment Gateway"], newValue: "จัดการ PG" },
       "admin.side.chillpay": { oldValues: ["Payment Gateway Events", "ChillPay Events"], newValue: "เหตุการณ์ PG" },
       "admin.side.server": { oldValues: ["Server"], newValue: "จัดการเซิร์ฟเวอร์" },
-      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+      "admin.side.dmchamp": { oldValues: ["DM Champ", "AI API"], newValue: "ตั้งค่า API" }
     },
     ko: {
       "nav.login": { oldValues: ["관리자 로그인"], newValue: "로그인" },
       "admin.side.webhook": { oldValues: ["ontheline 웹훅"], newValue: "웹훅" },
-      "admin.side.partners": { oldValues: ["ontheline 파트너"], newValue: "파트너 목록" },
+      "admin.side.partners": { oldValues: ["ontheline 파트너", "파트너 목록"], newValue: "파트너 관리" },
       "admin.side.paygw": { oldValues: ["ontheline 결제 게이트웨이"], newValue: "PG 목록" },
       "admin.side.currencies": { oldValues: ["ontheline 통화"], newValue: "통화" },
       "admin.side.paymentgw": { oldValues: ["결제 게이트웨이", "Payment Gateway"], newValue: "PG 관리" },
       "admin.side.chillpay": { oldValues: ["Payment Gateway 이벤트", "ChillPay 이벤트"], newValue: "PG 이벤트" },
       "admin.side.server": { oldValues: ["서버"], newValue: "서버 관리" },
-      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+      "admin.side.dmchamp": { oldValues: ["DM Champ", "AI API"], newValue: "API 설정" }
     },
     ja: {
       "nav.login": { oldValues: ["管理者ログイン"], newValue: "ログイン" },
       "admin.side.webhook": { oldValues: ["onthelineウェブフック"], newValue: "Webhook" },
-      "admin.side.partners": { oldValues: ["onthelineパートナー"], newValue: "パートナー一覧" },
+      "admin.side.partners": { oldValues: ["onthelineパートナー", "パートナー一覧"], newValue: "パートナー管理" },
       "admin.side.paygw": { oldValues: ["ontheline決済ゲートウェイ"], newValue: "PG一覧" },
       "admin.side.currencies": { oldValues: ["ontheline通貨"], newValue: "通貨" },
       "admin.side.paymentgw": { oldValues: ["決済ゲートウェイ", "Payment Gateway"], newValue: "PG管理" },
       "admin.side.chillpay": { oldValues: ["Payment Gateway イベント", "ChillPay イベント"], newValue: "PGイベント" },
       "admin.side.server": { oldValues: ["サーバー", "Server"], newValue: "サーバー管理" },
-      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+      "admin.side.dmchamp": { oldValues: ["DM Champ", "AI API"], newValue: "API設定" }
     },
     zh: {
       "admin.side.webhook": { oldValues: ["ontheline Webhook"], newValue: "Webhook" },
-      "admin.side.partners": { oldValues: ["ontheline Partners"], newValue: "合作伙伴列表" },
+      "admin.side.partners": { oldValues: ["ontheline Partners", "合作伙伴列表"], newValue: "合作伙伴管理" },
       "admin.side.paygw": { oldValues: ["ontheline Payment Gateways"], newValue: "PG 列表" },
       "admin.side.currencies": { oldValues: ["ontheline Currencies"], newValue: "货币" },
       "admin.side.paymentgw": { oldValues: ["Payment Gateway"], newValue: "PG 管理" },
       "admin.side.chillpay": { oldValues: ["Payment Gateway Events", "ChillPay Events"], newValue: "PG 事件" },
       "admin.side.server": { oldValues: ["Server", "服务器"], newValue: "服务器管理" },
-      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+      "admin.side.dmchamp": { oldValues: ["DM Champ", "AI API"], newValue: "API 设置" }
     },
     en: {
       "admin.side.webhook": { oldValues: ["ontheline Webhook"], newValue: "Webhook" },
-      "admin.side.partners": { oldValues: ["ontheline Partners"], newValue: "Partner List" },
+      "admin.side.partners": { oldValues: ["ontheline Partners", "Partner List"], newValue: "Partner Management" },
       "admin.side.paygw": { oldValues: ["ontheline Payment Gateways"], newValue: "PG List" },
       "admin.side.currencies": { oldValues: ["ontheline Currencies"], newValue: "Currencies" },
       "admin.side.paymentgw": { oldValues: ["Payment Gateway"], newValue: "PG Management" },
       "admin.side.chillpay": { oldValues: ["Payment Gateway Events", "ChillPay Events"], newValue: "PG Events" },
       "admin.side.server": { oldValues: ["Server"], newValue: "Server Management" },
-      "admin.side.dmchamp": { oldValues: ["DM Champ"], newValue: "AI API" }
+      "admin.side.dmchamp": { oldValues: ["DM Champ", "AI API"], newValue: "API Settings" }
     }
   };
 
@@ -4101,7 +5040,10 @@ function subscribeCollections(){
   // Users
   State.unsubs.push(onSnapshot(collection(db,"users"), snap => {
     State.users = snap.docs.map(d => ({ id:d.id, ...d.data() }));
-    if(document.getElementById("page-admin").classList.contains("show")) renderAdminUsers();
+    if(document.getElementById("page-admin").classList.contains("show")){
+      renderAdminStaff();
+      renderAdminCustomers();
+    }
   }, onErr("users")));
 
   // Email queue
@@ -4532,7 +5474,7 @@ function subscribeTranslations(){
       }else{
         const fromFs = data.strings || {};
         const bundled = (typeof FULL_TRANSLATIONS !== "undefined" && FULL_TRANSLATIONS[docId]) || {};
-        State.strings[docId] = { ...bundled, ...fromFs };
+        State.strings[docId] = { ...fromFs, ...bundled };
       }
       touched = true;
     });
@@ -5534,7 +6476,15 @@ const App = {
     updateLoginModalMode();
     document.getElementById("login-modal").classList.add("show");
   },
-  closeLogin(){ document.getElementById("login-modal").classList.remove("show"); },
+  closeLogin(){
+    if(State.adminOtpPending){
+      // Closing during OTP cancels the admin session
+      this.cancelAdminOtp();
+      return;
+    }
+    document.getElementById("login-modal").classList.remove("show");
+    this.showLoginStep("credentials");
+  },
 
   async doLogin(){
     const email = document.getElementById("li-email").value.trim().toLowerCase();
@@ -5600,8 +6550,8 @@ const App = {
     // SIGN IN MODE
     try{
       await signInWithEmailAndPassword(auth, email, pass);
-      this.closeLogin();
-      // onAuthStateChanged will populate State.user, show toast, and go to admin
+      // Keep modal open — admin OTP gate (or customer onAuth) finishes login.
+      // onAuthStateChanged will populate State.user / show OTP step.
     }catch(e){
       const code = e.code || "";
       // Special case: invalid credentials may mean the account doesn't exist yet.
@@ -5634,6 +6584,9 @@ const App = {
 
   async logout(){
     try{
+      this.clearAdminOtpOk(State.user?.uid || auth.currentUser?.uid);
+      State.adminOtpPending = null;
+      this.closeAdminUserMenu();
       await signOut(auth);
       // onAuthStateChanged will clear State.user
       Toast.show("Signed out","ok");
@@ -5646,6 +6599,7 @@ const App = {
       Toast.show("Sign out error: "+e.message,"err");
     }
   },
+  signOut(){ return this.logout(); },
 
   // Single click target for the top-right auth button.
   // Behaves as "Sign In" when logged out and "Sign Out" when logged in.
@@ -5663,12 +6617,29 @@ const App = {
     const isAdmin = isAuthed && State.user.role === "admin";
     const isCustomer = isAuthed && State.user.role === "customer";
 
-    // Top auth button (desktop)
+    // Top auth button (desktop) — hide for admin (user menu handles logout)
     const authBtn = document.getElementById("auth-btn");
     if(authBtn){
       authBtn.textContent = isAuthed ? I.t("nav.signout") : I.t("nav.login");
-      // Don't translate via data-i18n here — we set textContent directly
       authBtn.removeAttribute("data-i18n");
+      authBtn.style.display = isAdmin ? "none" : "";
+    }
+
+    const adminMenu = document.getElementById("admin-user-menu");
+    if(adminMenu){
+      adminMenu.style.display = isAdmin ? "" : "none";
+      if(isAdmin){
+        const mail = State.user.email || "—";
+        const name = State.user.name || "Admin";
+        const elMail = document.getElementById("admin-user-email");
+        const elMail2 = document.getElementById("admin-user-email-drop");
+        const elName = document.getElementById("admin-user-name");
+        if(elMail) elMail.textContent = mail;
+        if(elMail2) elMail2.textContent = mail;
+        if(elName) elName.textContent = name;
+      }else{
+        this.closeAdminUserMenu();
+      }
     }
 
     // Drawer auth button
@@ -5705,6 +6676,56 @@ const App = {
     if(heroCtaAdmin)   heroCtaAdmin.style.display   = isAdmin    ? "" : "none";
     if(heroCtaAccount) heroCtaAccount.style.display = isCustomer ? "" : "none";
     if(heroCtaSignin)  heroCtaSignin.style.display  = isAuthed   ? "none" : "";
+
+    this.refreshSessionMeta();
+  },
+
+  formatAccessTime(date){
+    const d = date instanceof Date ? date : new Date(date);
+    if(Number.isNaN(d.getTime())) return "—";
+    const lang = State.currentLang || "en";
+    const loc = lang === "ko" ? "ko-KR"
+      : lang === "th" ? "th-TH"
+      : lang === "ja" ? "ja-JP"
+      : lang === "zh" ? "zh-CN"
+      : "en-US";
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, "0");
+    const day = String(d.getDate()).padStart(2, "0");
+    const h = String(d.getHours()).padStart(2, "0");
+    const min = String(d.getMinutes()).padStart(2, "0");
+    const sec = String(d.getSeconds()).padStart(2, "0");
+    let weekday = "";
+    try{ weekday = new Intl.DateTimeFormat(loc, { weekday: "short" }).format(d); }catch{}
+    return `${y}. ${m}. ${day} ${h}:${min}:${sec}${weekday ? " " + weekday : ""}`;
+  },
+
+  async refreshSessionMeta(){
+    const box = document.getElementById("session-meta");
+    const ipEl = document.getElementById("session-ip");
+    const atEl = document.getElementById("session-access-at");
+    if(!box) return;
+    const show = !!(State.user && State.user.role === "admin");
+    box.classList.toggle("show", show);
+    if(!show){
+      if(this._sessionMetaTimer){ clearInterval(this._sessionMetaTimer); this._sessionMetaTimer = null; }
+      return;
+    }
+    if(!sessionStorage.getItem("dealmai.clientIp")){
+      try{
+        const r = await fetch("/api/session-info", { cache: "no-store" });
+        const j = await r.json();
+        if(j && j.ip) sessionStorage.setItem("dealmai.clientIp", String(j.ip));
+      }catch{}
+    }
+    if(ipEl) ipEl.textContent = sessionStorage.getItem("dealmai.clientIp") || "—";
+    const tick = () => {
+      if(atEl) atEl.textContent = this.formatAccessTime(new Date());
+    };
+    tick();
+    if(!this._sessionMetaTimer){
+      this._sessionMetaTimer = setInterval(tick, 1000);
+    }
   },
 
   async forgotPassword(){
@@ -5715,13 +6736,28 @@ const App = {
     }
     if(!confirm(`Send password reset email to ${email}?`)) return;
     try{
-      await sendPasswordResetEmail(auth, email);
-      Toast.show(`Password reset email sent to ${email}. Check your inbox.`,"ok");
+      const body = JSON.stringify({ action:"request", email });
+      let res = await fetch("/api/password-reset", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body
+      });
+      if(res.status === 404){
+        res = await fetch("/.netlify/functions/password-reset", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json" },
+          body
+        });
+      }
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || data.ok === false){
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      Toast.show(I.t("toast.password.resetSent",{ email: data.maskedEmail || email }),"ok");
     }catch(e){
       console.error(e);
-      let msg = "Reset failed: " + (e.code || e.message);
-      if(e.code === "auth/user-not-found") msg = "No account exists with that email.";
-      if(e.code === "auth/invalid-email") msg = "Invalid email format.";
+      let msg = e.message || "Reset failed";
+      if(/SMTP/i.test(msg)) msg = I.t("toast.password.resetSmtp");
       Toast.show(msg,"err");
     }
   },
@@ -5931,7 +6967,13 @@ const App = {
     }
   },
 
-  selectPackage(bucket, id, price){
+  async selectPackage(bucket, id, price, opts){
+    const skipGate = !!(opts && opts.skipGate);
+    if(!skipGate){
+      State.pendingPurchase = { type:"package", bucket, id, price };
+      if(!(await this.ensureReadyForPurchase())) return;
+      State.pendingPurchase = null;
+    }
     const list = PACKAGES[bucket] || [];
     const found = list.find(p => p.id === id);
     if(!found) return;
@@ -5944,7 +6986,13 @@ const App = {
     this.go("checkout");
   },
 
-  openManual(){
+  async openManual(opts){
+    const skipGate = !!(opts && opts.skipGate);
+    if(!skipGate){
+      State.pendingPurchase = { type:"manual" };
+      if(!(await this.ensureReadyForPurchase())) return;
+      State.pendingPurchase = null;
+    }
     this.showModal(`
       <button class="close" onclick="App.closeModal()">×</button>
       <h2>${I.t("pkg.manual.title")}</h2>
@@ -5959,7 +7007,8 @@ const App = {
     `);
   },
 
-  submitManual(){
+  async submitManual(){
+    if(!(await this.ensureReadyForPurchase())) return;
     const v = parseFloat(document.getElementById("manual-amt").value);
     if(!v || v <= 0) return Toast.show("Enter a valid amount","err");
     State.selectedPackage = {
@@ -5973,8 +7022,12 @@ const App = {
     this.go("checkout");
   },
 
-  renderCheckout(){
+  async renderCheckout(){
     if(!State.selectedPackage) return this.go("packages");
+    // Guests cannot checkout — must sign in + complete profile first.
+    if(!(await this.ensureReadyForPurchase())){
+      return this.go("packages");
+    }
     const p = State.selectedPackage;
     const vat = +(p.price * 0.07).toFixed(2);
     const total = +(p.price + vat).toFixed(2);
@@ -6010,19 +7063,24 @@ const App = {
     const mailEl = document.getElementById("co-email");
     const compEl = document.getElementById("co-company");
     const taxEl  = document.getElementById("co-taxid");
+    const countryEl = document.getElementById("co-country");
     const u = State.user;
-    if(u && u.role === "customer"){
-      if(!nameEl.value) nameEl.value = u.name || "";
-      if(!mailEl.value) mailEl.value = u.email || "";
+    if(u && (u.role === "customer" || u.role === "admin")){
+      if(nameEl && !nameEl.value) nameEl.value = (u.name && u.name !== "Customer") ? u.name : "";
+      if(mailEl){
+        mailEl.value = u.email || "";
+        if(u.role === "customer") mailEl.readOnly = true;
+      }
+      if(countryEl && u.nationality) countryEl.value = u.nationality;
       // Company / Tax ID aren't part of the auth profile — leave them for the
       // customer to fill, but hint with the sample format.
-      compEl.placeholder = I.t("checkout.ph.company");
-      taxEl.placeholder  = I.t("checkout.ph.taxid");
+      if(compEl) compEl.placeholder = I.t("checkout.ph.company");
+      if(taxEl) taxEl.placeholder  = I.t("checkout.ph.taxid");
     }else{
-      nameEl.placeholder = I.t("checkout.ph.name");
-      mailEl.placeholder = I.t("checkout.ph.email");
-      compEl.placeholder = I.t("checkout.ph.company");
-      taxEl.placeholder  = I.t("checkout.ph.taxid");
+      if(nameEl) nameEl.placeholder = I.t("checkout.ph.name");
+      if(mailEl){ mailEl.placeholder = I.t("checkout.ph.email"); mailEl.readOnly = false; }
+      if(compEl) compEl.placeholder = I.t("checkout.ph.company");
+      if(taxEl) taxEl.placeholder  = I.t("checkout.ph.taxid");
     }
     // Re-rendering rebuilds the summary, so the consent checkbox resets — make
     // sure the pay button starts disabled in sync with it.
@@ -6071,6 +7129,7 @@ const App = {
   },
 
   async submitCheckout(){
+    if(!(await this.ensureReadyForPurchase())) return;
     const p = State.selectedPackage;
     if(!p) return;
     const nameEl = document.getElementById("co-name");
@@ -6081,6 +7140,9 @@ const App = {
     const taxId = (document.getElementById("co-taxid")?.value || "").trim();
     const country = document.getElementById("co-country").value;
     const recvLang = document.getElementById("co-lang").value || "en";
+    const phone = State.user?.phone
+      ? `${State.user.phoneCountryCode || ""} ${State.user.phone}`.trim()
+      : "";
 
     // --- Validation: required customer details -------------------------------
     // Placeholders are only hints, so an untouched form arrives here empty.
@@ -6124,7 +7186,7 @@ const App = {
     // active (config/payment.activeGateway) and returns a paymentUrl, so the
     // frontend never needs to know which provider is in use.
     const payload = {
-      customer: { name, email, country, company, taxId, phone: "" },
+      customer: { name, email, country, company, taxId, phone },
       termsAcceptedAt: new Date().toISOString(),
       items: [ { id:p.id, bucket:p.bucket, title:p.title, price:p.price, manual:!!p.manual } ],
       subtotalUsd: p.price,
@@ -6539,17 +7601,492 @@ const App = {
   },
 
   // ============= ADMIN =============
+  ADMIN_TAB_MAX: 12,
+  ADMIN_TAB_LABELS: {
+    orders:"admin.side.orders", users:"admin.side.customers", customers:"admin.side.customers",
+    staff:"admin.side.staff", packages:"admin.side.packages",
+    webhook:"admin.side.webhook", partners:"admin.side.partners", paygw:"admin.side.paygw",
+    currencies:"admin.side.currencies", paymentgw:"admin.side.paymentgw", chillpay:"admin.side.chillpay",
+    emails:"admin.side.emails", smtp:"admin.side.smtp", domain:"admin.side.domain",
+    server:"admin.side.server", languages:"admin.side.languages", branding:"admin.side.branding",
+    dmchamp:"admin.side.dmchamp", password:"admin.side.password"
+  },
+  ADMIN_NAV_GROUP_FOR: {
+    customers:"customers", partners:"customers",
+    staff:"ops", users:"ops", paygw:"ops", paymentgw:"ops", chillpay:"ops",
+    orders:"sales", packages:"sales",
+    languages:"settings", currencies:"settings", server:"settings", webhook:"settings",
+    domain:"settings", smtp:"settings", emails:"settings", branding:"settings", dmchamp:"settings",
+    password:"settings"
+  },
+
+  normalizeAdminTab(name){
+    if(name === "users") return "customers"; // legacy combined list → customers
+    return name;
+  },
+
+  toggleAdminNavGroup(groupId, ev){
+    ev?.preventDefault?.();
+    ev?.stopPropagation?.();
+    const item = document.querySelector(`.side-nav-item[data-group="${groupId}"]`);
+    if(!item) return;
+    const willOpen = !item.classList.contains("open");
+    // Accordion: close others when opening (PG-style focus)
+    if(willOpen){
+      document.querySelectorAll(".side-nav-item.open").forEach(el => {
+        if(el !== item) el.classList.remove("open");
+      });
+    }
+    item.classList.toggle("open", willOpen);
+  },
+
+  syncAdminNavGroups(activeName){
+    const groupId = this.ADMIN_NAV_GROUP_FOR[activeName];
+    document.querySelectorAll(".side-nav-item").forEach(el => {
+      const g = el.dataset.group;
+      const isActiveGroup = g === groupId;
+      el.classList.toggle("has-active", isActiveGroup);
+      if(isActiveGroup) el.classList.add("open");
+    });
+  },
+
+  otpStorageKey(uid){ return "dealmai.adminOtpOk." + uid; },
+  isAdminOtpOk(uid){
+    try{ return sessionStorage.getItem(this.otpStorageKey(uid)) === "1"; }catch{ return false; }
+  },
+  markAdminOtpOk(uid){
+    try{ sessionStorage.setItem(this.otpStorageKey(uid), "1"); }catch{}
+  },
+  clearAdminOtpOk(uid){
+    try{ if(uid) sessionStorage.removeItem(this.otpStorageKey(uid)); }catch{}
+  },
+
+  showLoginStep(step){
+    ["credentials","otp","enroll-email","enroll-totp","signup","signup-code"].forEach(s => {
+      const el = document.getElementById("login-step-" + s);
+      if(el) el.classList.toggle("show", s === step);
+    });
+  },
+
+  async customerAuthFetch(action, extra={}, opts={}){
+    const headers = { "Content-Type":"application/json" };
+    if(opts.auth !== false && auth.currentUser){
+      headers.Authorization = "Bearer " + await auth.currentUser.getIdToken(false);
+    }
+    const body = JSON.stringify({ action, ...extra });
+    let res = await fetch("/api/customer-auth", { method:"POST", headers, body });
+    if(res.status === 404){
+      res = await fetch("/.netlify/functions/customer-auth", { method:"POST", headers, body });
+    }
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok || data.ok === false){
+      const err = new Error(data.error || `HTTP ${res.status}`);
+      err.data = data;
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  },
+
+  openSignup(){
+    if(!State.hasAdmin){
+      return Toast.show("Initial admin setup first — then customers can register.","warn");
+    }
+    this.showLoginStep("signup");
+    document.getElementById("login-modal")?.classList.add("show");
+  },
+
+  async sendSignupCode(){
+    const email = (document.getElementById("su-email")?.value || "").trim().toLowerCase();
+    const pass = document.getElementById("su-pass")?.value || "";
+    const pass2 = document.getElementById("su-pass2")?.value || "";
+    if(!email || !pass) return Toast.show(I.t("toast.login.fail"),"err");
+    if(pass.length < 6) return Toast.show("Password must be at least 6 characters","err");
+    if(pass !== pass2) return Toast.show(I.t("toast.signup.needMatch"),"err");
+    try{
+      const st = await this.customerAuthFetch("send-register-code", { email }, { auth:false });
+      State.signupDraft = { email, password: pass };
+      const hint = document.getElementById("signup-code-hint");
+      if(hint) hint.textContent = I.t("signup.codeHint",{ email: st.maskedEmail || email });
+      this.showLoginStep("signup-code");
+      Toast.show(I.t("toast.signup.codeSent") + (st.hint ? " ("+st.hint+")" : ""),"ok");
+    }catch(e){
+      Toast.show(e.message || I.t("toast.signup.fail"),"err");
+    }
+  },
+
+  async completeSignup(){
+    if(this._otpBusy) return;
+    const draft = State.signupDraft;
+    const code = (document.getElementById("su-code")?.value || "").replace(/\D/g,"").trim();
+    if(!draft?.email || !draft?.password){
+      this.showLoginStep("signup");
+      return Toast.show(I.t("toast.signup.fail"),"err");
+    }
+    if(!/^\d{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
+    this._otpBusy = true;
+    try{
+      await this.customerAuthFetch("register", {
+        email: draft.email,
+        password: draft.password,
+        code
+      }, { auth:false });
+      State.signupDraft = null;
+      const emailEl = document.getElementById("li-email");
+      const passEl = document.getElementById("li-pass");
+      if(emailEl) emailEl.value = draft.email;
+      if(passEl) passEl.value = draft.password;
+      this.showLoginStep("credentials");
+      Toast.show(I.t("toast.signup.ok"),"ok");
+    }catch(e){
+      Toast.show(e.message || I.t("toast.signup.fail"),"err");
+    }finally{
+      this._otpBusy = false;
+    }
+  },
+
+  isCustomerProfileComplete(u){
+    if(!u || u.role !== "customer") return true;
+    if(u.profileComplete === true) return true;
+    const name = String(u.name || "").trim();
+    if(!name || name === "Customer") return false;
+    return !!(u.nationality && u.phoneCountryCode && u.phone);
+  },
+
+  profileCountryOptions(){
+    return [
+      { v:"KR", t:"South Korea" },
+      { v:"TH", t:"Thailand" },
+      { v:"JP", t:"Japan" },
+      { v:"CN", t:"China" },
+      { v:"US", t:"United States" },
+      { v:"SG", t:"Singapore" },
+      { v:"OTHER", t:"Other" }
+    ];
+  },
+  profilePhoneCodes(){
+    return [
+      { v:"+82", t:"+82 KR" },
+      { v:"+66", t:"+66 TH" },
+      { v:"+81", t:"+81 JP" },
+      { v:"+86", t:"+86 CN" },
+      { v:"+1", t:"+1 US" },
+      { v:"+65", t:"+65 SG" }
+    ];
+  },
+
+  openCompleteProfileModal(){
+    const u = State.user || {};
+    const natOpts = this.profileCountryOptions().map(o =>
+      `<option value="${o.v}" ${u.nationality===o.v?"selected":""}>${o.t}</option>`
+    ).join("");
+    const codeOpts = this.profilePhoneCodes().map(o =>
+      `<option value="${o.v}" ${(u.phoneCountryCode||"+82")===o.v?"selected":""}>${o.t}</option>`
+    ).join("");
+    this.showModal(`
+      <button class="close" onclick="App.closeModal()">×</button>
+      <h2>${I.t("profile.complete.title")}</h2>
+      <div class="sub">${I.t("profile.complete.sub")}</div>
+      <div class="field"><label>${I.t("profile.field.name")}</label><input id="pf-name" value="${escapeHtml(u.name && u.name !== "Customer" ? u.name : "")}" /></div>
+      <div class="field"><label>${I.t("profile.field.nationality")}</label><select id="pf-nationality">${natOpts}</select></div>
+      <div class="field"><label>${I.t("profile.field.phoneCode")}</label><select id="pf-phone-code">${codeOpts}</select></div>
+      <div class="field"><label>${I.t("profile.field.phone")}</label><input id="pf-phone" inputmode="tel" value="${escapeHtml(u.phone||"")}" placeholder="1012345678" /></div>
+      <button class="btn-primary" onclick="App.saveCustomerProfile()" style="margin-top:14px"><span>${I.t("profile.complete.cta")}</span><span class="arr">→</span></button>
+    `);
+  },
+
+  async saveCustomerProfile(){
+    const name = (document.getElementById("pf-name")?.value || "").trim();
+    const nationality = (document.getElementById("pf-nationality")?.value || "").trim();
+    const phoneCountryCode = (document.getElementById("pf-phone-code")?.value || "").trim();
+    const phone = (document.getElementById("pf-phone")?.value || "").replace(/[^\d]/g,"");
+    if(!name || !nationality || !phoneCountryCode || phone.length < 6){
+      return Toast.show(I.t("toast.profile.needComplete"),"err");
+    }
+    try{
+      const data = await this.customerAuthFetch("complete-profile", {
+        name, nationality, phoneCountryCode, phone
+      });
+      if(State.user){
+        Object.assign(State.user, {
+          name,
+          nationality,
+          phoneCountryCode,
+          phone,
+          profileComplete: true
+        });
+      }
+      this.closeModal();
+      Toast.show(I.t("toast.profile.saved"),"ok");
+      this.resumePendingPurchase();
+    }catch(e){
+      Toast.show(e.message || I.t("toast.profile.fail"),"err");
+    }
+  },
+
+  async ensureReadyForPurchase(){
+    if(!State.user){
+      Toast.show(I.t("toast.profile.needLogin"),"warn");
+      await this.openLogin();
+      return false;
+    }
+    if(State.user.role === "admin") return true;
+    if(State.user.role !== "customer"){
+      Toast.show(I.t("toast.profile.needLogin"),"err");
+      return false;
+    }
+    if(!this.isCustomerProfileComplete(State.user)){
+      Toast.show(I.t("toast.profile.needComplete"),"warn");
+      this.openCompleteProfileModal();
+      return false;
+    }
+    return true;
+  },
+
+  resumePendingPurchase(){
+    const p = State.pendingPurchase;
+    if(!p) return;
+    if(p.type === "package"){
+      this.selectPackage(p.bucket, p.id, p.price);
+    }else if(p.type === "manual"){
+      this.openManual();
+    }
+  },
+
+  async adminOtpFetch(action, extra={}){
+    const current = auth.currentUser;
+    if(!current) throw new Error("Not signed in");
+    // Force-refresh so long email waits don't hit expired tokens mid-OTP.
+    const idToken = await current.getIdToken(true);
+    const headers = { "Content-Type":"application/json", "Authorization":"Bearer "+idToken };
+    const body = JSON.stringify({ action, ...extra });
+    // Prefer /api alias on VPS; fall back to Netlify-style path.
+    let res = await fetch("/api/admin-otp", { method:"POST", headers, body });
+    if(res.status === 404){
+      res = await fetch("/.netlify/functions/admin-otp", { method:"POST", headers, body });
+    }
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok || data.ok === false){
+      const raw = data.error || `HTTP ${res.status}`;
+      let msg = raw;
+      if(/expired|resend/i.test(raw)) msg = I.t("toast.otp.expired");
+      else if(/invalid code|invalid authenticator/i.test(raw)) msg = I.t("toast.otp.invalid");
+      const err = new Error(msg);
+      err.data = data;
+      err.raw = raw;
+      throw err;
+    }
+    return data;
+  },
+
+  setOtpBusy(busy){
+    this._otpBusy = !!busy;
+    ["li-otp-code","li-enroll-email-code","li-enroll-totp-code","su-code"].forEach(id => {
+      const el = document.getElementById(id);
+      if(el) el.disabled = !!busy;
+    });
+    document.querySelectorAll("#login-modal .btn-primary").forEach(btn => {
+      btn.classList.toggle("is-busy", !!busy);
+    });
+  },
+
+  async beginAdminOtpGate(profile){
+    // Prevent duplicate enroll-send (invalidates the email code the user just received).
+    if(this._otpGateUid === profile?.uid && this._otpGateStarted){
+      document.getElementById("login-modal")?.classList.add("show");
+      return;
+    }
+    this._otpGateUid = profile?.uid || null;
+    this._otpGateStarted = true;
+    State.adminOtpPending = profile;
+    State.user = null;
+    document.getElementById("login-modal")?.classList.add("show");
+    try{
+      const st = await this.adminOtpFetch("status");
+      if(st.mustSetupOtp || !st.totpEnabled){
+        await this.adminOtpFetch("enroll-send");
+        const hint = document.getElementById("login-enroll-email-hint");
+        if(hint) hint.textContent = I.t("login.otp.emailHint",{ email: st.maskedEmail || profile.email });
+        this.showLoginStep("enroll-email");
+        const emailInput = document.getElementById("li-enroll-email-code");
+        if(emailInput){ emailInput.value = ""; emailInput.focus(); }
+        Toast.show(I.t("toast.otp.sent") + (st.hint ? " ("+st.hint+")" : ""),"ok");
+      }else{
+        this.showLoginStep("otp");
+        const otpInput = document.getElementById("li-otp-code");
+        if(otpInput){ otpInput.value = ""; otpInput.focus(); }
+        Toast.show(I.t("login.otp.required"),"warn");
+      }
+    }catch(e){
+      console.error(e);
+      this._otpGateStarted = false;
+      this._otpGateUid = null;
+      Toast.show(e.message || I.t("toast.otp.invalid"),"err");
+      await signOut(auth);
+      State.adminOtpPending = null;
+      this.showLoginStep("credentials");
+    }
+  },
+
+  async finishAdminAfterOtp(){
+    const p = State.adminOtpPending;
+    if(!p || !auth.currentUser) return;
+    this.markAdminOtpOk(p.uid);
+    this._otpGateStarted = false;
+    this._otpGateUid = null;
+    State.adminOtpPending = null;
+    State.user = p;
+    this.closeLogin();
+    this.showLoginStep("credentials");
+    Toast.show(I.t("toast.login.ok",{name: p.name}),"ok");
+    subscribeCollections();
+    this.updateAuthUI();
+    if(p.mustChangePassword) this.openCustomerPasswordModal(true);
+    else this.go("admin");
+  },
+
+  async verifyAdminEnrollEmail(){
+    if(this._otpBusy) return Toast.show(I.t("toast.otp.busy"),"warn");
+    const code = (document.getElementById("li-enroll-email-code")?.value || "").replace(/\D/g,"").trim();
+    if(!/^\d{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
+    this.setOtpBusy(true);
+    try{
+      const data = await this.adminOtpFetch("enroll-verify-email",{ code });
+      const qr = document.getElementById("login-otp-qr");
+      if(qr){
+        if(data.otpauthUrl){
+          qr.src = "https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=" + encodeURIComponent(data.otpauthUrl);
+          qr.style.display = "block";
+        }else{
+          qr.removeAttribute("src");
+          qr.style.display = "none";
+        }
+      }
+      // Show manual secret as fallback if QR CDN is blocked.
+      let secretEl = document.getElementById("login-otp-secret");
+      if(!secretEl){
+        secretEl = document.createElement("div");
+        secretEl.id = "login-otp-secret";
+        secretEl.style.cssText = "margin:8px 0 14px;font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);text-align:center;word-break:break-all";
+        qr?.parentNode?.insertBefore(secretEl, qr.nextSibling);
+      }
+      if(data.secret){
+        secretEl.textContent = "Secret: " + data.secret;
+        secretEl.hidden = false;
+      }else{
+        secretEl.hidden = true;
+      }
+      this.showLoginStep("enroll-totp");
+      Toast.show(I.t("toast.otp.next"),"ok");
+      const totpInput = document.getElementById("li-enroll-totp-code");
+      if(totpInput){ totpInput.value = ""; setTimeout(() => totpInput.focus(), 50); }
+    }catch(e){
+      console.error("[otp enroll-email]", e);
+      Toast.show(e.message || I.t("toast.otp.invalid"),"err");
+    }finally{
+      this.setOtpBusy(false);
+    }
+  },
+
+  async resendAdminEnrollEmail(){
+    try{
+      const st = await this.adminOtpFetch("enroll-send");
+      Toast.show(I.t("toast.otp.sent"),"ok");
+      const hint = document.getElementById("login-enroll-email-hint");
+      if(hint) hint.textContent = I.t("login.otp.emailHint",{ email: st.maskedEmail || "" });
+      const emailInput = document.getElementById("li-enroll-email-code");
+      if(emailInput){ emailInput.value = ""; emailInput.focus(); }
+    }catch(e){
+      Toast.show(e.message || I.t("toast.otp.invalid"),"err");
+    }
+  },
+
+  async activateAdminTotp(){
+    if(this._otpBusy) return Toast.show(I.t("toast.otp.busy"),"warn");
+    const code = (document.getElementById("li-enroll-totp-code")?.value || "").replace(/\D/g,"").trim();
+    if(!/^\d{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
+    this.setOtpBusy(true);
+    try{
+      await this.adminOtpFetch("enroll-activate",{ code });
+      Toast.show(I.t("toast.otp.activated"),"ok");
+      await this.finishAdminAfterOtp();
+    }catch(e){
+      console.error("[otp activate]", e);
+      Toast.show(e.message || I.t("toast.otp.invalid"),"err");
+    }finally{
+      this.setOtpBusy(false);
+    }
+  },
+
+  async verifyAdminLoginOtp(){
+    if(this._otpBusy) return Toast.show(I.t("toast.otp.busy"),"warn");
+    const code = (document.getElementById("li-otp-code")?.value || "").replace(/\D/g,"").trim();
+    if(!/^\d{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
+    this.setOtpBusy(true);
+    try{
+      await this.adminOtpFetch("verify-login",{ code });
+      await this.finishAdminAfterOtp();
+    }catch(e){
+      console.error("[otp verify-login]", e);
+      Toast.show(e.message || I.t("toast.otp.invalid"),"err");
+    }finally{
+      this.setOtpBusy(false);
+    }
+  },
+
+  async cancelAdminOtp(){
+    this.clearAdminOtpOk(State.adminOtpPending?.uid || auth.currentUser?.uid);
+    this._otpGateStarted = false;
+    this._otpGateUid = null;
+    State.adminOtpPending = null;
+    try{ await signOut(auth); }catch{}
+    this.showLoginStep("credentials");
+    document.getElementById("login-modal")?.classList.add("show");
+  },
+
+  toggleAdminUserMenu(ev){
+    ev?.stopPropagation?.();
+    const drop = document.getElementById("admin-user-drop");
+    if(!drop) return;
+    drop.classList.toggle("open");
+  },
+  closeAdminUserMenu(){
+    document.getElementById("admin-user-drop")?.classList.remove("open");
+  },
+  openAdminPasswordFromMenu(){
+    this.closeAdminUserMenu();
+    this.go("admin");
+    this.setAdmin("password");
+  },
+
   setAdmin(name, ev, opts){
     const fromPopstate = !!(opts && opts.fromPopstate);
     if(!State.user){ this.openLogin(); return; }
+    if(State.user.role !== "admin"){ Toast.show("Admin only","err"); return; }
+    name = this.normalizeAdminTab(name);
     if(name !== "server" && typeof ServerManageUI !== "undefined"){
       ServerManageUI.clearTimers();
     }
+
+    // PG/Crypto: open as top tab (max 12); switch if already open
+    if(!Array.isArray(State.adminOpenTabs)) State.adminOpenTabs = ["orders"];
+    State.adminOpenTabs = State.adminOpenTabs.map(t => this.normalizeAdminTab(t));
+    if(!State.adminOpenTabs.includes(name)){
+      if(State.adminOpenTabs.length >= this.ADMIN_TAB_MAX){
+        State.adminOpenTabs.shift();
+        Toast.show(I.t("admin.tabs.max"),"warn");
+      }
+      State.adminOpenTabs.push(name);
+    }
+
     document.querySelectorAll(".side-item").forEach(s => s.classList.toggle("active", s.dataset.admin === name));
+    this.syncAdminNavGroups(name);
     document.querySelectorAll(".admin-view").forEach(v => v.style.display = "none");
-    document.getElementById("adm-"+name).style.display = "block";
+    const pane = document.getElementById("adm-"+name);
+    if(pane) pane.style.display = "block";
     if(name === "orders") renderAdminOrders();
-    if(name === "users") renderAdminUsers();
+    if(name === "customers") renderAdminCustomers();
+    if(name === "staff") renderAdminStaff();
     if(name === "packages") renderAdminPackages();
     if(name === "webhook") renderAdminWebhook();
     if(name === "partners") renderAdminPartners();
@@ -6565,9 +8102,8 @@ const App = {
     if(name === "dmchamp") renderAdminDmChamp();
     if(name === "paymentgw") renderAdminPaymentGw();
     if(name === "password") renderAdminPassword();
-    this.renderAdminMobileTabs(name);
+    this.renderAdminTabBar(name);
 
-    // Push a sub-page history entry so back navigates between admin tabs.
     if(!fromPopstate){
       try{
         const state = { page: "admin", adminTab: name };
@@ -6579,20 +8115,38 @@ const App = {
     }
   },
 
-  renderAdminMobileTabs(active){
-    const wrap = document.getElementById("admin-mobile-tabs");
+  closeAdminTab(name, ev){
+    ev?.stopPropagation?.();
+    if(!Array.isArray(State.adminOpenTabs)) return;
+    if(State.adminOpenTabs.length <= 1) return;
+    const idx = State.adminOpenTabs.indexOf(name);
+    if(idx < 0) return;
+    const wasActive = document.querySelector(`.side-item.active`)?.dataset?.admin === name;
+    State.adminOpenTabs.splice(idx, 1);
+    if(wasActive){
+      const next = State.adminOpenTabs[Math.max(0, idx - 1)] || State.adminOpenTabs[0];
+      this.setAdmin(next);
+    }else{
+      const active = document.querySelector(".side-item.active")?.dataset?.admin || State.adminOpenTabs[0];
+      this.renderAdminTabBar(active);
+    }
+  },
+
+  renderAdminTabBar(active){
+    const wrap = document.getElementById("admin-tab-bar");
     if(!wrap) return;
-    const tabs = [
-      ["orders","admin.side.orders"],["users","admin.side.users"],["packages","admin.side.packages"],
-      ["webhook","admin.side.webhook"],["partners","admin.side.partners"],["paygw","admin.side.paygw"],["currencies","admin.side.currencies"],["paymentgw","admin.side.paymentgw"],["chillpay","admin.side.chillpay"],["emails","admin.side.emails"],["smtp","admin.side.smtp"],
-      ["domain","admin.side.domain"],["server","admin.side.server"],
-      ["languages","admin.side.languages"],["branding","admin.side.branding"],
-      ["dmchamp","admin.side.dmchamp"],["password","admin.side.password"]
-    ];
-    wrap.innerHTML = tabs.map(([k,i]) => `
-      <button onclick="App.setAdmin('${k}')" class="filter-pill ${k===active?"on":""}" style="white-space:nowrap;flex:none">${I.t(i)}</button>
-    `).join("");
-  }
+    const tabs = Array.isArray(State.adminOpenTabs) ? State.adminOpenTabs : ["orders"];
+    wrap.innerHTML = tabs.map(k => {
+      const label = I.t(this.ADMIN_TAB_LABELS[k] || ("admin.side."+k));
+      return `<button type="button" class="admin-tab ${k===active?"on":""}" onclick="App.setAdmin('${k}')">
+        <span class="tab-label">${escapeHtml(label)}</span>
+        ${tabs.length>1?`<span class="tab-x" onclick="App.closeAdminTab('${k}',event)" title="Close">×</span>`:""}
+      </button>`;
+    }).join("");
+  },
+
+  // legacy name used by older call sites
+  renderAdminMobileTabs(active){ this.renderAdminTabBar(active); }
 };
 
 // ===========================================================
@@ -7602,20 +9156,24 @@ function getFilteredOrders(){
   return all;
 }
 
-function renderAdminUsers(){
-  const el = document.getElementById("adm-users");
+function renderAdminStaff(){ renderAdminUserList("staff"); }
+function renderAdminCustomers(){ renderAdminUserList("customers"); }
+function renderAdminUsers(){ renderAdminCustomers(); } // legacy alias
+
+function renderAdminUserList(kind){
+  const isStaff = kind === "staff";
+  const el = document.getElementById(isStaff ? "adm-staff" : "adm-customers");
+  if(!el) return;
 
   // Lazy-load DM Champ config so the Credits column uses the live rate.
   if(!State.dmchamp.loaded){
     loadDmChampConfig().then(() => {
-      if(document.getElementById("adm-users")?.classList.contains("show")){
-        renderAdminUsers();
+      if(el.style.display !== "none"){
+        renderAdminUserList(kind);
       }
     });
   }
 
-  // Helper: find the currently-active paid order for a given user email
-  // (parallels customer-side findActiveOrder, but for admin to see for each customer)
   const findActiveForEmail = (email) => {
     if(!email || !State.orders) return null;
     const now = Date.now();
@@ -7627,7 +9185,7 @@ function renderAdminUsers(){
     for(const o of candidates){
       const exp = toExpiryDate(o.expiresAt);
       if(!exp) continue;
-      if(exp.getTime() <= now) continue;  // already expired
+      if(exp.getTime() <= now) continue;
       if(exp.getTime() > bestExp){ best = o; bestExp = exp.getTime(); }
     }
     if(!best) return null;
@@ -7636,9 +9194,6 @@ function renderAdminUsers(){
     return { order: best, expDate, daysLeft };
   };
 
-  // Helper: total DM Champ credits earned by all paid orders for this user.
-  // Uses the same calculation as the Customer Portal (subtotal × per-order
-  // snapshot rate, falling back to current admin rate, then default 100).
   const totalCreditsForEmail = (email) => {
     if(!email || !State.orders) return 0;
     const emailLower = email.toLowerCase();
@@ -7646,16 +9201,10 @@ function renderAdminUsers(){
     let total = 0;
     for(const o of State.orders){
       if((o.customer?.email || "").toLowerCase() !== emailLower) continue;
-
-      // ontheline reversal events (Unpaid / Refund / Partial Refund) SUBTRACT
-      // credits that a prior Paid order had granted. creditsDeducted is stored
-      // on the reversal order by the webhook / Simulate.
       if(o.source === "ontheline" && ["Unpaid","Refund","Partial Refund"].includes(o.event)){
         total -= Number(o.creditsDeducted) || 0;
         continue;
       }
-
-      // Credit-earning orders: paid (direct/chillpay) or ontheline Paid event.
       const isPaid = o.status === "paid" || o.event === "Paid";
       if(!isPaid) continue;
       const subUsd = Number.isFinite(Number(o.amountUsd)) && Number(o.amountUsd) > 0
@@ -7670,20 +9219,23 @@ function renderAdminUsers(){
     return Math.max(0, total);
   };
 
-  const rows = State.users.map(u => {
+  const list = (State.users || []).filter(u =>
+    isStaff ? u.role === "admin" : u.role === "customer"
+  );
+
+  const rows = list.map(u => {
     const statusKey = u.disabled ? "disabled" : (u.mustChangePassword ? "pendingPassword" : "active");
     const statusLabel = I.t("admin.users.status." + statusKey);
     const statusClass = u.disabled ? "failed" : (u.mustChangePassword ? "pending" : "paid");
     const isSelf = State.user && (u.id === State.user.uid);
 
-    // Active package cell — only meaningful for customers
     let activePkgCell = "—";
-    if(u.role === "customer"){
+    let creditsCell = '<span style="color:var(--muted)">—</span>';
+    if(!isStaff){
       const active = findActiveForEmail(u.email);
       if(active){
         const pkgName = (active.order.items || []).map(i => i.title || i.id).join(" + ");
         const isExpiringSoon = active.daysLeft <= 7;
-        const pillClass = isExpiringSoon ? "pending" : "paid";
         activePkgCell = `
           <div style="line-height:1.45">
             <div style="font-size:12.5px">${escapeHtml(pkgName)}</div>
@@ -7693,26 +9245,26 @@ function renderAdminUsers(){
           </div>
         `;
       }
-    }
-
-    // Credits cell: sum across all paid orders for this user's email.
-    // Only meaningful for customers; admins always show "—".
-    let creditsCell = '<span style="color:var(--muted)">—</span>';
-    if(u.role === "customer"){
       const total = totalCreditsForEmail(u.email);
       if(total > 0){
         creditsCell = `<span style="font-family:var(--mono);font-size:12.5px;color:var(--teal-deep);font-weight:600">${fmtNumber(total)}</span>`;
       }
     }
 
+    const phoneCell = (!isStaff && (u.phoneCountryCode || u.phone))
+      ? `<span style="font-family:var(--mono);font-size:12px">${escapeHtml((u.phoneCountryCode||"")+" "+(u.phone||"")).trim()}</span>`
+      : "—";
+    const nationCell = (!isStaff && u.nationality) ? escapeHtml(u.nationality) : "—";
+
     return `
     <tr style="${u.disabled?'opacity:.55':''}">
       <td>${escapeHtml(u.name)}</td>
       <td style="font-family:var(--mono);font-size:12px">${escapeHtml(u.email)}</td>
-      <td><span class="src-tag ${u.role==='admin'?'ontheline':'direct'}">${I.t('admin.users.role.'+(u.role||'customer'))}</span></td>
-      <td>${escapeHtml(u.plan||"—")}</td>
+      ${isStaff ? `<td><span class="src-tag ontheline">${I.t('admin.users.role.admin')}</span></td>` : `
+      <td>${nationCell}</td>
+      <td>${phoneCell}</td>
       <td>${activePkgCell}</td>
-      <td>${creditsCell}</td>
+      <td>${creditsCell}</td>`}
       <td>${fmtDate(u.createdAt)}</td>
       <td><span class="status-tag ${statusClass}"><span class="d"></span>${statusLabel}</span></td>
       <td>
@@ -7724,26 +9276,34 @@ function renderAdminUsers(){
     </tr>
   `;}).join("");
 
+  const titleKey = isStaff ? "admin.users.title-html" : "admin.customers.title-html";
+  const addLabel = isStaff ? I.t("admin.users.add") : I.t("admin.customers.add");
+  const addFn = isStaff ? "AdminActions.openAddStaff()" : "AdminActions.openAddCustomer()";
+  const headLabel = isStaff ? I.t("admin.users.h") : I.t("admin.customers.h");
+  const emptyLabel = isStaff ? I.t("admin.users.empty") : I.t("admin.customers.empty");
+  const crumb = isStaff ? "Console / User Management" : "Console / Customer Management";
+
   el.innerHTML = `
     <div class="admin-head">
       <div>
-        <div class="crumbs">Console / Users</div>
-        <h1>${I.t("admin.users.title-html")}</h1>
+        <div class="crumbs">${crumb}</div>
+        <h1>${I.t(titleKey)}</h1>
       </div>
-      <button class="btn-primary" onclick="AdminActions.openAddUser()"><span>${I.t("admin.users.add")}</span><span class="arr">→</span></button>
+      <button class="btn-primary" onclick="${addFn}"><span>${addLabel}</span><span class="arr">→</span></button>
     </div>
     <div class="panel">
-      <div class="panel-h"><h3>${I.t("admin.users.h")}</h3></div>
+      <div class="panel-h"><h3>${headLabel}</h3></div>
       <div class="table-wrap">
-        ${State.users.length === 0 ? `<div class="empty-state">${I.t("admin.users.empty")}</div>` :
+        ${list.length === 0 ? `<div class="empty-state">${emptyLabel}</div>` :
         `<table>
           <thead><tr>
             <th>${I.t("admin.users.col.name")}</th>
             <th>${I.t("admin.users.col.email")}</th>
-            <th>${I.t("admin.users.col.role")}</th>
-            <th>${I.t("admin.users.col.plan")}</th>
+            ${isStaff ? `<th>${I.t("admin.users.col.role")}</th>` : `
+            <th>${I.t("profile.field.nationality")}</th>
+            <th>${I.t("profile.field.phone")}</th>
             <th>${I.t("admin.users.col.activePackage")}</th>
-            <th>${I.t("admin.users.col.credits")}</th>
+            <th>${I.t("admin.users.col.credits")}</th>`}
             <th>${I.t("admin.users.col.created")}</th>
             <th>${I.t("admin.users.col.status")}</th>
             <th>${I.t("admin.orders.col.actions")}</th>
@@ -8936,70 +10496,19 @@ function renderAdminPackages(){
 
 function renderAdminLanguages(){
   const el = document.getElementById("adm-languages");
-  I.recalcStatus();
-
-  const cards = State.langs.map(l => {
-    const s = State.langStatus[l.code];
-    const isLocked = s.locked;
-    const status = s.isMaster ? "100% · master" : `${s.pct}% · ${isLocked ? I.t("admin.langs.locked") : I.t("admin.langs.live")}`;
-    const isEnabled = App.isLangEnabled(l.code);
-    const isEn = l.code === "en";
-    // Enable/disable toggle — controls whether end-users see this language in
-    // the picker. "en" is always on (fallback) so its toggle is shown disabled.
-    const toggleBtn = isEn
-      ? `<button class="lang-toggle on locked" disabled title="${I.t("admin.langs.toggle.alwaysOn")}">${I.t("admin.langs.toggle.on")}</button>`
-      : `<button class="lang-toggle ${isEnabled?"on":"off"}" onclick="AdminActions.toggleLangEnabled('${l.code}')" title="${I.t(isEnabled?"admin.langs.toggle.clickToDisable":"admin.langs.toggle.clickToEnable")}">${I.t(isEnabled?"admin.langs.toggle.on":"admin.langs.toggle.off")}</button>`;
-    return `
-      <div class="lang-card ${isLocked?"locked":"active"}${isEnabled?"":" lang-disabled"}">
-        <div class="flag">${escapeHtml(langShort(l.code))}</div>
-        <div class="pct">${status}</div>
-        <div class="bar"><div class="bar-fill" style="width:${s.pct}%"></div></div>
-        <div class="meta">${escapeHtml(l.native)} — ${s.isMaster?I.t("admin.langs.master"):(isLocked?I.t("admin.langs.locked"):I.t("admin.langs.live"))}</div>
-        <div style="display:flex;gap:6px;align-items:center;margin-top:8px">
-          <span style="font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">${I.t("admin.langs.toggle.label")}</span>
-          ${toggleBtn}
-        </div>
-        <button onclick="AdminActions.editLang('${l.code}')" style="margin-top:8px">${I.t("admin.langs.continue")}</button>
-      </div>
-    `;
-  }).join("");
-
+  if(!el) return;
   el.innerHTML = `
     <div class="admin-head">
       <div>
-        <div class="crumbs">Console / Languages</div>
-        <h1>${I.t("admin.langs.title-html")}</h1>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn-ghost" onclick="AdminActions.importAllTranslations(false)" title="Merge full TH/KR/JP/CH translations — existing custom edits are kept where keys differ">
-          ⇪ Import TH / KR / JP / CH
-        </button>
-        <button class="btn-ghost" onclick="AdminActions.importAllTranslations(true)" title="Wipe TH/KR/JP/CH and replace with full bundled translations" style="border-color:var(--amber);color:var(--amber)">
-          ⇪ Import + Overwrite
-        </button>
+        <div class="crumbs">${I.t("admin.group.settings")} / ${I.t("admin.side.languages")}</div>
+        <h1>${I.t("admin.langs.disabled.title")}</h1>
       </div>
     </div>
-    <div class="lang-grid">${cards}</div>
-
-    <div class="panel">
-      <div class="panel-h">
-        <h3>${I.t("admin.langs.translate-table.h")}</h3>
-        <div class="translate-controls" style="margin:0">
-          <select id="tl-lang" onchange="renderAdminLanguages_TranslateTable()">
-            ${State.langs.map(l => `<option value="${l.code}">${l.native} (${langShort(l.code)})${l.code==="en"?" — master":""}</option>`).join("")}
-          </select>
-          <input class="search" id="tl-search" placeholder="${I.t("admin.langs.translate-table.search")}" oninput="renderAdminLanguages_TranslateTable()" />
-        </div>
-      </div>
-      <div style="padding:12px 22px;background:rgba(127,169,42,.08);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted-2);display:flex;align-items:center;gap:8px">
-        <span style="width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 6px var(--lime);flex:none"></span>
-        <span>${I.t("admin.langs.autosave.hint")}</span>
-      </div>
-      <div id="translate-table-body"></div>
+    <div class="panel" style="padding:22px 24px">
+      <p style="margin:0;font-size:14px;line-height:1.65;color:var(--text-2);max-width:640px">${I.t("admin.langs.disabled.sub")}</p>
+      <p style="margin:14px 0 0;font-size:12.5px;color:var(--muted)">${I.t("admin.langs.disabled.note")}</p>
     </div>
   `;
-
-  renderAdminLanguages_TranslateTable();
 }
 
 window.renderAdminLanguages_TranslateTable = function(){
@@ -10229,7 +11738,8 @@ const AdminActions = {
     Toast.show(`Cleared ${deleted} email(s) from queue`,"ok");
   },
 
-  openAddUser(){
+  openAddUser(){ return this.openAddStaff(); },
+  openAddStaff(){
     App.showModal(`
       <button class="close" onclick="App.closeModal()">×</button>
       <h2>${I.t("admin.users.modal.title-html")}</h2>
@@ -10237,17 +11747,32 @@ const AdminActions = {
       <div class="user-form-grid">
         <div class="field"><label>${I.t("admin.users.modal.name")}</label><input id="nu-name" /></div>
         <div class="field"><label>${I.t("admin.users.modal.email")}</label><input id="nu-email" type="email" /></div>
-        <div class="field"><label>${I.t("admin.users.modal.role")}</label><select id="nu-role"><option value="customer">${I.t("admin.users.role.customer")}</option><option value="admin">${I.t("admin.users.role.admin")}</option></select></div>
+        <input type="hidden" id="nu-role" value="admin" />
         <div class="field"><label>${I.t("admin.users.modal.password")}</label><input id="nu-pass" type="text" placeholder="e.g. Welcome123!" /></div>
       </div>
       <button class="btn-primary" onclick="AdminActions.createUser()" style="margin-top:18px"><span>${I.t("admin.users.modal.cta")}</span><span class="arr">→</span></button>
+    `);
+  },
+  openAddCustomer(){
+    App.showModal(`
+      <button class="close" onclick="App.closeModal()">×</button>
+      <h2>${I.t("admin.customers.modal.title-html")}</h2>
+      <div class="sub">${I.t("admin.customers.modal.sub")}</div>
+      <div class="user-form-grid">
+        <div class="field"><label>${I.t("admin.users.modal.name")}</label><input id="nu-name" /></div>
+        <div class="field"><label>${I.t("admin.users.modal.email")}</label><input id="nu-email" type="email" /></div>
+        <input type="hidden" id="nu-role" value="customer" />
+        <div class="field"><label>${I.t("admin.users.modal.password")}</label><input id="nu-pass" type="text" placeholder="e.g. Welcome123!" /></div>
+      </div>
+      <button class="btn-primary" onclick="AdminActions.createUser()" style="margin-top:18px"><span>${I.t("admin.customers.modal.cta")}</span><span class="arr">→</span></button>
     `);
   },
 
   async createUser(){
     const name = document.getElementById("nu-name").value.trim();
     const email = document.getElementById("nu-email").value.trim().toLowerCase();
-    const role = document.getElementById("nu-role").value;
+    const roleRaw = document.getElementById("nu-role").value;
+    const role = roleRaw === "admin" ? "admin" : "customer";
     const password = document.getElementById("nu-pass").value;
     if(!name || !email || !password) return Toast.show("All fields required","err");
     if(password.length < 6) return Toast.show("Password must be at least 6 characters","err");
@@ -10295,6 +11820,10 @@ const AdminActions = {
         uid,
         email, name, role,
         mustChangePassword: true,
+        profileComplete: role === "admin",
+        nationality: "",
+        phoneCountryCode: "",
+        phone: "",
         createdAt: serverTimestamp()
       });
 
@@ -10392,13 +11921,32 @@ const AdminActions = {
     if(!target) return;
     if(!confirm(`Send password reset email to ${target.email}?`)) return;
     try{
-      await sendPasswordResetEmail(auth, target.email);
-      // Also mark in Firestore that the user is expected to reset
-      await updateDoc(doc(db,"users",id),{ mustChangePassword: true });
-      Toast.show(`Password reset email sent to ${target.email}`,"ok");
+      const current = auth.currentUser;
+      if(!current) throw new Error("Not signed in");
+      const idToken = await current.getIdToken(false);
+      const body = JSON.stringify({ action:"admin-request", email: target.email });
+      let res = await fetch("/api/password-reset", {
+        method:"POST",
+        headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+idToken },
+        body
+      });
+      if(res.status === 404){
+        res = await fetch("/.netlify/functions/password-reset", {
+          method:"POST",
+          headers:{ "Content-Type":"application/json", "Authorization":"Bearer "+idToken },
+          body
+        });
+      }
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || data.ok === false){
+        throw new Error(data.error || `HTTP ${res.status}`);
+      }
+      Toast.show(I.t("toast.password.resetSent",{ email: target.email }),"ok");
     }catch(e){
       console.error(e);
-      Toast.show("Error: "+(e.code||e.message),"err");
+      let msg = e.message || "Error";
+      if(/SMTP/i.test(msg)) msg = I.t("toast.password.resetSmtp");
+      Toast.show(msg,"err");
     }
   },
 
@@ -12119,14 +13667,33 @@ async function boot(){
           return;
         }
         const wasAlreadyAuthed = !!State.user; // true if this is a re-fire, not a fresh login
-        State.user = {
+        const profileUser = {
           uid: fbUser.uid,
           email: fbUser.email,
           name: data.name || (data.role === "admin" ? "Admin" : "Customer"),
           role: data.role,
-          mustChangePassword: !!data.mustChangePassword
+          mustChangePassword: !!data.mustChangePassword,
+          profileComplete: !!data.profileComplete,
+          nationality: data.nationality || "",
+          phoneCountryCode: data.phoneCountryCode || "",
+          phone: data.phone || ""
         };
+        if(data.role === "customer"){
+          profileUser.profileComplete = App.isCustomerProfileComplete(profileUser);
+        }
+
+        // Admin OTP gate (Crypto-style): password alone is not enough.
+        if(data.role === "admin" && !App.isAdminOtpOk(fbUser.uid)){
+          await App.beginAdminOtpGate(profileUser);
+          return;
+        }
+
+        State.user = profileUser;
         if(!wasAlreadyAuthed){
+          if(data.role !== "admin"){
+            document.getElementById("login-modal")?.classList.remove("show");
+            App.showLoginStep("credentials");
+          }
           Toast.show(I.t("toast.login.ok",{name: State.user.name}),"ok");
         }
         // Subscribe to Firestore data appropriate to the role.
@@ -12153,10 +13720,14 @@ async function boot(){
           if(data.role === "admin"){
             App.go("admin");
           }else{
-            // Customer: go to My Account dashboard.
-            // The dashboard itself surfaces the "must change password" prompt
-            // when mustChangePassword=true, so we don't need a separate flow.
-            App.go("account");
+            // Customer: resume purchase flow if they clicked a package first;
+            // otherwise land on My Account.
+            if(State.pendingPurchase){
+              App.closeLogin();
+              App.resumePendingPurchase();
+            }else{
+              App.go("account");
+            }
           }
         }
       }else{
@@ -12168,6 +13739,10 @@ async function boot(){
     }else{
       // Signed out
       State.user = null;
+      App._otpGateStarted = false;
+      App._otpGateUid = null;
+      try{ sessionStorage.removeItem("dealmai.clientIp"); }catch{}
+      if(App._sessionMetaTimer){ clearInterval(App._sessionMetaTimer); App._sessionMetaTimer = null; }
       unsubscribeCollections();
       App.updateAuthUI();
       // If currently on admin or customer-portal page, bounce back to home
@@ -12309,25 +13884,28 @@ async function boot(){
 function updateLoginModalMode(){
   const modal = document.getElementById("login-modal");
   if(!modal) return;
-  const h2 = modal.querySelector("h2");
-  const sub = modal.querySelector(".sub");
-  const cta = modal.querySelector(".btn-primary span:first-child");
-  const helpText = modal.querySelector("p");
+  const h2 = modal.querySelector("#login-step-credentials h2");
+  const sub = modal.querySelector("#login-step-credentials .sub");
+  const cta = modal.querySelector("#login-step-credentials .btn-primary span:first-child");
+  const helpText = modal.querySelector("#login-step-credentials p");
+  const switchEl = modal.querySelector("#login-step-credentials .login-switch");
   const emailInput = document.getElementById("li-email");
   const passInput = document.getElementById("li-pass");
 
   if(!State.hasAdmin){
     if(h2) h2.innerHTML = 'Initial <span class="grad">Setup</span>';
-    if(sub) sub.textContent = "Create the first admin account";
+    if(sub) sub.textContent = "Create the first admin account (one-time bootstrap)";
     if(cta) cta.textContent = "Create Admin";
-    if(helpText) helpText.textContent = "No admin exists yet. The first sign-in creates one.";
+    if(helpText) helpText.textContent = "No admin exists yet. After the first admin is created, new admins can only be added from the Admin Console.";
+    if(switchEl) switchEl.style.display = "none";
     if(emailInput && emailInput.value === "admin@dealpro.io") emailInput.value = "";
     if(passInput) passInput.value = "";
   }else{
     if(h2) h2.innerHTML = I.t("login.title-html");
     if(sub) sub.textContent = I.t("login.sub");
     if(cta) cta.textContent = I.t("login.cta");
-    if(helpText) helpText.textContent = "Sign in with your Firebase admin credentials.";
+    if(helpText) helpText.textContent = I.t("login.help");
+    if(switchEl) switchEl.style.display = "";
   }
 }
 
@@ -12339,5 +13917,55 @@ window.loadAdminDomain = loadAdminDomain;
 window.loadAdminServerSummary = loadAdminServerSummary;
 window.matchPackagesForAmount = matchPackagesForAmount;
 window.updateLoginModalMode = updateLoginModalMode;
+
+document.addEventListener("click", (e) => {
+  const menu = document.getElementById("admin-user-menu");
+  if(menu && !menu.contains(e.target)) App.closeAdminUserMenu();
+});
+
+// Enter key + auto-submit when 6 OTP digits are entered
+function bindOtpAutoSubmit(){
+  const map = {
+    "li-otp-code": () => App.verifyAdminLoginOtp(),
+    "li-enroll-email-code": () => App.verifyAdminEnrollEmail(),
+    "li-enroll-totp-code": () => App.activateAdminTotp(),
+    "su-code": () => App.completeSignup()
+  };
+  Object.keys(map).forEach(id => {
+    const el = document.getElementById(id);
+    if(!el || el.dataset.otpBound === "1") return;
+    el.dataset.otpBound = "1";
+    el.setAttribute("inputmode", "numeric");
+    el.setAttribute("autocomplete", "one-time-code");
+    el.setAttribute("maxlength", "6");
+    let timer = null;
+    const run = () => {
+      const digits = String(el.value || "").replace(/\D/g, "").slice(0, 6);
+      if(el.value !== digits) el.value = digits;
+      if(digits.length === 6) map[id]();
+    };
+    el.addEventListener("input", () => {
+      clearTimeout(timer);
+      // Short debounce avoids double-fire when browsers rewrite the value.
+      timer = setTimeout(run, 40);
+    });
+    el.addEventListener("paste", () => {
+      clearTimeout(timer);
+      timer = setTimeout(run, 40);
+    });
+  });
+}
+
+["li-otp-code","li-enroll-email-code","li-enroll-totp-code","su-code"].forEach(id => {
+  document.addEventListener("keydown", (e) => {
+    if(e.key !== "Enter") return;
+    if(e.target?.id === "li-otp-code") App.verifyAdminLoginOtp();
+    if(e.target?.id === "li-enroll-email-code") App.verifyAdminEnrollEmail();
+    if(e.target?.id === "li-enroll-totp-code") App.activateAdminTotp();
+    if(e.target?.id === "su-code") App.completeSignup();
+  });
+});
+
+bindOtpAutoSubmit();
 
 boot();
