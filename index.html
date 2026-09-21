@@ -1244,6 +1244,7 @@
           </button>
           <ul class="side-nav-second">
             <li><button class="side-item active" data-admin="orders" onclick="App.setAdmin('orders',event)"><span data-i18n="admin.side.orders">Orders</span></button></li>
+            <li><button class="side-item" data-admin="invoices" onclick="App.setAdmin('invoices',event)"><span data-i18n="admin.side.invoices">Invoice</span></button></li>
             <li><button class="side-item" data-admin="packages" onclick="App.setAdmin('packages',event)"><span data-i18n="admin.side.packages">Packages</span></button></li>
           </ul>
         </li>
@@ -1271,6 +1272,7 @@
       <div class="admin-tab-bar" id="admin-tab-bar" aria-label="Open admin menus"></div>
 
       <div class="admin-view" id="adm-orders"></div>
+      <div class="admin-view" id="adm-invoices" style="display:none"></div>
       <div class="admin-view" id="adm-customers" style="display:none"></div>
       <div class="admin-view" id="adm-staff" style="display:none"></div>
       <div class="admin-view" id="adm-users" style="display:none"></div>

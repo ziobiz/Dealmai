@@ -306,10 +306,29 @@ const DEFAULT_STRINGS = {
   // Admin · sidebar
   "admin.side.console":"Console",
   "admin.side.orders":"Orders",
+  "admin.side.invoices":"Invoice",
   "admin.side.users":"User Management",
   "admin.side.staff":"User Management",
   "admin.side.customers":"Customer Management",
   "admin.side.packages":"Packages",
+  "admin.invoices.title":"Formal Invoices",
+  "admin.invoices.sub":"Official PDFs from Invoice Service (invoice.icopay.net). Issued automatically when a payment is confirmed (ChillPay settle / ontheline Paid).",
+  "admin.invoices.from":"From",
+  "admin.invoices.to":"To",
+  "admin.invoices.search":"Search",
+  "admin.invoices.refresh":"Refresh",
+  "admin.invoices.empty":"No invoices yet.",
+  "admin.invoices.loading":"Loading…",
+  "admin.invoices.loadFailed":"Could not load invoices",
+  "admin.invoices.notConfigured":"Invoice Service is not configured. Set INVOICE_BASE_URL and INVOICE_API_KEY in Netlify env.",
+  "admin.invoices.col.issued":"Issued",
+  "admin.invoices.col.no":"Invoice No",
+  "admin.invoices.col.ticket":"Order / Ticket",
+  "admin.invoices.col.tx":"Transaction",
+  "admin.invoices.col.amount":"Amount",
+  "admin.invoices.col.status":"Status",
+  "admin.invoices.pdf":"PDF",
+  "admin.invoices.pdfFailed":"PDF download failed",
   "admin.side.webhook":"Webhooks",
   "admin.side.partners":"Partner Management",
   "admin.side.paygw":"PG List",
@@ -1215,10 +1234,29 @@ const FULL_TRANSLATIONS = {
     // Admin · sidebar
     "admin.side.console":"ภาพรวม",
     "admin.side.orders":"รายการสั่งซื้อ",
+    "admin.side.invoices":"ใบแจ้งหนี้",
     "admin.side.users":"ผู้ใช้งาน",
     "admin.side.staff":"จัดการผู้ใช้",
     "admin.side.customers":"จัดการลูกค้า",
     "admin.side.packages":"จัดการแพ็คเกจ",
+    "admin.invoices.title":"ใบแจ้งหนี้ทางการ",
+    "admin.invoices.sub":"PDF ทางการจาก Invoice Service (invoice.icopay.net) ออกอัตโนมัติเมื่อชำระเงินสำเร็จ",
+    "admin.invoices.from":"จาก",
+    "admin.invoices.to":"ถึง",
+    "admin.invoices.search":"ค้นหา",
+    "admin.invoices.refresh":"รีเฟรช",
+    "admin.invoices.empty":"ยังไม่มีใบแจ้งหนี้",
+    "admin.invoices.loading":"กำลังโหลด…",
+    "admin.invoices.loadFailed":"โหลดใบแจ้งหนี้ไม่สำเร็จ",
+    "admin.invoices.notConfigured":"ยังไม่ได้ตั้งค่า Invoice Service — ใส่ INVOICE_BASE_URL และ INVOICE_API_KEY ใน Netlify",
+    "admin.invoices.col.issued":"วันที่ออก",
+    "admin.invoices.col.no":"เลขที่",
+    "admin.invoices.col.ticket":"ออเดอร์ / Ticket",
+    "admin.invoices.col.tx":"ธุรกรรม",
+    "admin.invoices.col.amount":"จำนวนเงิน",
+    "admin.invoices.col.status":"สถานะ",
+    "admin.invoices.pdf":"PDF",
+    "admin.invoices.pdfFailed":"ดาวน์โหลด PDF ไม่สำเร็จ",
     "admin.side.webhook":"Webhook",
     "admin.side.partners":"จัดการพาร์ทเนอร์",
     "admin.side.paygw":"รายการ PG",
@@ -1994,7 +2032,27 @@ const FULL_TRANSLATIONS = {
     // Admin · sidebar
     "admin.side.console":"콘솔",
     "admin.side.orders":"주문",
+    "admin.side.invoices":"인보이스",
     "admin.side.packages":"패키지",
+    "admin.invoices.title":"정식 인보이스",
+    "admin.invoices.sub":"Invoice Service(invoice.icopay.net) 공식 PDF. 결제 확정(ChillPay settle / ontheline Paid) 시 자동 발급됩니다.",
+    "admin.invoices.from":"시작",
+    "admin.invoices.to":"종료",
+    "admin.invoices.search":"검색",
+    "admin.invoices.refresh":"새로고침",
+    "admin.invoices.empty":"인보이스가 없습니다.",
+    "admin.invoices.loading":"불러오는 중…",
+    "admin.invoices.loadFailed":"인보이스를 불러오지 못했습니다",
+    "admin.invoices.notConfigured":"Invoice Service가 설정되지 않았습니다. Netlify에 INVOICE_BASE_URL, INVOICE_API_KEY를 설정하세요.",
+    "admin.invoices.col.issued":"발행일",
+    "admin.invoices.col.no":"인보이스 번호",
+    "admin.invoices.col.ticket":"주문 / Ticket",
+    "admin.invoices.col.tx":"거래",
+    "admin.invoices.col.amount":"금액",
+    "admin.invoices.col.status":"상태",
+    "admin.invoices.pdf":"PDF",
+    "admin.invoices.pdfFailed":"PDF 다운로드 실패",
+    "admin.side.webhook":"웹훅",
     "admin.side.webhook":"웹훅",
     "admin.side.partners":"파트너관리",
     "admin.side.paygw":"PG 목록",
@@ -2840,10 +2898,29 @@ const FULL_TRANSLATIONS = {
     // Admin · sidebar
     "admin.side.console":"ダッシュボード",
     "admin.side.orders":"注文",
+    "admin.side.invoices":"請求書",
     "admin.side.users":"顧客管理",
     "admin.side.staff":"ユーザー管理",
     "admin.side.customers":"顧客管理",
     "admin.side.packages":"パッケージ",
+    "admin.invoices.title":"正式インボイス",
+    "admin.invoices.sub":"Invoice Service（invoice.icopay.net）の公式PDF。支払い確定時に自動発行されます。",
+    "admin.invoices.from":"開始",
+    "admin.invoices.to":"終了",
+    "admin.invoices.search":"検索",
+    "admin.invoices.refresh":"更新",
+    "admin.invoices.empty":"インボイスはまだありません。",
+    "admin.invoices.loading":"読み込み中…",
+    "admin.invoices.loadFailed":"インボイスを読み込めませんでした",
+    "admin.invoices.notConfigured":"Invoice Serviceが未設定です。Netlifyに INVOICE_BASE_URL と INVOICE_API_KEY を設定してください。",
+    "admin.invoices.col.issued":"発行日",
+    "admin.invoices.col.no":"番号",
+    "admin.invoices.col.ticket":"注文 / Ticket",
+    "admin.invoices.col.tx":"取引",
+    "admin.invoices.col.amount":"金額",
+    "admin.invoices.col.status":"状態",
+    "admin.invoices.pdf":"PDF",
+    "admin.invoices.pdfFailed":"PDFのダウンロードに失敗しました",
     "admin.side.webhook":"Webhook",
     "admin.side.partners":"パートナー管理",
     "admin.side.paygw":"PG一覧",
@@ -3618,10 +3695,29 @@ const FULL_TRANSLATIONS = {
     "footer.tag":"全天候成交的 AI 销售代理。",
     "admin.side.console":"概览",
     "admin.side.orders":"订单",
+    "admin.side.invoices":"发票",
     "admin.side.users":"客户管理",
     "admin.side.staff":"用户管理",
     "admin.side.customers":"客户管理",
     "admin.side.packages":"套餐",
+    "admin.invoices.title":"正式发票",
+    "admin.invoices.sub":"来自 Invoice Service（invoice.icopay.net）的正式 PDF。付款确认后自动开具。",
+    "admin.invoices.from":"开始",
+    "admin.invoices.to":"结束",
+    "admin.invoices.search":"搜索",
+    "admin.invoices.refresh":"刷新",
+    "admin.invoices.empty":"暂无发票。",
+    "admin.invoices.loading":"加载中…",
+    "admin.invoices.loadFailed":"无法加载发票",
+    "admin.invoices.notConfigured":"未配置 Invoice Service。请在 Netlify 设置 INVOICE_BASE_URL 与 INVOICE_API_KEY。",
+    "admin.invoices.col.issued":"开具日期",
+    "admin.invoices.col.no":"发票号",
+    "admin.invoices.col.ticket":"订单 / Ticket",
+    "admin.invoices.col.tx":"交易",
+    "admin.invoices.col.amount":"金额",
+    "admin.invoices.col.status":"状态",
+    "admin.invoices.pdf":"PDF",
+    "admin.invoices.pdfFailed":"PDF 下载失败",
     "admin.side.webhook":"Webhook",
     "admin.side.partners":"合作伙伴管理",
     "admin.side.paygw":"PG 列表",
@@ -7603,7 +7699,8 @@ const App = {
   // ============= ADMIN =============
   ADMIN_TAB_MAX: 12,
   ADMIN_TAB_LABELS: {
-    orders:"admin.side.orders", users:"admin.side.customers", customers:"admin.side.customers",
+    orders:"admin.side.orders", invoices:"admin.side.invoices",
+    users:"admin.side.customers", customers:"admin.side.customers",
     staff:"admin.side.staff", packages:"admin.side.packages",
     webhook:"admin.side.webhook", partners:"admin.side.partners", paygw:"admin.side.paygw",
     currencies:"admin.side.currencies", paymentgw:"admin.side.paymentgw", chillpay:"admin.side.chillpay",
@@ -7614,7 +7711,7 @@ const App = {
   ADMIN_NAV_GROUP_FOR: {
     customers:"customers", partners:"customers",
     staff:"ops", users:"ops", paygw:"ops", paymentgw:"ops", chillpay:"ops",
-    orders:"sales", packages:"sales",
+    orders:"sales", invoices:"sales", packages:"sales",
     languages:"settings", currencies:"settings", server:"settings", webhook:"settings",
     domain:"settings", smtp:"settings", emails:"settings", branding:"settings", dmchamp:"settings",
     password:"settings"
@@ -8085,6 +8182,7 @@ const App = {
     const pane = document.getElementById("adm-"+name);
     if(pane) pane.style.display = "block";
     if(name === "orders") renderAdminOrders();
+    if(name === "invoices") renderAdminInvoices();
     if(name === "customers") renderAdminCustomers();
     if(name === "staff") renderAdminStaff();
     if(name === "packages") renderAdminPackages();
@@ -8739,6 +8837,92 @@ function renderCustomerOrders(){
       }
     </div>
   `;
+}
+
+function renderAdminInvoices(){
+  const el = document.getElementById("adm-invoices");
+  if(!el) return;
+  if(!State.invoiceFilter) State.invoiceFilter = { from:"", to:"" };
+  if(!Array.isArray(State.invoiceRows)) State.invoiceRows = [];
+  const from = State.invoiceFilter.from || "";
+  const to = State.invoiceFilter.to || "";
+  const loading = !!State.invoiceLoading;
+  const err = State.invoiceError || "";
+  const rows = State.invoiceRows || [];
+
+  const fmtWhen = (iso) => {
+    const d = new Date(iso);
+    if(Number.isNaN(d.getTime())) return "—";
+    const p = (n) => String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  };
+  const fmtMoney = (amount, currency) => {
+    const n = Number(amount);
+    const num = Number.isFinite(n)
+      ? n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      : String(amount ?? "");
+    return `${num} ${currency || ""}`.trim();
+  };
+
+  const bodyRows = rows.length
+    ? rows.map(r => {
+        const ticket = r.ticket_no && !String(r.ticket_no).startsWith("SIM-") ? r.ticket_no : "—";
+        const tx = r.source_transaction_id || "—";
+        return `<tr>
+          <td class="mono" style="font-size:11px">${escapeHtml(fmtWhen(r.issued_at))}</td>
+          <td class="mono" style="font-size:11px">${escapeHtml(r.invoice_no || "")}</td>
+          <td style="font-size:12px">${escapeHtml(ticket)}</td>
+          <td class="mono" style="font-size:11px">${escapeHtml(tx)}</td>
+          <td style="font-size:12px">${escapeHtml(fmtMoney(r.amount, r.currency))}</td>
+          <td style="font-size:12px">${escapeHtml(r.status || "")}</td>
+          <td><button type="button" onclick="AdminActions.downloadInvoicePdf('${escapeHtml(r.id)}','${escapeHtml(r.invoice_no || "invoice")}')">${escapeHtml(I.t("admin.invoices.pdf"))}</button></td>
+        </tr>`;
+      }).join("")
+    : `<tr><td colspan="7" class="muted">${escapeHtml(loading ? I.t("admin.invoices.loading") : I.t("admin.invoices.empty"))}</td></tr>`;
+
+  el.innerHTML = `
+    <div class="adm-head">
+      <div>
+        <h2>${escapeHtml(I.t("admin.invoices.title"))}</h2>
+        <p class="adm-sub">${I.t("admin.invoices.sub")}</p>
+      </div>
+      <div class="adm-actions">
+        <button type="button" onclick="AdminActions.loadInvoices()">${escapeHtml(I.t("admin.invoices.refresh"))}</button>
+      </div>
+    </div>
+    <div class="adm-filters" style="display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:14px">
+      <label style="font-size:11px">${escapeHtml(I.t("admin.invoices.from"))}
+        <input type="date" id="inv-from" value="${escapeHtml(from)}" onchange="State.invoiceFilter.from=this.value" />
+      </label>
+      <label style="font-size:11px">${escapeHtml(I.t("admin.invoices.to"))}
+        <input type="date" id="inv-to" value="${escapeHtml(to)}" onchange="State.invoiceFilter.to=this.value" />
+      </label>
+      <button type="button" class="btn-primary" style="padding:8px 14px" onclick="AdminActions.loadInvoices()">${escapeHtml(I.t("admin.invoices.search"))}</button>
+    </div>
+    ${err ? `<p class="err" style="margin-bottom:10px">${escapeHtml(err)}</p>` : ""}
+    <div class="table-wrap">
+      <table class="adm-table">
+        <thead>
+          <tr>
+            <th>${escapeHtml(I.t("admin.invoices.col.issued"))}</th>
+            <th>${escapeHtml(I.t("admin.invoices.col.no"))}</th>
+            <th>${escapeHtml(I.t("admin.invoices.col.ticket"))}</th>
+            <th>${escapeHtml(I.t("admin.invoices.col.tx"))}</th>
+            <th>${escapeHtml(I.t("admin.invoices.col.amount"))}</th>
+            <th>${escapeHtml(I.t("admin.invoices.col.status"))}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>${bodyRows}</tbody>
+      </table>
+    </div>
+  `;
+
+  // Auto-load once when opening the tab with empty cache
+  if(!State.invoiceLoadedOnce && !loading){
+    State.invoiceLoadedOnce = true;
+    AdminActions.loadInvoices();
+  }
 }
 
 function renderAdminOrders(){
@@ -11085,6 +11269,73 @@ function renderAdminPassword(){
 // ADMIN ACTIONS
 // ===========================================================
 const AdminActions = {
+  // ===== FORMAL INVOICES (Invoice Service proxy) =====
+  async loadInvoices(){
+    if(!State.user || State.user.role !== "admin") return;
+    if(!State.invoiceFilter) State.invoiceFilter = { from:"", to:"" };
+    const fromEl = document.getElementById("inv-from");
+    const toEl = document.getElementById("inv-to");
+    if(fromEl) State.invoiceFilter.from = fromEl.value || "";
+    if(toEl) State.invoiceFilter.to = toEl.value || "";
+
+    State.invoiceLoading = true;
+    State.invoiceError = "";
+    renderAdminInvoices();
+    try{
+      if(!auth?.currentUser) throw new Error("Not signed in");
+      const idToken = await auth.currentUser.getIdToken(false);
+      const qs = new URLSearchParams({ limit: "100", kind: "live" });
+      if(State.invoiceFilter.from) qs.set("from", State.invoiceFilter.from);
+      if(State.invoiceFilter.to) qs.set("to", State.invoiceFilter.to);
+      const res = await fetch("/api/invoices?" + qs.toString(), {
+        headers: { Authorization: "Bearer " + idToken, Accept: "application/json" },
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok){
+        if(data.code === "INVOICE_NOT_CONFIGURED"){
+          throw new Error(I.t("admin.invoices.notConfigured"));
+        }
+        throw new Error(data.error || I.t("admin.invoices.loadFailed"));
+      }
+      State.invoiceRows = data.items || [];
+      State.invoiceLoadedOnce = true;
+    }catch(e){
+      console.error("[invoices] load failed:", e);
+      State.invoiceRows = [];
+      State.invoiceError = e.message || I.t("admin.invoices.loadFailed");
+    }finally{
+      State.invoiceLoading = false;
+      renderAdminInvoices();
+    }
+  },
+
+  async downloadInvoicePdf(id, invoiceNo){
+    if(!id) return;
+    try{
+      if(!auth?.currentUser) throw new Error("Not signed in");
+      const idToken = await auth.currentUser.getIdToken(false);
+      const res = await fetch("/api/invoices/" + encodeURIComponent(id) + "/pdf", {
+        headers: { Authorization: "Bearer " + idToken },
+      });
+      if(!res.ok){
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || I.t("admin.invoices.pdfFailed"));
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = (invoiceNo || "invoice") + ".pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+    }catch(e){
+      console.error("[invoices] pdf failed:", e);
+      Toast.show(e.message || I.t("admin.invoices.pdfFailed"), "err");
+    }
+  },
+
   // ===== ORDERS: date + source filters + CSV export =====
   setOrderDateFilter(mode){
     State.orderDateFilter = mode;

@@ -140,6 +140,23 @@
   force = true
 
 # ============================================================
+# Admin: formal Invoice Service list + PDF (TINPASS-style)
+# ============================================================
+# Proxies to invoice.icopay.net with server-side INVOICE_API_KEY.
+# Requires Firebase admin ID token.
+[[redirects]]
+  from = "/api/invoices"
+  to = "/.netlify/functions/invoices"
+  status = 200
+  force = true
+
+[[redirects]]
+  from = "/api/invoices/*"
+  to = "/.netlify/functions/invoices/:splat"
+  status = 200
+  force = true
+
+# ============================================================
 # Customer-facing return URL after paying at ChillPay
 # ============================================================
 # ChillPay redirects the customer's browser back to /payment-result
