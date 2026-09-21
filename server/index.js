@@ -32,7 +32,8 @@ const FUNCTION_NAMES = [
   'settle-pending-payments',
   'admin-otp',
   'customer-auth',
-  'password-reset'
+  'password-reset',
+  'invoices',
 ];
 
 const API_ALIASES = {
@@ -50,7 +51,8 @@ const API_ALIASES = {
   '/api/admin-otp': 'admin-otp',
   '/api/customer-auth': 'customer-auth',
   '/api/password-reset': 'password-reset',
-  '/payment-result': 'payment-result'
+  '/api/invoices': 'invoices',
+  '/payment-result': 'payment-result',
 };
 
 const handlerCache = Object.create(null);
@@ -222,12 +224,18 @@ for (const name of FUNCTION_NAMES) {
   if (name === 'payment-callback') {
     mount(app, `/.netlify/functions/${name}/:gw`, name);
   }
+  if (name === 'invoices') {
+    mount(app, `/.netlify/functions/${name}/:id/pdf`, name);
+  }
 }
 
 for (const [route, name] of Object.entries(API_ALIASES)) {
   mount(app, route, name);
   if (name === 'payment-callback') {
     mount(app, `${route}/:gw`, name);
+  }
+  if (name === 'invoices') {
+    mount(app, `${route}/:id/pdf`, name);
   }
 }
 

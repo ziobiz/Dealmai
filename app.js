@@ -311,24 +311,34 @@ const DEFAULT_STRINGS = {
   "admin.side.staff":"User Management",
   "admin.side.customers":"Customer Management",
   "admin.side.packages":"Packages",
-  "admin.invoices.title":"Formal Invoices",
-  "admin.invoices.sub":"Official PDFs from Invoice Service (invoice.icopay.net). Issued automatically when a payment is confirmed (ChillPay settle / ontheline Paid).",
+  "admin.invoices.title-html":'Formal <span class="grad">invoices</span>',
+  "admin.invoices.sub":"Official PDFs from Invoice Service (invoice.icopay.net). Issued automatically when a payment is confirmed (Payment Gateway settle / ontheline Paid).",
+  "admin.invoices.crumb":"Console / Invoice",
   "admin.invoices.from":"From",
   "admin.invoices.to":"To",
   "admin.invoices.search":"Search",
   "admin.invoices.refresh":"Refresh",
-  "admin.invoices.empty":"No invoices yet.",
+  "admin.invoices.h":"All invoices",
+  "admin.invoices.stat.count":"Invoices in range",
+  "admin.invoices.stat.amount":"Amount (USD)",
+  "admin.invoices.unit.count":"invoices",
+  "admin.invoices.empty":"No invoices in this date range.",
+  "admin.invoices.empty.hint":"Widen the From / To dates, then Search.",
   "admin.invoices.loading":"Loading…",
   "admin.invoices.loadFailed":"Could not load invoices",
-  "admin.invoices.notConfigured":"Invoice Service is not configured. Set INVOICE_BASE_URL and INVOICE_API_KEY in Netlify env.",
+  "admin.invoices.notConfigured":"Invoice Service is not configured on the server.",
   "admin.invoices.col.issued":"Issued",
   "admin.invoices.col.no":"Invoice No",
   "admin.invoices.col.ticket":"Order / Ticket",
   "admin.invoices.col.tx":"Transaction",
   "admin.invoices.col.amount":"Amount",
   "admin.invoices.col.status":"Status",
+  "admin.invoices.col.actions":"Actions",
   "admin.invoices.pdf":"PDF",
   "admin.invoices.pdfFailed":"PDF download failed",
+  "admin.invoices.status.issued":"Issued",
+  "admin.invoices.status.void":"Void",
+  "admin.invoices.status.draft":"Draft",
   "admin.side.webhook":"Webhooks",
   "admin.side.partners":"Partner Management",
   "admin.side.paygw":"PG List",
@@ -1239,24 +1249,34 @@ const FULL_TRANSLATIONS = {
     "admin.side.staff":"จัดการผู้ใช้",
     "admin.side.customers":"จัดการลูกค้า",
     "admin.side.packages":"จัดการแพ็คเกจ",
-    "admin.invoices.title":"ใบแจ้งหนี้ทางการ",
+    "admin.invoices.title-html":'Formal <span class="grad">invoices</span>',
     "admin.invoices.sub":"PDF ทางการจาก Invoice Service (invoice.icopay.net) ออกอัตโนมัติเมื่อชำระเงินสำเร็จ",
+    "admin.invoices.crumb":"Console / Invoice",
     "admin.invoices.from":"จาก",
     "admin.invoices.to":"ถึง",
     "admin.invoices.search":"ค้นหา",
     "admin.invoices.refresh":"รีเฟรช",
-    "admin.invoices.empty":"ยังไม่มีใบแจ้งหนี้",
+    "admin.invoices.h":"ใบแจ้งหนี้ทั้งหมด",
+    "admin.invoices.stat.count":"จำนวนในช่วง",
+    "admin.invoices.stat.amount":"ยอด (USD)",
+    "admin.invoices.unit.count":"ใบ",
+    "admin.invoices.empty":"ไม่มีใบแจ้งหนี้ในช่วงวันที่นี้",
+    "admin.invoices.empty.hint":"ขยายช่วง From / To แล้วกด Search",
     "admin.invoices.loading":"กำลังโหลด…",
     "admin.invoices.loadFailed":"โหลดใบแจ้งหนี้ไม่สำเร็จ",
-    "admin.invoices.notConfigured":"ยังไม่ได้ตั้งค่า Invoice Service — ใส่ INVOICE_BASE_URL และ INVOICE_API_KEY ใน Netlify",
+    "admin.invoices.notConfigured":"ยังไม่ได้ตั้งค่า Invoice Service บนเซิร์ฟเวอร์",
     "admin.invoices.col.issued":"วันที่ออก",
     "admin.invoices.col.no":"เลขที่",
     "admin.invoices.col.ticket":"ออเดอร์ / Ticket",
     "admin.invoices.col.tx":"ธุรกรรม",
     "admin.invoices.col.amount":"จำนวนเงิน",
     "admin.invoices.col.status":"สถานะ",
+    "admin.invoices.col.actions":"การทำงาน",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"ดาวน์โหลด PDF ไม่สำเร็จ",
+    "admin.invoices.status.issued":"ออกแล้ว",
+    "admin.invoices.status.void":"ยกเลิก",
+    "admin.invoices.status.draft":"ฉบับร่าง",
     "admin.side.webhook":"Webhook",
     "admin.side.partners":"จัดการพาร์ทเนอร์",
     "admin.side.paygw":"รายการ PG",
@@ -2034,24 +2054,34 @@ const FULL_TRANSLATIONS = {
     "admin.side.orders":"주문",
     "admin.side.invoices":"인보이스",
     "admin.side.packages":"패키지",
-    "admin.invoices.title":"정식 인보이스",
-    "admin.invoices.sub":"Invoice Service(invoice.icopay.net) 공식 PDF. 결제 확정(ChillPay settle / ontheline Paid) 시 자동 발급됩니다.",
+    "admin.invoices.title-html":'Formal <span class="grad">invoices</span>',
+    "admin.invoices.sub":"Invoice Service(invoice.icopay.net) 공식 PDF. 결제 확정(Payment Gateway settle / ontheline Paid) 시 자동 발급됩니다.",
+    "admin.invoices.crumb":"Console / Invoice",
     "admin.invoices.from":"시작",
     "admin.invoices.to":"종료",
     "admin.invoices.search":"검색",
     "admin.invoices.refresh":"새로고침",
-    "admin.invoices.empty":"인보이스가 없습니다.",
+    "admin.invoices.h":"전체 인보이스",
+    "admin.invoices.stat.count":"기간 내 건수",
+    "admin.invoices.stat.amount":"금액 (USD)",
+    "admin.invoices.unit.count":"건",
+    "admin.invoices.empty":"이 기간에 인보이스가 없습니다.",
+    "admin.invoices.empty.hint":"시작·종료 날짜를 넓힌 뒤 검색하세요.",
     "admin.invoices.loading":"불러오는 중…",
     "admin.invoices.loadFailed":"인보이스를 불러오지 못했습니다",
-    "admin.invoices.notConfigured":"Invoice Service가 설정되지 않았습니다. Netlify에 INVOICE_BASE_URL, INVOICE_API_KEY를 설정하세요.",
+    "admin.invoices.notConfigured":"서버에 Invoice Service가 설정되지 않았습니다.",
     "admin.invoices.col.issued":"발행일",
     "admin.invoices.col.no":"인보이스 번호",
     "admin.invoices.col.ticket":"주문 / Ticket",
     "admin.invoices.col.tx":"거래",
     "admin.invoices.col.amount":"금액",
     "admin.invoices.col.status":"상태",
+    "admin.invoices.col.actions":"작업",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"PDF 다운로드 실패",
+    "admin.invoices.status.issued":"발행",
+    "admin.invoices.status.void":"무효",
+    "admin.invoices.status.draft":"초안",
     "admin.side.webhook":"웹훅",
     "admin.side.webhook":"웹훅",
     "admin.side.partners":"파트너관리",
@@ -2903,24 +2933,34 @@ const FULL_TRANSLATIONS = {
     "admin.side.staff":"ユーザー管理",
     "admin.side.customers":"顧客管理",
     "admin.side.packages":"パッケージ",
-    "admin.invoices.title":"正式インボイス",
+    "admin.invoices.title-html":'Formal <span class="grad">invoices</span>',
     "admin.invoices.sub":"Invoice Service（invoice.icopay.net）の公式PDF。支払い確定時に自動発行されます。",
+    "admin.invoices.crumb":"Console / Invoice",
     "admin.invoices.from":"開始",
     "admin.invoices.to":"終了",
     "admin.invoices.search":"検索",
     "admin.invoices.refresh":"更新",
-    "admin.invoices.empty":"インボイスはまだありません。",
+    "admin.invoices.h":"すべてのインボイス",
+    "admin.invoices.stat.count":"期間内件数",
+    "admin.invoices.stat.amount":"金額 (USD)",
+    "admin.invoices.unit.count":"件",
+    "admin.invoices.empty":"この期間にインボイスはありません。",
+    "admin.invoices.empty.hint":"開始・終了日を広げて検索してください。",
     "admin.invoices.loading":"読み込み中…",
     "admin.invoices.loadFailed":"インボイスを読み込めませんでした",
-    "admin.invoices.notConfigured":"Invoice Serviceが未設定です。Netlifyに INVOICE_BASE_URL と INVOICE_API_KEY を設定してください。",
+    "admin.invoices.notConfigured":"サーバーに Invoice Service が設定されていません。",
     "admin.invoices.col.issued":"発行日",
     "admin.invoices.col.no":"番号",
     "admin.invoices.col.ticket":"注文 / Ticket",
     "admin.invoices.col.tx":"取引",
     "admin.invoices.col.amount":"金額",
     "admin.invoices.col.status":"状態",
+    "admin.invoices.col.actions":"操作",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"PDFのダウンロードに失敗しました",
+    "admin.invoices.status.issued":"発行済",
+    "admin.invoices.status.void":"無効",
+    "admin.invoices.status.draft":"下書き",
     "admin.side.webhook":"Webhook",
     "admin.side.partners":"パートナー管理",
     "admin.side.paygw":"PG一覧",
@@ -3700,24 +3740,34 @@ const FULL_TRANSLATIONS = {
     "admin.side.staff":"用户管理",
     "admin.side.customers":"客户管理",
     "admin.side.packages":"套餐",
-    "admin.invoices.title":"正式发票",
+    "admin.invoices.title-html":'Formal <span class="grad">invoices</span>',
     "admin.invoices.sub":"来自 Invoice Service（invoice.icopay.net）的正式 PDF。付款确认后自动开具。",
+    "admin.invoices.crumb":"Console / Invoice",
     "admin.invoices.from":"开始",
     "admin.invoices.to":"结束",
     "admin.invoices.search":"搜索",
     "admin.invoices.refresh":"刷新",
-    "admin.invoices.empty":"暂无发票。",
+    "admin.invoices.h":"全部发票",
+    "admin.invoices.stat.count":"区间内笔数",
+    "admin.invoices.stat.amount":"金额 (USD)",
+    "admin.invoices.unit.count":"笔",
+    "admin.invoices.empty":"该日期范围内暂无发票。",
+    "admin.invoices.empty.hint":"请扩大开始/结束日期后搜索。",
     "admin.invoices.loading":"加载中…",
     "admin.invoices.loadFailed":"无法加载发票",
-    "admin.invoices.notConfigured":"未配置 Invoice Service。请在 Netlify 设置 INVOICE_BASE_URL 与 INVOICE_API_KEY。",
+    "admin.invoices.notConfigured":"服务器未配置 Invoice Service。",
     "admin.invoices.col.issued":"开具日期",
     "admin.invoices.col.no":"发票号",
     "admin.invoices.col.ticket":"订单 / Ticket",
     "admin.invoices.col.tx":"交易",
     "admin.invoices.col.amount":"金额",
     "admin.invoices.col.status":"状态",
+    "admin.invoices.col.actions":"操作",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"PDF 下载失败",
+    "admin.invoices.status.issued":"已开具",
+    "admin.invoices.status.void":"作废",
+    "admin.invoices.status.draft":"草稿",
     "admin.side.webhook":"Webhook",
     "admin.side.partners":"合作伙伴管理",
     "admin.side.paygw":"PG 列表",
@@ -8839,86 +8889,132 @@ function renderCustomerOrders(){
   `;
 }
 
+function defaultInvoiceDateRange(){
+  // Local calendar dates: From = today − 7 days, To = today (YYYY-MM-DD).
+  const to = new Date();
+  const from = new Date(to);
+  from.setDate(from.getDate() - 7);
+  const ymd = (d) => {
+    const p = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  };
+  return { from: ymd(from), to: ymd(to) };
+}
+
+function ensureInvoiceFilter(){
+  if(!State.invoiceFilter) State.invoiceFilter = { from: "", to: "" };
+  if(!State.invoiceFilter.from || !State.invoiceFilter.to){
+    const d = defaultInvoiceDateRange();
+    if(!State.invoiceFilter.from) State.invoiceFilter.from = d.from;
+    if(!State.invoiceFilter.to) State.invoiceFilter.to = d.to;
+  }
+  return State.invoiceFilter;
+}
+
 function renderAdminInvoices(){
   const el = document.getElementById("adm-invoices");
   if(!el) return;
-  if(!State.invoiceFilter) State.invoiceFilter = { from:"", to:"" };
+  ensureInvoiceFilter();
   if(!Array.isArray(State.invoiceRows)) State.invoiceRows = [];
-  const from = State.invoiceFilter.from || "";
-  const to = State.invoiceFilter.to || "";
+  const from = State.invoiceFilter.from;
+  const to = State.invoiceFilter.to;
   const loading = !!State.invoiceLoading;
   const err = State.invoiceError || "";
   const rows = State.invoiceRows || [];
 
-  const fmtWhen = (iso) => {
-    const d = new Date(iso);
-    if(Number.isNaN(d.getTime())) return "—";
-    const p = (n) => String(n).padStart(2,"0");
-    return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
-  };
-  const fmtMoney = (amount, currency) => {
+  const fmtMoneyCell = (amount, currency) => {
     const n = Number(amount);
     const num = Number.isFinite(n)
-      ? n.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      ? n.toLocaleString(appLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
       : String(amount ?? "");
-    return `${num} ${currency || ""}`.trim();
+    const cur = currency || "USD";
+    return `<div style="line-height:1.4"><div style="font-weight:600;font-family:var(--mono)">${escapeHtml(num)} <span style="font-size:10px;color:var(--muted)">${escapeHtml(cur)}</span></div></div>`;
   };
 
-  const bodyRows = rows.length
-    ? rows.map(r => {
-        const ticket = r.ticket_no && !String(r.ticket_no).startsWith("SIM-") ? r.ticket_no : "—";
-        const tx = r.source_transaction_id || "—";
-        return `<tr>
-          <td class="mono" style="font-size:11px">${escapeHtml(fmtWhen(r.issued_at))}</td>
-          <td class="mono" style="font-size:11px">${escapeHtml(r.invoice_no || "")}</td>
-          <td style="font-size:12px">${escapeHtml(ticket)}</td>
-          <td class="mono" style="font-size:11px">${escapeHtml(tx)}</td>
-          <td style="font-size:12px">${escapeHtml(fmtMoney(r.amount, r.currency))}</td>
-          <td style="font-size:12px">${escapeHtml(r.status || "")}</td>
-          <td><button type="button" onclick="AdminActions.downloadInvoicePdf('${escapeHtml(r.id)}','${escapeHtml(r.invoice_no || "invoice")}')">${escapeHtml(I.t("admin.invoices.pdf"))}</button></td>
-        </tr>`;
-      }).join("")
-    : `<tr><td colspan="7" class="muted">${escapeHtml(loading ? I.t("admin.invoices.loading") : I.t("admin.invoices.empty"))}</td></tr>`;
+  const statusCell = (status) => {
+    const raw = String(status || "").toLowerCase();
+    const cls = raw === "issued" ? "paid" : (raw === "void" || raw === "cancelled" ? "failed" : "pending");
+    const key = "admin.invoices.status." + raw;
+    const label = I.t(key);
+    const text = label === key ? (status || "—") : label;
+    return `<span class="status-tag ${cls}"><span class="d"></span>${escapeHtml(text)}</span>`;
+  };
 
-  el.innerHTML = `
-    <div class="adm-head">
-      <div>
-        <h2>${escapeHtml(I.t("admin.invoices.title"))}</h2>
-        <p class="adm-sub">${I.t("admin.invoices.sub")}</p>
-      </div>
-      <div class="adm-actions">
-        <button type="button" onclick="AdminActions.loadInvoices()">${escapeHtml(I.t("admin.invoices.refresh"))}</button>
-      </div>
-    </div>
-    <div class="adm-filters" style="display:flex;flex-wrap:wrap;gap:10px;align-items:end;margin-bottom:14px">
-      <label style="font-size:11px">${escapeHtml(I.t("admin.invoices.from"))}
-        <input type="date" id="inv-from" value="${escapeHtml(from)}" onchange="State.invoiceFilter.from=this.value" />
-      </label>
-      <label style="font-size:11px">${escapeHtml(I.t("admin.invoices.to"))}
-        <input type="date" id="inv-to" value="${escapeHtml(to)}" onchange="State.invoiceFilter.to=this.value" />
-      </label>
-      <button type="button" class="btn-primary" style="padding:8px 14px" onclick="AdminActions.loadInvoices()">${escapeHtml(I.t("admin.invoices.search"))}</button>
-    </div>
-    ${err ? `<p class="err" style="margin-bottom:10px">${escapeHtml(err)}</p>` : ""}
-    <div class="table-wrap">
-      <table class="adm-table">
-        <thead>
-          <tr>
+  const usdTotal = rows.reduce((sum, r) => {
+    if(String(r.currency || "USD").toUpperCase() !== "USD") return sum;
+    const n = Number(r.amount);
+    return sum + (Number.isFinite(n) ? n : 0);
+  }, 0);
+
+  const bodyRows = rows.map(r => {
+    const ticket = r.ticket_no && !String(r.ticket_no).startsWith("SIM-") ? r.ticket_no : "—";
+    const tx = r.source_transaction_id || "—";
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:12px">${escapeHtml(fmtDate(r.issued_at))}</td>
+      <td style="font-family:var(--mono);font-size:12px">${escapeHtml(r.invoice_no || "")}</td>
+      <td style="font-family:var(--mono);font-size:11.5px">${escapeHtml(ticket)}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${escapeHtml(tx)}</td>
+      <td>${fmtMoneyCell(r.amount, r.currency)}</td>
+      <td>${statusCell(r.status)}</td>
+      <td>
+        <div class="row-actions">
+          <button type="button" onclick="AdminActions.downloadInvoicePdf('${escapeHtml(r.id)}','${escapeHtml(r.invoice_no || "invoice")}')">${escapeHtml(I.t("admin.invoices.pdf"))}</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+
+  const tableHtml = loading
+    ? `<div class="empty-state"><div class="em">${escapeHtml(I.t("admin.invoices.loading"))}</div></div>`
+    : (rows.length === 0
+      ? `<div class="empty-state"><div class="em">${escapeHtml(I.t("admin.invoices.empty"))}</div>${escapeHtml(I.t("admin.invoices.empty.hint"))}</div>`
+      : `<table id="invoices-table">
+          <thead><tr>
             <th>${escapeHtml(I.t("admin.invoices.col.issued"))}</th>
             <th>${escapeHtml(I.t("admin.invoices.col.no"))}</th>
             <th>${escapeHtml(I.t("admin.invoices.col.ticket"))}</th>
             <th>${escapeHtml(I.t("admin.invoices.col.tx"))}</th>
             <th>${escapeHtml(I.t("admin.invoices.col.amount"))}</th>
             <th>${escapeHtml(I.t("admin.invoices.col.status"))}</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>${bodyRows}</tbody>
-      </table>
+            <th>${escapeHtml(I.t("admin.invoices.col.actions"))}</th>
+          </tr></thead>
+          <tbody>${bodyRows}</tbody>
+        </table>`);
+
+  el.innerHTML = `
+    <div class="admin-head">
+      <div>
+        <div class="crumbs">${escapeHtml(I.t("admin.invoices.crumb"))} · <span style="color:var(--teal-deep)">${escapeHtml(from)} → ${escapeHtml(to)}</span></div>
+        <h1>${I.t("admin.invoices.title-html")}</h1>
+        <p class="adm-sub" style="margin:8px 0 0;max-width:640px;color:var(--muted);font-size:13px;line-height:1.45">${escapeHtml(I.t("admin.invoices.sub"))}</p>
+      </div>
+      <button class="btn-primary" type="button" onclick="AdminActions.loadInvoices()"><span>${escapeHtml(I.t("admin.invoices.refresh"))}</span><span class="arr">→</span></button>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.count"))}</div><div class="val">${rows.length}<span class="unit">${escapeHtml(I.t("admin.invoices.unit.count"))}</span></div></div>
+      <div class="stat accent"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.amount"))}</div><div class="val"><span class="cur">$</span>${fmtNumber(usdTotal,{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div>
+    </div>
+    <div class="filters" style="margin:0 0 14px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+      <label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">
+        ${escapeHtml(I.t("admin.invoices.from"))}
+        <input type="date" id="inv-from" class="orders-dropdown-filter" value="${escapeHtml(from)}" onchange="State.invoiceFilter.from=this.value" style="min-width:150px" />
+      </label>
+      <label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">
+        ${escapeHtml(I.t("admin.invoices.to"))}
+        <input type="date" id="inv-to" class="orders-dropdown-filter" value="${escapeHtml(to)}" onchange="State.invoiceFilter.to=this.value" style="min-width:150px" />
+      </label>
+      <button class="btn-primary" type="button" onclick="AdminActions.loadInvoices()" style="padding:10px 18px"><span>${escapeHtml(I.t("admin.invoices.search"))}</span><span class="arr">→</span></button>
+    </div>
+    ${err ? `<p class="err" style="margin-bottom:10px">${escapeHtml(err)}</p>` : ""}
+    <div class="panel">
+      <div class="panel-h">
+        <h3>${escapeHtml(I.t("admin.invoices.h"))}</h3>
+      </div>
+      <div class="table-wrap">${tableHtml}</div>
     </div>
   `;
 
-  // Auto-load once when opening the tab with empty cache
+  // Auto-load once when opening the tab
   if(!State.invoiceLoadedOnce && !loading){
     State.invoiceLoadedOnce = true;
     AdminActions.loadInvoices();
@@ -11272,11 +11368,15 @@ const AdminActions = {
   // ===== FORMAL INVOICES (Invoice Service proxy) =====
   async loadInvoices(){
     if(!State.user || State.user.role !== "admin") return;
-    if(!State.invoiceFilter) State.invoiceFilter = { from:"", to:"" };
+    ensureInvoiceFilter();
     const fromEl = document.getElementById("inv-from");
     const toEl = document.getElementById("inv-to");
-    if(fromEl) State.invoiceFilter.from = fromEl.value || "";
-    if(toEl) State.invoiceFilter.to = toEl.value || "";
+    if(fromEl && fromEl.value) State.invoiceFilter.from = fromEl.value;
+    if(toEl && toEl.value) State.invoiceFilter.to = toEl.value;
+    // Keep both ends filled with real dates (never blank → no "연도-월-일" placeholder)
+    const defaults = defaultInvoiceDateRange();
+    if(!State.invoiceFilter.from) State.invoiceFilter.from = defaults.from;
+    if(!State.invoiceFilter.to) State.invoiceFilter.to = defaults.to;
 
     State.invoiceLoading = true;
     State.invoiceError = "";
@@ -11284,9 +11384,9 @@ const AdminActions = {
     try{
       if(!auth?.currentUser) throw new Error("Not signed in");
       const idToken = await auth.currentUser.getIdToken(false);
-      const qs = new URLSearchParams({ limit: "100", kind: "live" });
-      if(State.invoiceFilter.from) qs.set("from", State.invoiceFilter.from);
-      if(State.invoiceFilter.to) qs.set("to", State.invoiceFilter.to);
+      const qs = new URLSearchParams({ limit: "100", kind: "all" });
+      qs.set("from", State.invoiceFilter.from);
+      qs.set("to", State.invoiceFilter.to);
       const res = await fetch("/api/invoices?" + qs.toString(), {
         headers: { Authorization: "Bearer " + idToken, Accept: "application/json" },
       });
