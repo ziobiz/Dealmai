@@ -8,6 +8,7 @@
 //      password) and write the users/{uid} profile
 //   4. queue the invoice / receipt / credentials emails
 //   5. provision the DM Champ sub-account (best effort)
+//   6. notify Invoice Service (icopay) for formal PDF invoice (best effort)
 //
 // This is called from TWO places, which is why it lives here:
 //   • payment-callback.js — the gateway's server-to-server notification
@@ -20,6 +21,7 @@
 // ============================================================
 
 const pkgLogic = require('./packages');
+const { notifyAndPersist } = require('./invoice-service');
 
 // ------------------------------------------------------------
 // Strong random initial password for newly-provisioned customers
@@ -228,6 +230,21 @@ async function settlePaidOrder({ db, admin, order, orderRef, updateData = {}, so
     notes.dmchampProvisioned = false;
     notes.dmchampError = String(e.message || e);
     console.error(`${tag} DM Champ provisioning threw:`, e);
+  }
+
+  // ---- 6. Invoice Service (best effort) ----
+  try {
+    const fresh = (await orderRef.get()).data() || order;
+    const inv = await notifyAndPersist(orderRef, { ...order, ...fresh }, { source });
+    notes.invoiceService = {
+      ok: !!inv.ok,
+      skipped: !!inv.skipped,
+      invoiceNo: inv.invoiceNo || null,
+      error: inv.error || null,
+    };
+  } catch (e) {
+    notes.invoiceService = { ok: false, error: String(e.message || e) };
+    console.error(`${tag} Invoice Service threw:`, e);
   }
 
   return notes;

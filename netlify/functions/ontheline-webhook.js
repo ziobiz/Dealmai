@@ -840,6 +840,27 @@ exports.handler = async (event) => {
       console.error('[ontheline-webhook] DM Champ credit recording failed (non-fatal):', e);
     }
 
+    // Invoice Service (best effort) — formal PDF for ontheline Paid path
+    try {
+      const { notifyAndPersist } = require('./lib/invoice-service');
+      const orderSnap = await db.collection('orders').doc(ref).get();
+      const orderData = orderSnap.exists ? orderSnap.data() : {};
+      await notifyAndPersist(orderSnap.ref, {
+        ...orderData,
+        ref,
+        gatewayRef: txId,
+        gatewayOrderNo: txId,
+        total: amount,
+        amountOriginal: amount,
+        currency,
+        customer,
+        items: matched.items,
+        paidAt: now,
+      }, { source: 'ontheline', transactionId: txId, ticketNo: ref, amount, currency });
+    } catch (e) {
+      console.error('[ontheline-webhook] Invoice Service failed (non-fatal):', e);
+    }
+
     return {
       statusCode: 200,
       body: JSON.stringify({
