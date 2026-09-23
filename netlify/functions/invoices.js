@@ -143,7 +143,7 @@ exports.handler = async (event) => {
   try {
     const qs = event.queryStringParameters || {};
     const url = new URL(`${env.baseUrl}/v1/invoices`);
-    url.searchParams.set('limit', String(Math.min(Number(qs.limit) || 100, 200)));
+    url.searchParams.set('limit', String(Math.min(Number(qs.limit) || 100, 2000)));
     if (qs.kind) url.searchParams.set('kind', String(qs.kind));
     if (qs.from) url.searchParams.set('from', String(qs.from));
     if (qs.to) url.searchParams.set('to', String(qs.to));

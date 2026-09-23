@@ -948,6 +948,32 @@
   /* Admin → Orders: email substring filter */
   .orders-dropdown-filter{font-family:var(--mono);font-size:11px;padding:7px 10px;border:1px solid var(--line-2);border-radius:8px;background:rgba(255,251,243,.65);color:var(--text);cursor:pointer;max-width:200px;margin-left:6px}
   .orders-dropdown-filter:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(11,182,196,.12)}
+
+  /* PG/Crypto-style page size bar */
+  .page-size-bar{
+    margin-top:14px;display:grid;grid-template-columns:1fr;gap:10px;align-items:center;
+    border:1px solid rgba(11,182,196,.28);background:rgba(11,182,196,.07);
+    border-radius:10px;padding:10px 12px;font-size:12px;color:var(--text-2);
+  }
+  @media (min-width:900px){
+    .page-size-bar{grid-template-columns:1fr auto 1fr}
+  }
+  .page-size-left{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+  .page-size-left .ps-label{margin-right:4px;color:var(--muted);font-weight:500}
+  .page-size-left .ps-total{margin-left:4px;color:var(--muted)}
+  .ps-btn{
+    min-width:36px;padding:5px 9px;border:1px solid rgba(11,182,196,.35);
+    background:#fff;border-radius:6px;color:var(--text);cursor:pointer;font-size:12px;line-height:1.2;
+  }
+  .ps-btn:hover{background:rgba(11,182,196,.12)}
+  .ps-btn.on{border-color:var(--teal);background:rgba(11,182,196,.22);color:var(--teal-deep);font-weight:600}
+  .page-size-pages{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px}
+  .ps-page{
+    min-width:28px;height:28px;padding:0 6px;border:1px solid rgba(11,182,196,.35);
+    background:#fff;border-radius:6px;color:var(--text);cursor:pointer;font-size:12px;
+  }
+  .ps-page:hover{background:rgba(11,182,196,.12)}
+  .ps-page.on{border-color:#0b5f6b;background:#0b5f6b;color:#fff;font-weight:600}
   .orders-email-filter{
     position:relative;
     display:inline-flex;
@@ -1388,7 +1414,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20260923inv1"></script>
+<script type="module" src="/app.js?v=20260923pager2"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

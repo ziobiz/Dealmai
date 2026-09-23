@@ -1,0 +1,21 @@
+---
+description: After feature work, verify i18n then auto-deploy to GitHub + VPS
+alwaysApply: true
+---
+
+# i18n verify → auto deploy
+
+When user-facing UI work is **complete** (or the user asks to deploy / ship):
+
+1. **Do not deploy until i18n passes for keys touched by the change.**
+2. Ship gate: `node scripts/verify-i18n.js --feature` (pager + date presets) **must** exit 0. When other `DEFAULT_STRINGS` keys were added, also run `node scripts/verify-i18n.js --keys <prefix,>` for those prefixes.
+3. Full `node scripts/verify-i18n.js` may report pre-existing gaps (especially `zh`); do not block a feature deploy on unrelated backlog, but fix every **new** key in th/ko/ja/zh before commit.
+4. Fix any missing/empty translations or `{placeholder}` mismatches for the gated keys in `FULL_TRANSLATIONS` before committing.
+5. English remains the canonical default in `DEFAULT_STRINGS`; other locales must carry natural translations (not raw English leftovers) for new keys.
+6. After i18n OK: commit (when deploy was requested), `git push origin HEAD`, then VPS deploy:
+   - `cd /var/www/dealmai && git fetch origin && git reset --hard origin/main`
+   - `npm install --omit=dev` if lock/deps changed
+   - `systemctl restart dealmai-api`
+   - Confirm `curl -sS http://127.0.0.1:3000/healthz` and that `index.html` cache-bust (`app.js?v=…`) matches the commit.
+7. Use gitignored helpers (`_deploy_*.py` / `DEALMAI_VPS_PASSWORD`) for SSH — never commit VPS passwords.
+8. Report commit SHA, push result, and VPS HEAD in the final reply.

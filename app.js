@@ -328,6 +328,13 @@ const DEFAULT_STRINGS = {
   "admin.invoices.loadFailed":"Could not load invoices",
   "admin.invoices.notConfigured":"Invoice Service is not configured on the server.",
   "admin.invoices.authExpired":"Session expired. Sign out and sign in again, then reopen Invoice.",
+  "pager.viewAtOnce":"View at once:",
+  "pager.all":"All",
+  "pager.unit":"rows",
+  "pager.total":"total {n}",
+  "pager.size1000":"1000",
+  "pager.prev":"Previous",
+  "pager.next":"Next",
   "admin.invoices.col.issued":"Issued",
   "admin.invoices.col.no":"Invoice No",
   "admin.invoices.col.ticket":"Order / Ticket",
@@ -1592,6 +1599,13 @@ const FULL_TRANSLATIONS = {
     "admin.orders.date.month":"เดือนนี้",
     "admin.orders.date.period":"ช่วงเวลา",
     "admin.orders.date.label":"ช่วงเวลา:",
+    "pager.viewAtOnce":"ดูทีละ:",
+    "pager.all":"ทั้งหมด",
+    "pager.unit":"รายการ",
+    "pager.total":"ทั้งหมด {n}",
+    "pager.size1000":"1000",
+    "pager.prev":"ก่อนหน้า",
+    "pager.next":"ถัดไป",
     "admin.orders.unit.orders":"ออเดอร์",
     "admin.orders.period.title-html":'เลือก<span class="grad">ช่วงเวลา</span>',
     "admin.orders.period.start":"วันเริ่มต้น",
@@ -2084,6 +2098,13 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.loadFailed":"인보이스를 불러오지 못했습니다",
     "admin.invoices.notConfigured":"서버에 Invoice Service가 설정되지 않았습니다.",
     "admin.invoices.authExpired":"로그인이 만료되었습니다. 로그아웃 후 다시 로그인한 뒤 인보이스를 열어 주세요.",
+    "pager.viewAtOnce":"한 번에 보기:",
+    "pager.all":"모두",
+    "pager.unit":"건",
+    "pager.total":"총 {n}건",
+    "pager.size1000":"1000건",
+    "pager.prev":"이전",
+    "pager.next":"다음",
     "admin.invoices.col.issued":"발행일",
     "admin.invoices.col.no":"인보이스 번호",
     "admin.invoices.col.ticket":"주문 / Ticket",
@@ -3289,6 +3310,13 @@ const FULL_TRANSLATIONS = {
     "admin.orders.date.month":"今月",
     "admin.orders.date.period":"期間",
     "admin.orders.date.label":"期間:",
+    "pager.viewAtOnce":"一度に表示:",
+    "pager.all":"すべて",
+    "pager.unit":"件",
+    "pager.total":"全 {n} 件",
+    "pager.size1000":"1000件",
+    "pager.prev":"前へ",
+    "pager.next":"次へ",
     "admin.orders.unit.orders":"件",
     "admin.orders.period.title-html":'<span class="grad">期間</span>を選択',
     "admin.orders.period.start":"開始日",
@@ -4115,6 +4143,13 @@ const FULL_TRANSLATIONS = {
     "admin.orders.date.month":"本月",
     "admin.orders.date.period":"自定义时段",
     "admin.orders.date.label":"时段：",
+    "pager.viewAtOnce":"每页显示：",
+    "pager.all":"全部",
+    "pager.unit":"条",
+    "pager.total":"共 {n} 条",
+    "pager.size1000":"1000条",
+    "pager.prev":"上一页",
+    "pager.next":"下一页",
     "admin.orders.unit.orders":"笔订单",
     "admin.orders.period.title-html":'选择<span class="grad">时段</span>',
     "admin.orders.period.start":"开始日期",
@@ -4413,7 +4448,7 @@ const State = {
   onthelineCurrencies: [],        // ontheline_currencies collection: {code, symbol, companyName/label}
   unsubs: [],
   // Orders page filters — default to "month" so admins land on a useful overview
-  orderDateFilter: "month",       // "today" | "month" | "period"
+  orderDateFilter: "month",       // "today" | "yesterday" | "month" | "lastMonth" | "period"
   orderPeriodStart: null,         // Date | null
   orderPeriodEnd: null,           // Date | null
   orderSourceFilter: "all",       // "all" | "ontheline" | "direct" (direct includes chillpay)
@@ -4421,6 +4456,11 @@ const State = {
   orderPartnerFilter: "",         // ontheline partner code filter ("" = all)
   orderPaygwFilter: "",           // ontheline paygw code filter ("" = all)
   orderCurrencyFilter: "",        // ontheline currency code filter ("" = all)
+  orderPageSize: 50,              // number | "all"
+  orderPage: 1,
+  invoiceDateFilter: "month",     // same modes as orders
+  invoicePageSize: 50,
+  invoicePage: 1,
   smtpAccounts: [],
   smtpConfig: { defaultAccountId: null, replyTo: "", supportBcc: "support@dealmai.com", testRewriteTo: "" },
   // Branding (loaded from Firestore config/branding doc; falls back to defaults below)
@@ -8978,10 +9018,10 @@ function renderCustomerOrders(){
 }
 
 function defaultInvoiceDateRange(){
-  // Local calendar dates: From = today − 7 days, To = today (YYYY-MM-DD).
-  const to = new Date();
-  const from = new Date(to);
-  from.setDate(from.getDate() - 7);
+  // Local calendar dates for "this month" default.
+  const now = new Date();
+  const from = new Date(now.getFullYear(), now.getMonth(), 1);
+  const to = now;
   const ymd = (d) => {
     const p = (n) => String(n).padStart(2, "0");
     return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
@@ -8989,14 +9029,99 @@ function defaultInvoiceDateRange(){
   return { from: ymd(from), to: ymd(to) };
 }
 
+function ymdLocal(d){
+  const p = (n) => String(n).padStart(2, "0");
+  const x = d instanceof Date ? d : new Date(d);
+  return `${x.getFullYear()}-${p(x.getMonth() + 1)}-${p(x.getDate())}`;
+}
+
+function computeInvoiceDateRange(){
+  const now = new Date();
+  let rangeStart, rangeEnd;
+  const mode = State.invoiceDateFilter || "month";
+  if(mode === "today"){
+    rangeStart = new Date(now); rangeStart.setHours(0,0,0,0);
+    rangeEnd = new Date(now); rangeEnd.setHours(23,59,59,999);
+  }else if(mode === "yesterday"){
+    rangeStart = new Date(now); rangeStart.setDate(rangeStart.getDate()-1); rangeStart.setHours(0,0,0,0);
+    rangeEnd = new Date(now); rangeEnd.setDate(rangeEnd.getDate()-1); rangeEnd.setHours(23,59,59,999);
+  }else if(mode === "month"){
+    rangeStart = new Date(now.getFullYear(), now.getMonth(), 1, 0,0,0,0);
+    rangeEnd = new Date(now.getFullYear(), now.getMonth()+1, 0, 23,59,59,999);
+  }else if(mode === "lastMonth"){
+    rangeStart = new Date(now.getFullYear(), now.getMonth()-1, 1, 0,0,0,0);
+    rangeEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23,59,59,999);
+  }else{
+    // period — use from/to strings on State.invoiceFilter
+    ensureInvoiceFilter();
+    const from = State.invoiceFilter.from ? new Date(State.invoiceFilter.from + "T00:00:00") : new Date(now.setHours(0,0,0,0));
+    const to = State.invoiceFilter.to ? new Date(State.invoiceFilter.to + "T23:59:59") : new Date();
+    rangeStart = from;
+    rangeEnd = to;
+  }
+  return { rangeStart, rangeEnd, from: ymdLocal(rangeStart), to: ymdLocal(rangeEnd) };
+}
+
 function ensureInvoiceFilter(){
   if(!State.invoiceFilter) State.invoiceFilter = { from: "", to: "" };
+  if(!State.invoiceDateFilter) State.invoiceDateFilter = "month";
+  if(State.invoicePageSize == null) State.invoicePageSize = 50;
+  if(!State.invoicePage) State.invoicePage = 1;
   if(!State.invoiceFilter.from || !State.invoiceFilter.to){
-    const d = defaultInvoiceDateRange();
+    const d = computeInvoiceDateRange();
     if(!State.invoiceFilter.from) State.invoiceFilter.from = d.from;
     if(!State.invoiceFilter.to) State.invoiceFilter.to = d.to;
   }
   return State.invoiceFilter;
+}
+
+const PAGE_SIZE_OPTIONS = [50, 100, 300, 400, 500, 1000];
+
+function paginateList(list, pageSize, page){
+  const total = Array.isArray(list) ? list.length : 0;
+  const size = pageSize === "all" ? Math.max(total, 1) : (Number(pageSize) || 50);
+  const pages = pageSize === "all" ? 1 : Math.max(1, Math.ceil(total / size) || 1);
+  const safePage = Math.min(Math.max(1, Number(page) || 1), pages);
+  const slice = pageSize === "all"
+    ? (list || [])
+    : (list || []).slice((safePage - 1) * size, (safePage - 1) * size + size);
+  return { total, pages, page: safePage, pageSize, slice };
+}
+
+function renderPageSizeBar({ total, page, pageSize, setSizeFn, setPageFn }){
+  const pager = paginateList(new Array(total), pageSize, page);
+  const maxButtons = 12;
+  const windowStart = Math.max(
+    1,
+    Math.min(pager.page - Math.floor(maxButtons / 2), Math.max(1, pager.pages - maxButtons + 1))
+  );
+  const windowEnd = Math.min(pager.pages, windowStart + maxButtons - 1);
+  const sizeBtns = PAGE_SIZE_OPTIONS.map(s => {
+    const label = s === 1000 ? I.t("pager.size1000") : String(s);
+    return `<button type="button" class="ps-btn${pageSize === s ? " on" : ""}" onclick="${setSizeFn}(${s})">${escapeHtml(label)}</button>`;
+  }).join("");
+  const pageBtns = [];
+  if(windowStart > 1){
+    pageBtns.push(`<button type="button" class="ps-page" onclick="${setPageFn}(${Math.max(1, windowStart - 1)})" aria-label="${escapeHtml(I.t("pager.prev"))}">‹</button>`);
+  }
+  for(let p = windowStart; p <= windowEnd; p++){
+    pageBtns.push(`<button type="button" class="ps-page${pager.page === p ? " on" : ""}" onclick="${setPageFn}(${p})">${p}</button>`);
+  }
+  if(windowEnd < pager.pages){
+    pageBtns.push(`<button type="button" class="ps-page" onclick="${setPageFn}(${Math.min(pager.pages, windowEnd + 1)})" aria-label="${escapeHtml(I.t("pager.next"))}">›</button>`);
+  }
+  return `
+    <div class="page-size-bar">
+      <div class="page-size-left">
+        <span class="ps-label">${escapeHtml(I.t("pager.viewAtOnce"))}</span>
+        ${sizeBtns}
+        <button type="button" class="ps-btn${pageSize === "all" ? " on" : ""}" onclick="${setSizeFn}('all')">${escapeHtml(I.t("pager.all"))}</button>
+        <span class="ps-total">${escapeHtml(I.t("pager.unit"))} (${escapeHtml(I.t("pager.total",{ n: String(total) }))})</span>
+      </div>
+      <div class="page-size-pages">${pageBtns.join("")}</div>
+      <div class="page-size-spacer" aria-hidden="true"></div>
+    </div>
+  `;
 }
 
 function renderAdminInvoices(){
@@ -9004,11 +9129,18 @@ function renderAdminInvoices(){
   if(!el) return;
   ensureInvoiceFilter();
   if(!Array.isArray(State.invoiceRows)) State.invoiceRows = [];
-  const from = State.invoiceFilter.from;
-  const to = State.invoiceFilter.to;
+  const range = computeInvoiceDateRange();
+  // Keep filter inputs synced with active mode
+  State.invoiceFilter.from = range.from;
+  State.invoiceFilter.to = range.to;
+  const from = range.from;
+  const to = range.to;
   const loading = !!State.invoiceLoading;
   const err = State.invoiceError || "";
-  const rows = State.invoiceRows || [];
+  const allRows = State.invoiceRows || [];
+  const pager = paginateList(allRows, State.invoicePageSize || 50, State.invoicePage || 1);
+  State.invoicePage = pager.page;
+  const rows = pager.slice;
 
   const fmtMoneyCell = (amount, currency) => {
     const n = Number(amount);
@@ -9028,7 +9160,7 @@ function renderAdminInvoices(){
     return `<span class="status-tag ${cls}"><span class="d"></span>${escapeHtml(text)}</span>`;
   };
 
-  const usdTotal = rows.reduce((sum, r) => {
+  const usdTotal = allRows.reduce((sum, r) => {
     if(String(r.currency || "USD").toUpperCase() !== "USD") return sum;
     const n = Number(r.amount);
     return sum + (Number.isFinite(n) ? n : 0);
@@ -9054,7 +9186,7 @@ function renderAdminInvoices(){
 
   const tableHtml = loading
     ? `<div class="empty-state"><div class="em">${escapeHtml(I.t("admin.invoices.loading"))}</div></div>`
-    : (rows.length === 0
+    : (allRows.length === 0
       ? `<div class="empty-state"><div class="em">${escapeHtml(I.t("admin.invoices.empty"))}</div>${escapeHtml(I.t("admin.invoices.empty.hint"))}</div>`
       : `<table id="invoices-table">
           <thead><tr>
@@ -9069,6 +9201,9 @@ function renderAdminInvoices(){
           <tbody>${bodyRows}</tbody>
         </table>`);
 
+  const dateBtnClass = (mode) => "filter-pill" + ((State.invoiceDateFilter || "month") === mode ? " on" : "");
+  const showPeriodInputs = (State.invoiceDateFilter || "month") === "period";
+
   el.innerHTML = `
     <div class="admin-head">
       <div>
@@ -9079,9 +9214,18 @@ function renderAdminInvoices(){
       <button class="btn-primary" type="button" onclick="AdminActions.loadInvoices()"><span>${escapeHtml(I.t("admin.invoices.refresh"))}</span><span class="arr">→</span></button>
     </div>
     <div class="stats">
-      <div class="stat"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.count"))}</div><div class="val">${rows.length}<span class="unit">${escapeHtml(I.t("admin.invoices.unit.count"))}</span></div></div>
+      <div class="stat"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.count"))}</div><div class="val">${allRows.length}<span class="unit">${escapeHtml(I.t("admin.invoices.unit.count"))}</span></div></div>
       <div class="stat accent"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.amount"))}</div><div class="val"><span class="cur">$</span>${fmtNumber(usdTotal,{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div>
     </div>
+    <div class="filters" style="margin:0 0 14px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <span style="font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-right:6px">${escapeHtml(I.t("admin.orders.date.label"))}</span>
+      <button class="${dateBtnClass('today')}" onclick="AdminActions.setInvoiceDateFilter('today')">${escapeHtml(I.t("admin.orders.date.today"))}</button>
+      <button class="${dateBtnClass('yesterday')}" onclick="AdminActions.setInvoiceDateFilter('yesterday')">${escapeHtml(I.t("admin.orders.date.yesterday"))}</button>
+      <button class="${dateBtnClass('month')}" onclick="AdminActions.setInvoiceDateFilter('month')">${escapeHtml(I.t("admin.orders.date.month"))}</button>
+      <button class="${dateBtnClass('lastMonth')}" onclick="AdminActions.setInvoiceDateFilter('lastMonth')">${escapeHtml(I.t("admin.orders.date.lastMonth"))}</button>
+      <button class="${dateBtnClass('period')}" onclick="AdminActions.setInvoiceDateFilter('period')">${escapeHtml(I.t("admin.orders.date.period"))}${showPeriodInputs ? ` · ${escapeHtml(from)} → ${escapeHtml(to)}` : ""}</button>
+    </div>
+    ${showPeriodInputs ? `
     <div class="filters" style="margin:0 0 14px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
       <label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">
         ${escapeHtml(I.t("admin.invoices.from"))}
@@ -9092,7 +9236,7 @@ function renderAdminInvoices(){
         <input type="date" id="inv-to" class="orders-dropdown-filter" value="${escapeHtml(to)}" onchange="State.invoiceFilter.to=this.value" style="min-width:150px" />
       </label>
       <button class="btn-primary" type="button" onclick="AdminActions.loadInvoices()" style="padding:10px 18px"><span>${escapeHtml(I.t("admin.invoices.search"))}</span><span class="arr">→</span></button>
-    </div>
+    </div>` : ""}
     ${err ? `<p class="err" style="margin-bottom:10px">${escapeHtml(err)}</p>` : ""}
     <div class="panel">
       <div class="panel-h">
@@ -9100,6 +9244,13 @@ function renderAdminInvoices(){
       </div>
       <div class="table-wrap">${tableHtml}</div>
     </div>
+    ${!loading && allRows.length ? renderPageSizeBar({
+      total: allRows.length,
+      page: State.invoicePage || 1,
+      pageSize: State.invoicePageSize || 50,
+      setSizeFn: "AdminActions.setInvoicePageSize",
+      setPageFn: "AdminActions.setInvoicePage"
+    }) : ""}
   `;
 
   // Auto-load once when opening the tab
@@ -9173,6 +9324,11 @@ function renderAdminOrders(){
   // row is shown (full event history per transaction_id) — the table, CSV
   // export, and dropdown filters all read this same list.
   const list = getFilteredOrders();
+  if(State.orderPageSize == null) State.orderPageSize = 50;
+  if(!State.orderPage) State.orderPage = 1;
+  const orderPager = paginateList(list, State.orderPageSize, State.orderPage);
+  State.orderPage = orderPager.page;
+  const pageList = orderPager.slice;
 
   // Stats — based on the date-filtered set (NOT the source-filtered one, so all source counts make sense)
   // "Direct" count includes both legacy direct orders and ChillPay orders.
@@ -9205,7 +9361,7 @@ function renderAdminOrders(){
     return s + (isCounted ? (o.total || 0) : 0);
   }, 0);
 
-  const rows = list.map(o => {
+  const rows = pageList.map(o => {
     const itemSummary = (o.items||[]).map(i => `${i.title}${i.manual?` $${i.price}`:""}`).join(" + ");
     // For gateway-settled orders show "Check Status" always; plus "Mark Paid" /
     // "Cancel" for pending ones. Matches on the `gateway` field so it keeps
@@ -9423,6 +9579,13 @@ function renderAdminOrders(){
         </table>`}
       </div>
     </div>
+    ${list.length ? renderPageSizeBar({
+      total: list.length,
+      page: State.orderPage || 1,
+      pageSize: State.orderPageSize || 50,
+      setSizeFn: "AdminActions.setOrderPageSize",
+      setPageFn: "AdminActions.setOrderPage"
+    }) : ""}
   `;
 }
 
@@ -11469,22 +11632,27 @@ const AdminActions = {
   async loadInvoices(){
     if(!State.user || State.user.role !== "admin") return;
     ensureInvoiceFilter();
-    const fromEl = document.getElementById("inv-from");
-    const toEl = document.getElementById("inv-to");
-    if(fromEl && fromEl.value) State.invoiceFilter.from = fromEl.value;
-    if(toEl && toEl.value) State.invoiceFilter.to = toEl.value;
-    // Keep both ends filled with real dates (never blank → no "연도-월-일" placeholder)
-    const defaults = defaultInvoiceDateRange();
-    if(!State.invoiceFilter.from) State.invoiceFilter.from = defaults.from;
-    if(!State.invoiceFilter.to) State.invoiceFilter.to = defaults.to;
+    const range = computeInvoiceDateRange();
+    if((State.invoiceDateFilter || "month") === "period"){
+      const fromEl = document.getElementById("inv-from");
+      const toEl = document.getElementById("inv-to");
+      if(fromEl && fromEl.value) State.invoiceFilter.from = fromEl.value;
+      if(toEl && toEl.value) State.invoiceFilter.to = toEl.value;
+    }else{
+      State.invoiceFilter.from = range.from;
+      State.invoiceFilter.to = range.to;
+    }
 
     State.invoiceLoading = true;
     State.invoiceError = "";
     renderAdminInvoices();
     try{
-      const qs = new URLSearchParams({ limit: "100", kind: "all" });
+      const qs = new URLSearchParams({ kind: "all" });
       qs.set("from", State.invoiceFilter.from);
       qs.set("to", State.invoiceFilter.to);
+      const ps = State.invoicePageSize;
+      const limit = ps === "all" ? 2000 : Math.min(2000, Math.max(Number(ps) || 100, 100));
+      qs.set("limit", String(limit));
       const res = await this._fetchInvoicesApi("/api/invoices?" + qs.toString());
       const data = await res.json().catch(() => ({}));
       if(!res.ok){
@@ -11497,6 +11665,7 @@ const AdminActions = {
         throw new Error(data.error || I.t("admin.invoices.loadFailed"));
       }
       State.invoiceRows = data.items || [];
+      State.invoicePage = 1;
       State.invoiceLoadedOnce = true;
     }catch(e){
       console.error("[invoices] load failed:", e);
@@ -11506,6 +11675,43 @@ const AdminActions = {
       State.invoiceLoading = false;
       renderAdminInvoices();
     }
+  },
+
+  setInvoiceDateFilter(mode){
+    State.invoiceDateFilter = mode || "month";
+    State.invoicePage = 1;
+    if(mode !== "period"){
+      const range = computeInvoiceDateRange();
+      State.invoiceFilter.from = range.from;
+      State.invoiceFilter.to = range.to;
+      this.loadInvoices();
+    }else{
+      renderAdminInvoices();
+    }
+  },
+  setInvoicePageSize(size){
+    State.invoicePageSize = size === "all" ? "all" : Number(size) || 50;
+    State.invoicePage = 1;
+    // Reload if requesting more than currently buffered
+    const need = State.invoicePageSize === "all" ? 2000 : State.invoicePageSize;
+    if((State.invoiceRows || []).length < need){
+      this.loadInvoices();
+    }else{
+      renderAdminInvoices();
+    }
+  },
+  setInvoicePage(page){
+    State.invoicePage = Math.max(1, Number(page) || 1);
+    renderAdminInvoices();
+  },
+  setOrderPageSize(size){
+    State.orderPageSize = size === "all" ? "all" : Number(size) || 50;
+    State.orderPage = 1;
+    renderAdminOrders();
+  },
+  setOrderPage(page){
+    State.orderPage = Math.max(1, Number(page) || 1);
+    renderAdminOrders();
   },
 
   async downloadInvoicePdf(id, invoiceNo){
@@ -11538,6 +11744,7 @@ const AdminActions = {
   // ===== ORDERS: date + source filters + CSV export =====
   setOrderDateFilter(mode){
     State.orderDateFilter = mode;
+    State.orderPage = 1;
     // Reset period dates when leaving period mode (so toggle back-and-forth is clean)
     if(mode !== "period"){
       State.orderPeriodStart = null;
@@ -11551,6 +11758,7 @@ const AdminActions = {
     // collapsed the two sources in the UI.
     if(src === "chillpay") src = "direct";
     State.orderSourceFilter = src;
+    State.orderPage = 1;
     renderAdminOrders();
   },
 
@@ -11558,14 +11766,17 @@ const AdminActions = {
   // affect both the table and the CSV export (both read getFilteredOrders).
   setOrderPartnerFilter(code){
     State.orderPartnerFilter = String(code || "");
+    State.orderPage = 1;
     renderAdminOrders();
   },
   setOrderPaygwFilter(code){
     State.orderPaygwFilter = String(code || "");
+    State.orderPage = 1;
     renderAdminOrders();
   },
   setOrderCurrencyFilter(code){
     State.orderCurrencyFilter = String(code || "");
+    State.orderPage = 1;
     renderAdminOrders();
   },
 
@@ -11581,6 +11792,7 @@ const AdminActions = {
   //     filter (empty string) we re-render immediately for snappy feedback.
   setOrderEmailFilter(value){
     State.orderEmailFilter = String(value || "");
+    State.orderPage = 1;
     if(this._emailFilterTimer){
       clearTimeout(this._emailFilterTimer);
       this._emailFilterTimer = null;
@@ -11649,6 +11861,7 @@ const AdminActions = {
     State.orderPeriodStart = start;
     State.orderPeriodEnd = end;
     State.orderDateFilter = "period";
+    State.orderPage = 1;
     App.closeModal();
     renderAdminOrders();
   },
