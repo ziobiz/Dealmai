@@ -34,6 +34,7 @@ const FUNCTION_NAMES = [
   'customer-auth',
   'password-reset',
   'invoices',
+  'admin-fix-order-currencies',
 ];
 
 const API_ALIASES = {
@@ -52,6 +53,7 @@ const API_ALIASES = {
   '/api/customer-auth': 'customer-auth',
   '/api/password-reset': 'password-reset',
   '/api/invoices': 'invoices',
+  '/api/admin-fix-order-currencies': 'admin-fix-order-currencies',
   '/payment-result': 'payment-result',
 };
 
