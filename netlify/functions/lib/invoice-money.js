@@ -100,16 +100,27 @@ function resolveInvoiceMoney(order = {}, extra = {}) {
   }
 
   // Safety: zero-decimal currencies must not carry fractional settlement amounts.
-  // Seen in production: amount 1857.97 (THB) labeled JPY.
+  // Seen in production: amount 1857.97 (THB) labeled JPY — and often settlementCurrency
+  // was also wrongly stored as JPY, so skip other zero-decimal candidates and fall to THB.
   if (ZERO_DECIMAL.has(currency) && Number.isFinite(amount) && !Number.isInteger(amount)) {
-    const fallback = pickStr(
+    let fallback = '';
+    for (const c of [
       order.settlementCurrency,
       extra.settlementCurrency,
       order.gatewayCurrency,
       order.chillpayCurrency,
-      'THB',
-    ).toUpperCase();
-    if (fallback && fallback !== currency) {
+      order.chargeCurrency,
+      extra.chargeCurrency,
+      extra.gatewayCurrency,
+    ]) {
+      const s = pickStr(c).toUpperCase();
+      if (s && !ZERO_DECIMAL.has(s)) {
+        fallback = s;
+        break;
+      }
+    }
+    if (!fallback) fallback = 'THB';
+    if (fallback !== currency) {
       console.warn(
         `[invoice-money] ${currency} with fractional amount ${amount} — coercing currency to ${fallback}`,
       );
@@ -132,7 +143,38 @@ function resolveInvoiceMoney(order = {}, extra = {}) {
   return out;
 }
 
+/**
+ * True when a stored order currency/amount pair looks like a DP mislabel
+ * (e.g. JPY + 1857.97 which is actually THB settlement).
+ */
+function needsCurrencyCorrection(order = {}) {
+  const money = resolveInvoiceMoney(order, {});
+  const rawCur = pickStr(order.currency, 'USD').toUpperCase();
+  return money.currency !== rawCur || money.source === 'coerced-fractional-zero-decimal';
+}
+
+/**
+ * Patch fields to write back onto a Firestore order after correction.
+ */
+function correctionPatch(order = {}) {
+  const money = resolveInvoiceMoney(order, {});
+  const rawCur = pickStr(order.currency, 'USD').toUpperCase();
+  if (money.currency === rawCur && money.source !== 'coerced-fractional-zero-decimal') {
+    return null;
+  }
+  return {
+    currency: money.currency,
+    settlementCurrency: money.currency,
+    settlementAmount: money.amount,
+    currencyCorrectedFrom: rawCur,
+    currencyCorrectedAt: new Date().toISOString(),
+    currencyCorrectedReason: money.source || 'coerced-fractional-zero-decimal',
+  };
+}
+
 module.exports = {
   resolveInvoiceMoney,
+  needsCurrencyCorrection,
+  correctionPatch,
   ZERO_DECIMAL,
 };

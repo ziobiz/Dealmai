@@ -566,6 +566,12 @@ const DEFAULT_STRINGS = {
   // Admin · orders
   "admin.orders.title-html":'Recent <span class="grad">orders</span>',
   "admin.orders.export":"Export CSV",
+  "admin.orders.fixCurrency":"Fix currencies",
+  "admin.orders.fixCurrency.hint":"Correct ontheline orders where a THB settlement amount was mislabeled as JPY/KRW. Recalculates USD FX.",
+  "admin.orders.fixCurrency.confirm":"Scan and correct mislabeled ontheline order currencies (JPY/KRW + fractional amount → THB)?",
+  "admin.orders.fixCurrency.done":"Corrected {count} orders",
+  "admin.orders.fixCurrency.none":"No mislabeled orders found",
+  "admin.orders.fixCurrency.failed":"Currency fix failed: {error}",
   // Orders count stat label, by date filter
   "admin.orders.stat.today":"Today · Orders",
   "admin.orders.stat.month":"This Month · Orders",
@@ -1527,6 +1533,12 @@ const FULL_TRANSLATIONS = {
     // Admin · orders
     "admin.orders.title-html":'รายการ<span class="grad">สั่งซื้อล่าสุด</span>',
     "admin.orders.export":"ส่งออก CSV",
+    "admin.orders.fixCurrency":"แก้สกุลเงิน",
+    "admin.orders.fixCurrency.hint":"แก้คำสั่ง ontheline ที่ยอด THB ถูกติดป้าย JPY/KRW ผิด และคำนวณ USD ใหม่",
+    "admin.orders.fixCurrency.confirm":"สแกนและแก้สกุลเงินที่ผิด (JPY/KRW + ทศนิยม → THB) หรือไม่?",
+    "admin.orders.fixCurrency.done":"แก้แล้ว {count} รายการ",
+    "admin.orders.fixCurrency.none":"ไม่พบรายการที่ต้องแก้",
+    "admin.orders.fixCurrency.failed":"แก้สกุลเงินไม่สำเร็จ: {error}",
     "admin.orders.stat.today":"วันนี้ · ออเดอร์",
     "admin.orders.stat.month":"เดือนนี้ · ออเดอร์",
     "admin.orders.stat.yesterday":"เมื่อวาน · ออเดอร์",
@@ -2402,6 +2414,12 @@ const FULL_TRANSLATIONS = {
     // Admin · orders
     "admin.orders.title-html":'최근 <span class="grad">주문</span>',
     "admin.orders.export":"CSV 내보내기",
+    "admin.orders.fixCurrency":"통화 보정",
+    "admin.orders.fixCurrency.hint":"THB 실결제 금액이 JPY/KRW로 잘못 저장된 ontheline 주문을 보정하고 USD 환율을 다시 계산합니다.",
+    "admin.orders.fixCurrency.confirm":"잘못 표기된 ontheline 주문 통화(JPY/KRW + 소수 금액 → THB)를 스캔·보정할까요?",
+    "admin.orders.fixCurrency.done":"{count}건 보정 완료",
+    "admin.orders.fixCurrency.none":"보정할 주문이 없습니다",
+    "admin.orders.fixCurrency.failed":"통화 보정 실패: {error}",
     "admin.orders.stat.today":"오늘 · 주문",
     "admin.orders.stat.month":"이번 달 · 주문",
     "admin.orders.stat.yesterday":"어제 · 주문",
@@ -3211,6 +3229,12 @@ const FULL_TRANSLATIONS = {
     // Admin · orders
     "admin.orders.title-html":'最近の <span class="grad">注文</span>',
     "admin.orders.export":"CSVエクスポート",
+    "admin.orders.fixCurrency":"通貨を修正",
+    "admin.orders.fixCurrency.hint":"THB決済額がJPY/KRWと誤表示されたontheline注文を修正し、USD換算を再計算します。",
+    "admin.orders.fixCurrency.confirm":"誤表示の通貨（JPY/KRW+小数→THB）をスキャンして修正しますか？",
+    "admin.orders.fixCurrency.done":"{count}件を修正しました",
+    "admin.orders.fixCurrency.none":"修正対象はありません",
+    "admin.orders.fixCurrency.failed":"通貨修正に失敗: {error}",
     "admin.orders.stat.today":"本日 · 注文",
     "admin.orders.stat.month":"今月 · 注文",
     "admin.orders.stat.yesterday":"昨日 · 注文",
@@ -4030,6 +4054,12 @@ const FULL_TRANSLATIONS = {
     // Admin orders
     "admin.orders.title-html":'最近<span class="grad">订单</span>',
     "admin.orders.export":"导出 CSV",
+    "admin.orders.fixCurrency":"修正货币",
+    "admin.orders.fixCurrency.hint":"修正将 THB 结算金额误标为 JPY/KRW 的 ontheline 订单，并重算 USD。",
+    "admin.orders.fixCurrency.confirm":"扫描并修正错误货币（JPY/KRW + 小数 → THB）？",
+    "admin.orders.fixCurrency.done":"已修正 {count} 笔",
+    "admin.orders.fixCurrency.none":"没有需要修正的订单",
+    "admin.orders.fixCurrency.failed":"货币修正失败：{error}",
     "admin.orders.stat.today":"今日 · 订单",
     "admin.orders.stat.month":"本月 · 订单",
     "admin.orders.stat.yesterday":"昨日 · 订单",
@@ -8312,6 +8342,62 @@ function fmtNumber(n, opts){
 function fmtMoney(n){
   return "$"+fmtNumber(n||0,{minimumFractionDigits:2,maximumFractionDigits:2});
 }
+
+/**
+ * Settlement money for Orders display / CSV.
+ * Prefer settlementCurrency; coerce fractional amounts wrongly tagged as JPY/KRW → THB
+ * (ICOPAY DP mislabel — amount is THB settlement, currency was shopper JPY).
+ */
+function resolveOrderDisplayMoney(o){
+  const ZERO = new Set(["JPY", "KRW"]);
+  const pickStr = (...vals) => {
+    for(const v of vals){
+      if(v == null) continue;
+      const s = String(v).trim();
+      if(s) return s;
+    }
+    return "";
+  };
+  const amount = Number(
+    o?.settlementAmount ?? o?.gatewayAmount ?? o?.chillpayAmount ?? o?.amountOriginal ?? o?.total ?? 0
+  );
+  let currency = pickStr(
+    o?.settlementCurrency, o?.gatewayCurrency, o?.chillpayCurrency, o?.currency, "USD"
+  ).toUpperCase();
+  let coerced = false;
+  if(ZERO.has(currency) && Number.isFinite(amount) && !Number.isInteger(amount)){
+    // Skip other zero-decimal labels (often also mis-stored as JPY) → default THB.
+    let fb = "";
+    for(const c of [o?.settlementCurrency, o?.gatewayCurrency, o?.chillpayCurrency, o?.chargeCurrency]){
+      const s = pickStr(c).toUpperCase();
+      if(s && !ZERO.has(s)){ fb = s; break; }
+    }
+    if(!fb) fb = "THB";
+    if(fb !== currency){
+      currency = fb;
+      coerced = true;
+    }
+  }
+  return {
+    amount: Number.isFinite(amount) ? amount : 0,
+    currency: currency || "USD",
+    coerced,
+  };
+}
+
+function fmtOrderOriginalMoney(o){
+  const money = resolveOrderDisplayMoney(o);
+  if(o?.source === "ontheline" && money.currency && money.currency !== "USD"){
+    const cur = (State.onthelineCurrencies || []).find(c => (c.code||"").toLowerCase() === money.currency.toLowerCase());
+    const sym = cur?.symbol || "";
+    const usdTotal = Number.isFinite(Number(o.total)) ? Number(o.total)
+                   : (Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd) : Number(o.subtotal) || 0);
+    const origTxt = `${escapeHtml(sym)}${fmtNumber(money.amount,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+    return `<div style="line-height:1.4"><div style="font-weight:600">${origTxt} <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(money.currency)}</span></div>
+      <div style="font-size:11px;color:var(--muted)">(${fmtMoney(usdTotal)})</div></div>`;
+  }
+  return fmtMoney(o?.total);
+}
 function fmtDate(ts){
   if(!ts) return "—";
   const d = ts.toDate ? ts.toDate() : new Date(ts);
@@ -9184,23 +9270,7 @@ function renderAdminOrders(){
           </div>`;
         })()}</td>
         <td>${escapeHtml(itemSummary)}</td>
-        <td>${(() => {
-          // ontheline orders show the original-currency amount with its symbol,
-          // then the USD value in parentheses. We show the VAT-INCLUSIVE total
-          // in USD so it matches the customer's My Orders amount (which also
-          // shows o.total). (Credit math separately uses the pre-VAT amountUsd.)
-          if(o.source === "ontheline" && o.currency && o.currency !== "USD"){
-            const cur = (State.onthelineCurrencies || []).find(c => (c.code||"").toLowerCase() === (o.currency||"").toLowerCase());
-            const sym = cur?.symbol || "";
-            const orig = Number.isFinite(Number(o.amountOriginal)) ? Number(o.amountOriginal) : null;
-            const usdTotal = Number.isFinite(Number(o.total)) ? Number(o.total)
-                           : (Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd) : Number(o.subtotal) || 0);
-            const origTxt = orig !== null ? `${escapeHtml(sym)}${fmtNumber(orig,{minimumFractionDigits:2,maximumFractionDigits:2})}` : "—";
-            return `<div style="line-height:1.4"><div style="font-weight:600">${origTxt} <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(o.currency)}</span></div>
-              <div style="font-size:11px;color:var(--muted)">(${fmtMoney(usdTotal)})</div></div>`;
-          }
-          return fmtMoney(o.total);
-        })()}</td>
+        <td>${fmtOrderOriginalMoney(o)}</td>
         <td>${creditsCell}</td>
         <td>${(() => {
           // ontheline orders show the latest event (Paid/Unpaid/Refund/Partial
@@ -9268,7 +9338,10 @@ function renderAdminOrders(){
         <h1>${I.t("admin.orders.title-html")}</h1>
         ${periodSummary}
       </div>
-      <button class="btn-primary" onclick="AdminActions.exportOrdersCSV()"><span>${I.t("admin.orders.export")}</span><span class="arr">→</span></button>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn-ghost" type="button" onclick="AdminActions.fixOrderCurrencies()" title="${escapeHtml(I.t("admin.orders.fixCurrency.hint"))}"><span>${I.t("admin.orders.fixCurrency")}</span></button>
+        <button class="btn-primary" onclick="AdminActions.exportOrdersCSV()"><span>${I.t("admin.orders.export")}</span><span class="arr">→</span></button>
+      </div>
     </div>
     <div class="stats">
       <div class="stat"><div class="lab">${escapeHtml(ordersStatLabel)}</div><div class="val">${dateFiltered.length}<span class="unit">${I.t("admin.orders.unit.orders")}</span></div></div>
@@ -9416,10 +9489,10 @@ function getFilteredOrders(){
   if(paygwQ){
     filtered = filtered.filter(o => (o.paygw || "").toLowerCase() === paygwQ);
   }
-  // Currency filter — exact code match (ontheline orders only carry currency).
+  // Currency filter — use corrected settlement currency for display consistency
   const curQ = (State.orderCurrencyFilter || "").trim().toLowerCase();
   if(curQ){
-    filtered = filtered.filter(o => (o.currency || "").toLowerCase() === curQ);
+    filtered = filtered.filter(o => resolveOrderDisplayMoney(o).currency.toLowerCase() === curQ);
   }
 
   // Show EVERY transaction row. ontheline sends a new order per event (Paid →
@@ -11554,6 +11627,38 @@ const AdminActions = {
     renderAdminOrders();
   },
 
+  async fixOrderCurrencies(){
+    if(!confirm(I.t("admin.orders.fixCurrency.confirm"))) return;
+    try{
+      if(!auth?.currentUser) throw new Error("Not signed in");
+      const idToken = await auth.currentUser.getIdToken(false);
+      const res = await fetch("/api/admin-fix-order-currencies", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + idToken,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({ dryRun: false, limit: 2000 }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok){
+        throw new Error(data.error || ("HTTP " + res.status));
+      }
+      const n = Number(data.fixedCount) || 0;
+      if(n > 0){
+        Toast.show(I.t("admin.orders.fixCurrency.done", { count: n }), "ok");
+        // onSnapshot will refresh State.orders; re-render for immediate feedback.
+        renderAdminOrders();
+      } else {
+        Toast.show(I.t("admin.orders.fixCurrency.none"), "ok");
+      }
+    }catch(e){
+      console.error("[fixOrderCurrencies]", e);
+      Toast.show(I.t("admin.orders.fixCurrency.failed", { error: e.message || String(e) }), "err");
+    }
+  },
+
   exportOrdersCSV(){
     const list = getFilteredOrders();
     if(list.length === 0){
@@ -11604,8 +11709,11 @@ const AdminActions = {
       const statusOrEvent = (o.source === "ontheline" && o.event) ? o.event : o.status;
       // Original-currency amount (ontheline) vs USD. amountUsd is what credit
       // math uses; amountOriginal is the figure ontheline actually sent.
-      const amountOriginal = Number.isFinite(Number(o.amountOriginal)) ? Number(o.amountOriginal)
-                            : (Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal) : "");
+      const amountOriginal = (() => {
+        const money = resolveOrderDisplayMoney(o);
+        return Number.isFinite(money.amount) ? money.amount
+              : (Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal) : "");
+      })();
       const amountUsd = Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd)
                        : (Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal) : "");
       // Which payment gateway settled this order. Direct sales carry it
@@ -11613,13 +11721,14 @@ const AdminActions = {
       // ontheline orders settle outside DealMai, so the column stays empty.
       const gatewayId = o.gateway
         || ((o.source === "chillpay" || o.chillpayOrderNo) ? "chillpay" : "");
+      const displayCur = resolveOrderDisplayMoney(o).currency || o.currency || "USD";
       return [
         o.ref, o.source, gatewayId, statusOrEvent,
         o.customer?.name || "", o.customer?.email || "", o.customer?.country || "",
         o.partner || "", pName ? pName.companyName : "",
         o.paygw || "", gName ? gName.companyName : "",
         items,
-        o.currency || "USD",
+        displayCur,
         amountOriginal, amountUsd,
         o.vat ?? "", o.total ?? "",
         creditsEarned,
@@ -11908,12 +12017,13 @@ const AdminActions = {
     if(o.source === "ontheline"){
       const pName = (State.onthelinePartners || []).find(p => (p.code||"").toLowerCase() === (o.partner||"").toLowerCase());
       const gName = (State.onthelinePaygw || []).find(g => (g.code||"").toLowerCase() === (o.paygw||"").toLowerCase());
-      const cur = (State.onthelineCurrencies || []).find(c => (c.code||"").toLowerCase() === (o.currency||"").toLowerCase());
+      const money = resolveOrderDisplayMoney(o);
+      const cur = (State.onthelineCurrencies || []).find(c => (c.code||"").toLowerCase() === money.currency.toLowerCase());
       const sym = cur?.symbol || "";
-      const origAmt = Number.isFinite(Number(o.amountOriginal)) ? Number(o.amountOriginal) : null;
+      const origAmt = money.amount;
       const usdAmt  = Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd) : Number(o.subtotal) || 0;
-      const amountTxt = origAmt !== null
-        ? `${escapeHtml(sym)}${fmtNumber(origAmt,{minimumFractionDigits:2,maximumFractionDigits:2})} ${escapeHtml(o.currency||"")} <span style="color:var(--muted)">(${fmtMoney(usdAmt)})</span>`
+      const amountTxt = Number.isFinite(origAmt)
+        ? `${escapeHtml(sym)}${fmtNumber(origAmt,{minimumFractionDigits:2,maximumFractionDigits:2})} ${escapeHtml(money.currency||"")} <span style="color:var(--muted)">(${fmtMoney(usdAmt)})</span>`
         : fmtMoney(usdAmt);
       const eventTxt = o.event ? escapeHtml(o.event) : "—";
       onthelineBlock = `

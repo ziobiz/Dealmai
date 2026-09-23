@@ -156,6 +156,13 @@
   status = 200
   force = true
 
+# Admin: backfill mislabeled ontheline order currencies (JPY fractional → THB)
+[[redirects]]
+  from = "/api/admin-fix-order-currencies"
+  to = "/.netlify/functions/admin-fix-order-currencies"
+  status = 200
+  force = true
+
 # ============================================================
 # Customer-facing return URL after paying at ChillPay
 # ============================================================
