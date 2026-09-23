@@ -475,6 +475,18 @@
   .stat .val .unit{font-size:13px;color:var(--muted);font-weight:300}
   .stat .val .cur{font-size:14px;color:var(--teal-deep);font-weight:400}
   .stat.accent .val{background:var(--grad-1);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .val.val-multi{
+    display:flex;flex-direction:column;align-items:flex-start;gap:5px;
+    font-size:18px;font-weight:400;letter-spacing:-.01em;
+    background:none;-webkit-background-clip:unset;background-clip:unset;color:var(--text);
+  }
+  .stat.accent .val.val-multi{color:var(--teal-deep)}
+  .stat-currencies{display:flex;flex-direction:column;gap:4px;width:100%}
+  .stat-currency-line{display:flex;align-items:baseline;gap:6px;line-height:1.25;font-variant-numeric:tabular-nums}
+  .stat-currency-line .sym{font-size:13px;color:var(--teal-deep);font-weight:500;min-width:0.9em}
+  .stat-currency-line .amt{font-size:18px;font-weight:500;letter-spacing:-.02em}
+  .stat-currency-line .ccode{font-family:var(--mono);font-size:10px;letter-spacing:.06em;color:var(--muted);font-weight:500}
+  .stat-currency-line.neg .amt{color:#c8463d}
 
   .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;backdrop-filter:blur(14px);overflow:hidden;margin-bottom:18px}
   .panel-h{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;border-bottom:1px solid var(--line);gap:12px;flex-wrap:wrap}
@@ -1414,7 +1426,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20260923pager2"></script>
+<script type="module" src="/app.js?v=20260923fx1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

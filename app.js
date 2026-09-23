@@ -320,7 +320,7 @@ const DEFAULT_STRINGS = {
   "admin.invoices.refresh":"Refresh",
   "admin.invoices.h":"All invoices",
   "admin.invoices.stat.count":"Invoices in range",
-  "admin.invoices.stat.amount":"Amount (USD)",
+  "admin.invoices.stat.amount":"Amount by currency",
   "admin.invoices.unit.count":"invoices",
   "admin.invoices.empty":"No invoices in this date range.",
   "admin.invoices.empty.hint":"Widen the From / To dates, then Search.",
@@ -1272,7 +1272,7 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.refresh":"รีเฟรช",
     "admin.invoices.h":"ใบแจ้งหนี้ทั้งหมด",
     "admin.invoices.stat.count":"จำนวนในช่วง",
-    "admin.invoices.stat.amount":"ยอด (USD)",
+    "admin.invoices.stat.amount":"ยอดตามสกุลเงิน",
     "admin.invoices.unit.count":"ใบ",
     "admin.invoices.empty":"ไม่มีใบแจ้งหนี้ในช่วงวันที่นี้",
     "admin.invoices.empty.hint":"ขยายช่วง From / To แล้วกด Search",
@@ -2090,7 +2090,7 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.refresh":"새로고침",
     "admin.invoices.h":"전체 인보이스",
     "admin.invoices.stat.count":"기간 내 건수",
-    "admin.invoices.stat.amount":"금액 (USD)",
+    "admin.invoices.stat.amount":"통화별 금액",
     "admin.invoices.unit.count":"건",
     "admin.invoices.empty":"이 기간에 인보이스가 없습니다.",
     "admin.invoices.empty.hint":"시작·종료 날짜를 넓힌 뒤 검색하세요.",
@@ -2983,7 +2983,7 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.refresh":"更新",
     "admin.invoices.h":"すべてのインボイス",
     "admin.invoices.stat.count":"期間内件数",
-    "admin.invoices.stat.amount":"金額 (USD)",
+    "admin.invoices.stat.amount":"通貨別金額",
     "admin.invoices.unit.count":"件",
     "admin.invoices.empty":"この期間にインボイスはありません。",
     "admin.invoices.empty.hint":"開始・終了日を広げて検索してください。",
@@ -3803,7 +3803,7 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.refresh":"刷新",
     "admin.invoices.h":"全部发票",
     "admin.invoices.stat.count":"区间内笔数",
-    "admin.invoices.stat.amount":"金额 (USD)",
+    "admin.invoices.stat.amount":"按货币合计",
     "admin.invoices.unit.count":"笔",
     "admin.invoices.empty":"该日期范围内暂无发票。",
     "admin.invoices.empty.hint":"请扩大开始/结束日期后搜索。",
@@ -8430,15 +8430,88 @@ function resolveOrderDisplayMoney(o){
 function fmtOrderOriginalMoney(o){
   const money = resolveOrderDisplayMoney(o);
   if(o?.source === "ontheline" && money.currency && money.currency !== "USD"){
-    const cur = (State.onthelineCurrencies || []).find(c => (c.code||"").toLowerCase() === money.currency.toLowerCase());
-    const sym = cur?.symbol || "";
+    const sym = currencySymbol(money.currency);
     const usdTotal = Number.isFinite(Number(o.total)) ? Number(o.total)
                    : (Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd) : Number(o.subtotal) || 0);
-    const origTxt = `${escapeHtml(sym)}${fmtNumber(money.amount,{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+    const decimals = currencyFractionDigits(money.currency);
+    const origTxt = `${escapeHtml(sym)}${fmtNumber(money.amount,{minimumFractionDigits:decimals,maximumFractionDigits:decimals})}`;
     return `<div style="line-height:1.4"><div style="font-weight:600">${origTxt} <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(money.currency)}</span></div>
       <div style="font-size:11px;color:var(--muted)">(${fmtMoney(usdTotal)})</div></div>`;
   }
   return fmtMoney(o?.total);
+}
+
+/** ISO currency → display symbol (admin list, then common fallbacks). */
+function currencySymbol(code){
+  const cur = String(code || "USD").toUpperCase();
+  const fromList = (State.onthelineCurrencies || []).find(c => (c.code || "").toUpperCase() === cur);
+  if(fromList?.symbol) return fromList.symbol;
+  const FALLBACK = { USD:"$", THB:"฿", JPY:"¥", KRW:"₩", EUR:"€", CNY:"¥", GBP:"£", VND:"₫", SGD:"S$", MYR:"RM", IDR:"Rp", AUD:"A$", CAD:"C$" };
+  return FALLBACK[cur] || "";
+}
+
+function currencyFractionDigits(code){
+  return (code === "JPY" || code === "KRW" || code === "VND") ? 0 : 2;
+}
+
+/** Accumulate signed amounts keyed by currency code. */
+function addCurrencyAmount(totals, currency, amount){
+  const n = Number(amount);
+  if(!Number.isFinite(n) || n === 0) return totals;
+  const cur = String(currency || "USD").toUpperCase() || "USD";
+  totals[cur] = (totals[cur] || 0) + n;
+  return totals;
+}
+
+/**
+ * Revenue contribution of one order row in its settlement currency
+ * (not FX-converted USD). Sign: +paid / −refund. null = skip.
+ */
+function orderRevenueByCurrency(o){
+  const money = resolveOrderDisplayMoney(o);
+  if(o.source === "ontheline"){
+    if(["Unpaid","Refund","Partial Refund"].includes(o.event)){
+      const amt = Number(o.refundAmountOriginal);
+      const useAmt = Number.isFinite(amt) && amt !== 0
+        ? amt
+        : (Number(o.amountOriginal) || money.amount || 0);
+      return { currency: money.currency || o.currency || "USD", amount: -Math.abs(useAmt) };
+    }
+    if(o.event === "Fail") return null;
+    if(o.event === "Paid") return { currency: money.currency || "USD", amount: money.amount };
+    return null;
+  }
+  const isGatewayOrder = !!o.gateway || o.source === "chillpay";
+  const isCounted = (o.status === "paid") || (!isGatewayOrder && o.status !== "failed" && o.status !== "cancelled");
+  if(!isCounted) return null;
+  return { currency: money.currency || o.currency || "USD", amount: money.amount };
+}
+
+/** HTML for a stats card value listing each traded currency total. */
+function renderCurrencyTotalsHtml(totalsMap){
+  const entries = Object.entries(totalsMap || {})
+    .filter(([, v]) => Number.isFinite(v) && Math.abs(v) > 1e-9)
+    .sort((a, b) => {
+      if(a[0] === "USD") return -1;
+      if(b[0] === "USD") return 1;
+      return a[0].localeCompare(b[0]);
+    });
+  if(!entries.length){
+    return `<span class="cur">$</span>0<span class="unit">USD</span>`;
+  }
+  if(entries.length === 1){
+    const [cur, amt] = entries[0];
+    const dig = currencyFractionDigits(cur);
+    const sym = currencySymbol(cur);
+    return `<span class="cur">${escapeHtml(sym || cur)}</span>${fmtNumber(amt,{minimumFractionDigits:dig,maximumFractionDigits:dig})}<span class="unit">${escapeHtml(cur)}</span>`;
+  }
+  const lines = entries.map(([cur, amt]) => {
+    const dig = currencyFractionDigits(cur);
+    const sym = currencySymbol(cur);
+    const neg = amt < 0 ? " neg" : "";
+    return `<div class="stat-currency-line${neg}"><span class="sym">${escapeHtml(sym || "")}</span><span class="amt">${fmtNumber(amt,{minimumFractionDigits:dig,maximumFractionDigits:dig})}</span><span class="ccode">${escapeHtml(cur)}</span></div>`;
+  }).join("");
+  return `<div class="stat-currencies">${lines}</div>`;
 }
 function fmtDate(ts){
   if(!ts) return "—";
@@ -9160,11 +9233,12 @@ function renderAdminInvoices(){
     return `<span class="status-tag ${cls}"><span class="d"></span>${escapeHtml(text)}</span>`;
   };
 
-  const usdTotal = allRows.reduce((sum, r) => {
-    if(String(r.currency || "USD").toUpperCase() !== "USD") return sum;
+  // Sum invoice amounts per issued currency (USD, THB, JPY, …).
+  const invoiceTotalsByCurrency = allRows.reduce((acc, r) => {
     const n = Number(r.amount);
-    return sum + (Number.isFinite(n) ? n : 0);
-  }, 0);
+    if(!Number.isFinite(n)) return acc;
+    return addCurrencyAmount(acc, r.currency || "USD", n);
+  }, {});
 
   const bodyRows = rows.map(r => {
     const ticket = r.ticket_no && !String(r.ticket_no).startsWith("SIM-") ? r.ticket_no : "—";
@@ -9215,7 +9289,7 @@ function renderAdminInvoices(){
     </div>
     <div class="stats">
       <div class="stat"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.count"))}</div><div class="val">${allRows.length}<span class="unit">${escapeHtml(I.t("admin.invoices.unit.count"))}</span></div></div>
-      <div class="stat accent"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.amount"))}</div><div class="val"><span class="cur">$</span>${fmtNumber(usdTotal,{minimumFractionDigits:2,maximumFractionDigits:2})}</div></div>
+      <div class="stat accent"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.amount"))}</div><div class="val${Object.keys(invoiceTotalsByCurrency).length > 1 ? " val-multi" : ""}">${renderCurrencyTotalsHtml(invoiceTotalsByCurrency)}</div></div>
     </div>
     <div class="filters" style="margin:0 0 14px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <span style="font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-right:6px">${escapeHtml(I.t("admin.orders.date.label"))}</span>
@@ -9334,32 +9408,15 @@ function renderAdminOrders(){
   // "Direct" count includes both legacy direct orders and ChillPay orders.
   const onlineCount = dateFiltered.filter(o => o.source === "ontheline").length;
   const directCount = dateFiltered.filter(o => o.source === "direct" || o.source === "chillpay").length;
-  // Revenue = the literal sum of every transaction that occurred within the
-  // selected date range (date-of-event). Each row counts on the day it
-  // happened:
-  //   Paid                                 → + o.total (money in)
-  //   Refund / Partial Refund / Unpaid     → − refunded amount (money out / reversed)
+  // Revenue by settlement currency (USD / THB / JPY / …), not FX-flattened USD.
+  //   Paid                                 → + original amount
+  //   Refund / Partial Refund / Unpaid     → − original refund amount
   //   Fail / failed / cancelled            → not counted
-  // This is a true day-by-day total, so if a Paid order from an earlier day is
-  // refunded today, today's Revenue can legitimately go negative.
-  const revenue = dateFiltered.reduce((s,o) => {
-    if(o.source === "ontheline"){
-      if(["Unpaid","Refund","Partial Refund"].includes(o.event)){
-        // refundAmountUsd is the VAT-inclusive amount reversed on this day.
-        return s - (Number(o.refundAmountUsd) || Number(o.total) || 0);
-      }
-      if(o.event === "Fail") return s;            // failed → no money
-      if(o.event === "Paid") return s + (Number(o.total) || 0);
-      return s;
-    }
-    // Non-ontheline (direct web sales): count paid only. Gateway-settled
-    // orders start as 'pending' and must NOT count until the callback confirms
-    // payment — detect them by the `gateway` field (or the legacy
-    // source==='chillpay') rather than the source name alone.
-    const isGatewayOrder = !!o.gateway || o.source === "chillpay";
-    const isCounted = (o.status === "paid") || (!isGatewayOrder && o.status !== "failed" && o.status !== "cancelled");
-    return s + (isCounted ? (o.total || 0) : 0);
-  }, 0);
+  const revenueByCurrency = dateFiltered.reduce((acc, o) => {
+    const delta = orderRevenueByCurrency(o);
+    if(!delta) return acc;
+    return addCurrencyAmount(acc, delta.currency, delta.amount);
+  }, {});
 
   const rows = pageList.map(o => {
     const itemSummary = (o.items||[]).map(i => `${i.title}${i.manual?` $${i.price}`:""}`).join(" + ");
@@ -9505,7 +9562,7 @@ function renderAdminOrders(){
       <div class="stat"><div class="lab">${escapeHtml(ordersStatLabel)}</div><div class="val">${dateFiltered.length}<span class="unit">${I.t("admin.orders.unit.orders")}</span></div></div>
       <div class="stat"><div class="lab">${I.t("admin.orders.stat.online")}</div><div class="val">${onlineCount}<span class="unit">${I.t("admin.orders.unit.orders")}</span></div></div>
       <div class="stat"><div class="lab">${I.t("admin.orders.stat.direct")}</div><div class="val">${directCount}<span class="unit">${I.t("admin.orders.unit.orders")}</span></div></div>
-      <div class="stat accent"><div class="lab">${escapeHtml(revenueStatLabel)}</div><div class="val"><span class="cur">$</span>${fmtNumber(revenue)}</div></div>
+      <div class="stat accent"><div class="lab">${escapeHtml(revenueStatLabel)}</div><div class="val${Object.keys(revenueByCurrency).length > 1 ? " val-multi" : ""}">${renderCurrencyTotalsHtml(revenueByCurrency)}</div></div>
     </div>
 
     <!-- Date range filter — primary toggle row -->
