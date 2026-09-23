@@ -50,8 +50,10 @@ async function requireAdmin(event) {
   try {
     decoded = await admin.auth().verifyIdToken(m[1]);
   } catch (e) {
+    console.warn('[invoices] verifyIdToken failed:', e.code || e.message);
     const err = new Error('Invalid or expired ID token');
     err.status = 401;
+    err.code = e.code || 'auth/invalid-id-token';
     throw err;
   }
   const snap = await db.collection('users').doc(decoded.uid).get();

@@ -327,6 +327,7 @@ const DEFAULT_STRINGS = {
   "admin.invoices.loading":"Loading…",
   "admin.invoices.loadFailed":"Could not load invoices",
   "admin.invoices.notConfigured":"Invoice Service is not configured on the server.",
+  "admin.invoices.authExpired":"Session expired. Sign out and sign in again, then reopen Invoice.",
   "admin.invoices.col.issued":"Issued",
   "admin.invoices.col.no":"Invoice No",
   "admin.invoices.col.ticket":"Order / Ticket",
@@ -2082,6 +2083,7 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.loading":"불러오는 중…",
     "admin.invoices.loadFailed":"인보이스를 불러오지 못했습니다",
     "admin.invoices.notConfigured":"서버에 Invoice Service가 설정되지 않았습니다.",
+    "admin.invoices.authExpired":"로그인이 만료되었습니다. 로그아웃 후 다시 로그인한 뒤 인보이스를 열어 주세요.",
     "admin.invoices.col.issued":"발행일",
     "admin.invoices.col.no":"인보이스 번호",
     "admin.invoices.col.ticket":"주문 / Ticket",
@@ -11439,6 +11441,31 @@ function renderAdminPassword(){
 // ===========================================================
 const AdminActions = {
   // ===== FORMAL INVOICES (Invoice Service proxy) =====
+  async _adminIdToken(forceRefresh=false){
+    if(!auth?.currentUser) throw new Error("Not signed in");
+    return auth.currentUser.getIdToken(!!forceRefresh);
+  },
+
+  async _fetchInvoicesApi(pathWithQuery, opts={}){
+    const attempt = async (force) => {
+      const idToken = await this._adminIdToken(force);
+      return fetch(pathWithQuery, {
+        ...opts,
+        headers: {
+          ...(opts.headers || {}),
+          Authorization: "Bearer " + idToken,
+          Accept: opts.accept || "application/json",
+        },
+      });
+    };
+    let res = await attempt(true);
+    // One retry with a fresh token if the first looks expired.
+    if(res.status === 401){
+      res = await attempt(true);
+    }
+    return res;
+  },
+
   async loadInvoices(){
     if(!State.user || State.user.role !== "admin") return;
     ensureInvoiceFilter();
@@ -11455,18 +11482,17 @@ const AdminActions = {
     State.invoiceError = "";
     renderAdminInvoices();
     try{
-      if(!auth?.currentUser) throw new Error("Not signed in");
-      const idToken = await auth.currentUser.getIdToken(false);
       const qs = new URLSearchParams({ limit: "100", kind: "all" });
       qs.set("from", State.invoiceFilter.from);
       qs.set("to", State.invoiceFilter.to);
-      const res = await fetch("/api/invoices?" + qs.toString(), {
-        headers: { Authorization: "Bearer " + idToken, Accept: "application/json" },
-      });
+      const res = await this._fetchInvoicesApi("/api/invoices?" + qs.toString());
       const data = await res.json().catch(() => ({}));
       if(!res.ok){
         if(data.code === "INVOICE_NOT_CONFIGURED"){
           throw new Error(I.t("admin.invoices.notConfigured"));
+        }
+        if(res.status === 401){
+          throw new Error(I.t("admin.invoices.authExpired"));
         }
         throw new Error(data.error || I.t("admin.invoices.loadFailed"));
       }
@@ -11485,13 +11511,13 @@ const AdminActions = {
   async downloadInvoicePdf(id, invoiceNo){
     if(!id) return;
     try{
-      if(!auth?.currentUser) throw new Error("Not signed in");
-      const idToken = await auth.currentUser.getIdToken(false);
-      const res = await fetch("/api/invoices/" + encodeURIComponent(id) + "/pdf", {
-        headers: { Authorization: "Bearer " + idToken },
-      });
+      const res = await this._fetchInvoicesApi(
+        "/api/invoices/" + encodeURIComponent(id) + "/pdf",
+        { accept: "application/pdf,*/*" }
+      );
       if(!res.ok){
         const data = await res.json().catch(() => ({}));
+        if(res.status === 401) throw new Error(I.t("admin.invoices.authExpired"));
         throw new Error(data.error || I.t("admin.invoices.pdfFailed"));
       }
       const blob = await res.blob();
