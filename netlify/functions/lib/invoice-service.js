@@ -10,6 +10,7 @@
 // ============================================================
 
 const crypto = require('node:crypto');
+const { resolveInvoiceMoney } = require('./invoice-money');
 
 function configured() {
   return Boolean(
@@ -21,22 +22,15 @@ function configured() {
 
 /**
  * Build webhook payload from a DealMai order (direct ChillPay or ontheline).
+ * Amount + currency are always the settlement pair (never display JPY + THB amount).
  * @param {object} order
  * @param {object} [extra]
  */
 function buildPayload(order, extra = {}) {
   const site = process.env.INVOICE_SITE_CODE || 'dealmai';
-  const currency = String(
-    order.gatewayCurrency || order.currency || extra.currency || 'USD',
-  ).toUpperCase();
-  const amountRaw =
-    order.gatewayAmount ??
-    order.amountOriginal ??
-    order.total ??
-    order.amountUsd ??
-    extra.amount ??
-    0;
-  const amount = Number(amountRaw);
+  const money = resolveInvoiceMoney(order, extra);
+  const amount = money.amount;
+  const currency = money.currency;
   const transactionId = String(
     order.gatewayOrderNo || order.gatewayRef || order.ref || extra.transactionId || '',
   );
@@ -50,17 +44,21 @@ function buildPayload(order, extra = {}) {
     ? order.items.map((i) => i.title || i.name || i.code).filter(Boolean).join(', ')
     : '';
 
-  return {
+  const payload = {
     site,
     event: 'transaction.completed',
     occurredAt,
     transactionId: transactionId || ticketNo,
     ticketNo,
-    amount: Number.isFinite(amount) ? amount.toFixed(2) : String(amountRaw),
+    amount: Number.isFinite(amount) ? amount.toFixed(2) : String(amount),
     currency,
     buyerRef: order.customer?.email || extra.buyerRef || undefined,
     memo: itemTitles || extra.memo || undefined,
   };
+  if (money.source && money.source !== 'settlement') {
+    console.log(`[invoice-service] money source=${money.source} ${payload.amount} ${payload.currency}`);
+  }
+  return payload;
 }
 
 /**

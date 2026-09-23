@@ -106,7 +106,8 @@ async function checkOne(orderRef, order) {
     gateway:         gw.id,
     gatewayRef:      check.gatewayRef || order.gatewayRef || null,
     gatewayStatus:   check.rawStatus,
-    gatewayCurrency: check.currency || order.gatewayCurrency || null,
+    gatewayCurrency: order.gatewayCurrency || check.currency || null,
+    gatewayCallbackCurrency: check.currency || null,
     gatewayData:     check.fields || {},
     gatewayStatusCheckedAt: now
   };

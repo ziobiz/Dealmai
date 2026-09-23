@@ -222,11 +222,30 @@ exports.handler = async (event) => {
   //   "transaction_id": "ot_xxx",
   //   "customer": { "name": "...", "email": "...", "country": "TH" },
   //   "amount": 5020.00,
-  //   "currency": "USD"
+  //   "currency": "USD",
+  //   optional DP split:
+  //   "settlementAmount" / "settlementCurrency"  — real charge (invoice)
+  //   "displayAmount" / "displayCurrency"        — shopper-facing only
   // }
   const customer = payload.customer || {};
-  const amount = Number(payload.amount || 0);
-  const currency = (payload.currency || 'USD').toString().trim().toUpperCase();
+  const { resolveInvoiceMoney } = require('./lib/invoice-money');
+  const money = resolveInvoiceMoney(
+    {
+      settlementAmount: payload.settlementAmount ?? payload.settlement_amount,
+      settlementCurrency: payload.settlementCurrency || payload.settlement_currency,
+      chargeAmount: payload.chargeAmount ?? payload.charge_amount,
+      chargeCurrency: payload.chargeCurrency || payload.charge_currency,
+      amountOriginal: payload.amount,
+      currency: payload.currency,
+      displayAmount: payload.displayAmount ?? payload.display_amount ?? payload.shopperDisplayAmount,
+      displayCurrency: payload.displayCurrency || payload.display_currency || payload.shopperDisplayCurrency,
+    },
+    {},
+  );
+  const amount = Number(money.amount || 0);
+  const currency = (money.currency || 'USD').toString().trim().toUpperCase();
+  const displayCurrency = money.displayCurrency || null;
+  const displayAmount = money.displayAmount != null ? Number(money.displayAmount) : null;
   const txId = payload.transaction_id || `ot_${Date.now()}`;
   // partner / paygw codes sent by ontheline. Both are validated against the
   // admin-managed reference lists (ontheline_partners / ontheline_paygw).
@@ -666,8 +685,12 @@ exports.handler = async (event) => {
       subtotal: usdAmount,
       vat,
       total,
-      currency,                      // original currency code
-      amountOriginal: amount,        // amount in the original currency
+      currency,                      // settlement currency (invoice / FX base)
+      amountOriginal: amount,        // settlement amount in that currency
+      settlementCurrency: currency,
+      settlementAmount: amount,
+      displayCurrency: displayCurrency || null,
+      displayAmount: displayAmount != null && Number.isFinite(displayAmount) ? displayAmount : null,
       amountUsd: usdAmount,          // converted USD (credit math + display)
       fxRate, fxSource,
       partner: partnerCode,
@@ -850,13 +873,29 @@ exports.handler = async (event) => {
         ref,
         gatewayRef: txId,
         gatewayOrderNo: txId,
+        gatewayCurrency: currency,
+        gatewayAmount: amount,
+        settlementCurrency: currency,
+        settlementAmount: amount,
+        displayCurrency: displayCurrency || null,
+        displayAmount: displayAmount,
         total: amount,
         amountOriginal: amount,
         currency,
         customer,
         items: matched.items,
         paidAt: now,
-      }, { source: 'ontheline', transactionId: txId, ticketNo: ref, amount, currency });
+      }, {
+        source: 'ontheline',
+        transactionId: txId,
+        ticketNo: ref,
+        amount,
+        currency,
+        settlementCurrency: currency,
+        settlementAmount: amount,
+        displayCurrency: displayCurrency || undefined,
+        displayAmount: displayAmount != null ? displayAmount : undefined,
+      });
     } catch (e) {
       console.error('[ontheline-webhook] Invoice Service failed (non-fatal):', e);
     }

@@ -210,7 +210,8 @@ exports.handler = async (event) => {
       gateway:         gw.id,
       gatewayRef:      info.gatewayRef || order.gatewayRef || null,
       gatewayStatus:   info.rawStatus,
-      gatewayCurrency: info.currency || order.gatewayCurrency || null,
+      gatewayCurrency: order.gatewayCurrency || info.currency || null,
+      gatewayCallbackCurrency: info.currency || null,
       gatewayData:     info.fields || {},
       gatewayRawCallback: params
     };
@@ -229,7 +230,7 @@ exports.handler = async (event) => {
         chillpayCurrentTime:        f.currentTime || null,
         chillpayPaymentDescription: f.paymentDescription || null,
         chillpayCreditCardToken:    f.creditCardToken || null,
-        chillpayCurrency:           info.currency || order.chillpayCurrency || null,
+        chillpayCurrency:           order.chillpayCurrency || info.currency || null,
         chillpayCustomerName:       f.customerName || null,
         chillpayChannelCode:        f.channelCode || order.paymentChannel || null,
         chillpayRawCallback:        params
