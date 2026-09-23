@@ -4458,7 +4458,7 @@ const State = {
   orderCurrencyFilter: "",        // ontheline currency code filter ("" = all)
   orderPageSize: 50,              // number | "all"
   orderPage: 1,
-  invoiceDateFilter: "month",     // same modes as orders
+  invoiceDateFilter: "today",     // default: today's invoices
   invoicePageSize: 50,
   invoicePage: 1,
   smtpAccounts: [],
@@ -8304,7 +8304,16 @@ const App = {
     const pane = document.getElementById("adm-"+name);
     if(pane) pane.style.display = "block";
     if(name === "orders") renderAdminOrders();
-    if(name === "invoices") renderAdminInvoices();
+    if(name === "invoices"){
+      // Entering Invoice always opens on today's range.
+      State.invoiceDateFilter = "today";
+      const todayRange = computeInvoiceDateRange();
+      ensureInvoiceFilter();
+      State.invoiceFilter.from = todayRange.from;
+      State.invoiceFilter.to = todayRange.to;
+      State.invoiceLoadedOnce = false;
+      renderAdminInvoices();
+    }
     if(name === "customers") renderAdminCustomers();
     if(name === "staff") renderAdminStaff();
     if(name === "packages") renderAdminPackages();
@@ -9111,7 +9120,7 @@ function ymdLocal(d){
 function computeInvoiceDateRange(){
   const now = new Date();
   let rangeStart, rangeEnd;
-  const mode = State.invoiceDateFilter || "month";
+  const mode = State.invoiceDateFilter || "today";
   if(mode === "today"){
     rangeStart = new Date(now); rangeStart.setHours(0,0,0,0);
     rangeEnd = new Date(now); rangeEnd.setHours(23,59,59,999);
@@ -9137,7 +9146,7 @@ function computeInvoiceDateRange(){
 
 function ensureInvoiceFilter(){
   if(!State.invoiceFilter) State.invoiceFilter = { from: "", to: "" };
-  if(!State.invoiceDateFilter) State.invoiceDateFilter = "month";
+  if(!State.invoiceDateFilter) State.invoiceDateFilter = "today";
   if(State.invoicePageSize == null) State.invoicePageSize = 50;
   if(!State.invoicePage) State.invoicePage = 1;
   if(!State.invoiceFilter.from || !State.invoiceFilter.to){
@@ -9202,9 +9211,9 @@ function renderAdminInvoices(){
   if(!el) return;
   ensureInvoiceFilter();
   if(!Array.isArray(State.invoiceRows)) State.invoiceRows = [];
-  const mode = State.invoiceDateFilter || "month";
+  const mode = State.invoiceDateFilter || "today";
   const range = computeInvoiceDateRange();
-  // Presets sync From/To; custom Period keeps the user's chosen range.
+  // Presets sync From/To; custom range (manual From/To) keeps the user's dates.
   if(mode !== "period"){
     State.invoiceFilter.from = range.from;
     State.invoiceFilter.to = range.to;
@@ -9281,7 +9290,9 @@ function renderAdminInvoices(){
           <tbody>${bodyRows}</tbody>
         </table>`);
 
-  const dateBtnClass = (mode) => "filter-pill" + ((State.invoiceDateFilter || "month") === mode ? " on" : "");
+  const dateBtnClass = (mode) => "filter-pill" + ((State.invoiceDateFilter || "today") === mode ? " on" : "");
+  // When From/To were edited manually, no preset is active.
+  const presetOn = (State.invoiceDateFilter || "today") !== "period";
 
   el.innerHTML = `
     <div class="admin-head">
@@ -9296,24 +9307,21 @@ function renderAdminInvoices(){
       <div class="stat"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.count"))}</div><div class="val">${allRows.length}<span class="unit">${escapeHtml(I.t("admin.invoices.unit.count"))}</span></div></div>
       <div class="stat accent"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.amount"))}</div><div class="val${Object.keys(invoiceTotalsByCurrency).length > 1 ? " val-multi" : ""}">${renderCurrencyTotalsHtml(invoiceTotalsByCurrency)}</div></div>
     </div>
-    <div class="filters" style="margin:0 0 10px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-      <span style="font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;margin-right:6px">${escapeHtml(I.t("admin.orders.date.label"))}</span>
-      <button class="${dateBtnClass('today')}" onclick="AdminActions.setInvoiceDateFilter('today')">${escapeHtml(I.t("admin.orders.date.today"))}</button>
-      <button class="${dateBtnClass('yesterday')}" onclick="AdminActions.setInvoiceDateFilter('yesterday')">${escapeHtml(I.t("admin.orders.date.yesterday"))}</button>
-      <button class="${dateBtnClass('month')}" onclick="AdminActions.setInvoiceDateFilter('month')">${escapeHtml(I.t("admin.orders.date.month"))}</button>
-      <button class="${dateBtnClass('lastMonth')}" onclick="AdminActions.setInvoiceDateFilter('lastMonth')">${escapeHtml(I.t("admin.orders.date.lastMonth"))}</button>
-      <button class="${dateBtnClass('period')}" onclick="AdminActions.setInvoiceDateFilter('period')">${escapeHtml(I.t("admin.orders.date.period"))}</button>
-    </div>
-    <div class="filters" style="margin:0 0 14px 0;display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end">
+    <div class="filters invoice-date-row" style="margin:0 0 14px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
       <label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">
         ${escapeHtml(I.t("admin.invoices.from"))}
-        <input type="date" id="inv-from" class="orders-dropdown-filter" value="${escapeHtml(from)}" onchange="AdminActions.setInvoiceCustomDate('from', this.value)" style="min-width:150px" />
+        <input type="date" id="inv-from" class="orders-dropdown-filter" value="${escapeHtml(from)}" onchange="AdminActions.setInvoiceCustomDate('from', this.value)" style="min-width:140px" />
       </label>
       <label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">
         ${escapeHtml(I.t("admin.invoices.to"))}
-        <input type="date" id="inv-to" class="orders-dropdown-filter" value="${escapeHtml(to)}" onchange="AdminActions.setInvoiceCustomDate('to', this.value)" style="min-width:150px" />
+        <input type="date" id="inv-to" class="orders-dropdown-filter" value="${escapeHtml(to)}" onchange="AdminActions.setInvoiceCustomDate('to', this.value)" style="min-width:140px" />
       </label>
-      <button class="btn-primary" type="button" onclick="AdminActions.loadInvoices()" style="padding:10px 18px"><span>${escapeHtml(I.t("admin.invoices.search"))}</span><span class="arr">→</span></button>
+      <button class="btn-primary" type="button" onclick="AdminActions.loadInvoices()" style="padding:10px 16px"><span>${escapeHtml(I.t("admin.invoices.search"))}</span><span class="arr">→</span></button>
+      <span style="width:8px" aria-hidden="true"></span>
+      <button class="${presetOn ? dateBtnClass('today') : "filter-pill"}" onclick="AdminActions.setInvoiceDateFilter('today')">${escapeHtml(I.t("admin.orders.date.today"))}</button>
+      <button class="${presetOn ? dateBtnClass('yesterday') : "filter-pill"}" onclick="AdminActions.setInvoiceDateFilter('yesterday')">${escapeHtml(I.t("admin.orders.date.yesterday"))}</button>
+      <button class="${presetOn ? dateBtnClass('month') : "filter-pill"}" onclick="AdminActions.setInvoiceDateFilter('month')">${escapeHtml(I.t("admin.orders.date.month"))}</button>
+      <button class="${presetOn ? dateBtnClass('lastMonth') : "filter-pill"}" onclick="AdminActions.setInvoiceDateFilter('lastMonth')">${escapeHtml(I.t("admin.orders.date.lastMonth"))}</button>
     </div>
     ${err ? `<p class="err" style="margin-bottom:10px">${escapeHtml(err)}</p>` : ""}
     <div class="panel">
@@ -11744,15 +11752,9 @@ const AdminActions = {
   },
 
   setInvoiceDateFilter(mode){
-    State.invoiceDateFilter = mode || "month";
+    const allowed = new Set(["today","yesterday","month","lastMonth"]);
+    State.invoiceDateFilter = allowed.has(mode) ? mode : "today";
     State.invoicePage = 1;
-    if(mode === "period"){
-      // Custom range: focus From/To (already visible) without forcing a reload.
-      renderAdminInvoices();
-      const fromEl = document.getElementById("inv-from");
-      if(fromEl) try{ fromEl.focus(); }catch(_){}
-      return;
-    }
     const range = computeInvoiceDateRange();
     State.invoiceFilter.from = range.from;
     State.invoiceFilter.to = range.to;
@@ -11761,11 +11763,11 @@ const AdminActions = {
 
   setInvoiceCustomDate(which, value){
     ensureInvoiceFilter();
+    // Manual From/To clears preset highlight; Search loads the custom range.
     State.invoiceDateFilter = "period";
     const v = String(value || "").trim();
     if(which === "from") State.invoiceFilter.from = v;
     else if(which === "to") State.invoiceFilter.to = v;
-    // Re-render so Period pill stays active; Search still triggers load.
     renderAdminInvoices();
   },
   setInvoicePageSize(size){
