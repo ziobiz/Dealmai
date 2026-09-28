@@ -757,7 +757,12 @@
   }
   .doc-meta{
     background:var(--surface-2);border:1px solid var(--line);border-radius:11px;
-    padding:13px 15px;margin:0 0 18px;font-size:12px;line-height:1.65;
+    padding:13px 15px;margin:0;font-size:12px;line-height:1.65;
+  }
+  .doc-entities{display:flex;flex-direction:column;gap:12px;margin:0 0 18px}
+  .doc-meta .region{
+    font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--teal-deep);font-weight:600;margin-bottom:8px;
   }
   .doc-meta div{margin-bottom:3px}
   .doc-meta div:last-child{margin-bottom:0}
@@ -1426,7 +1431,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20260923invdate2"></script>
+<script type="module" src="/app.js?v=20260928about1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

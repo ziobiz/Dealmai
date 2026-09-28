@@ -180,7 +180,7 @@ const DEFAULT_STRINGS = {
   "about.readmore":"Read our story",
   "about.modal.kicker":"About Us",
   "about.modal.title":"ONTHELINE & DealMai",
-  "about.modal.sub":"Bridging the gap in global lead engagement · Thailand · Japan · South Korea",
+  "about.modal.sub":"Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea",
   "terms.modal.kicker":"Legal",
   "terms.modal.title":"Terms of Service & Privacy Policy",
   "terms.modal.sub":"DealMai Master Terms of Service & Platform Agreement · Effective July 31, 2026",
@@ -1138,7 +1138,7 @@ const FULL_TRANSLATIONS = {
     "about.readmore":"อ่านเรื่องราวของเรา",
     "about.modal.kicker":"เกี่ยวกับเรา",
     "about.modal.title":"ONTHELINE และ DealMai",
-    "about.modal.sub":"ปิดช่องว่างการดูแลลูกค้าระดับโลก · ไทย · ญี่ปุ่น · เกาหลีใต้",
+    "about.modal.sub":"ปิดช่องว่างการดูแลลูกค้าระดับโลก · ไทย · ญี่ปุ่น · สิงคโปร์ · เกาหลีใต้",
     "terms.modal.kicker":"ข้อกฎหมาย",
     "terms.modal.title":"ข้อกำหนดในการให้บริการและนโยบายความเป็นส่วนตัว",
     "terms.modal.sub":"ข้อกำหนดหลักในการให้บริการและข้อตกลงแพลตฟอร์ม DealMai · มีผล 31 กรกฎาคม 2026",
@@ -2022,7 +2022,7 @@ const FULL_TRANSLATIONS = {
     "about.readmore":"우리 이야기 보기",
     "about.modal.kicker":"회사 소개",
     "about.modal.title":"ONTHELINE & DealMai",
-    "about.modal.sub":"글로벌 리드 응대의 격차를 메우다 · 태국 · 일본 · 한국",
+    "about.modal.sub":"글로벌 리드 응대의 격차를 메우다 · 태국 · 일본 · 싱가포르 · 한국",
     "terms.modal.kicker":"법적 고지",
     "terms.modal.title":"서비스 약관 및 개인정보 처리방침",
     "terms.modal.sub":"DealMai 마스터 서비스 약관 및 플랫폼 계약 · 2026년 7월 31일 시행",
@@ -2912,7 +2912,7 @@ const FULL_TRANSLATIONS = {
     "about.readmore":"私たちの物語を読む",
     "about.modal.kicker":"会社概要",
     "about.modal.title":"ONTHELINE & DealMai",
-    "about.modal.sub":"グローバルなリード対応の溝を埋める · タイ · 日本 · 韓国",
+    "about.modal.sub":"グローバルなリード対応の溝を埋める · タイ · 日本 · シンガポール · 韓国",
     "terms.modal.kicker":"法的事項",
     "terms.modal.title":"利用規約およびプライバシーポリシー",
     "terms.modal.sub":"DealMai マスター利用規約およびプラットフォーム契約 · 2026年7月31日施行",
@@ -3993,7 +3993,7 @@ const FULL_TRANSLATIONS = {
     "about.readmore":"了解我们的故事",
     "about.modal.kicker":"关于我们",
     "about.modal.title":"ONTHELINE 与 DealMai",
-    "about.modal.sub":"连接全球客户互动 · 泰国 · 日本 · 韩国",
+    "about.modal.sub":"连接全球客户互动 · 泰国 · 日本 · 新加坡 · 韩国",
     "terms.modal.kicker":"法律条款",
     "terms.modal.title":"服务条款与隐私政策",
     "terms.modal.sub":"DealMai 服务条款与平台协议 · 2026 年 7 月 31 日生效",
@@ -5802,11 +5802,41 @@ const ABOUT_DOC = {
     p2: "To solve this, we developed <strong>DealMai</strong> — an advanced AI automation platform designed to transform instant messaging channels into high-converting sales pipelines.",
     p3: "By unifying channels like WhatsApp, Instagram, LINE, and web chat with probability-based conversational AI, DealMai delivers human-like interactions that qualify prospects, schedule appointments, and reactivate dormant leads automatically. Operating 24/7 and adapting seamlessly to each brand's unique voice, DealMai ensures every customer inquiry becomes a measurable growth opportunity — without extra operational burden.",
     h2: "One Global Identity",
-    p4: "As part of the <strong>ONTHELINE</strong> corporate group — with operations spanning Thailand, Japan, and South Korea — we combine regional market expertise with cutting-edge technology infrastructure. Whether you are a local enterprise or a cross-border business, ONTHELINE provides the AI tools and stability needed to scale your customer communications effortlessly across Asia and beyond.",
+    p4: "As part of the <strong>ONTHELINE</strong> corporate group — with operations spanning Thailand, Japan, Singapore, and South Korea — we combine regional market expertise with cutting-edge technology infrastructure. Whether you are a local enterprise or a cross-border business, ONTHELINE provides the AI tools and stability needed to scale your customer communications effortlessly across Asia and beyond.",
     callout: "<strong>Every inquiry, a growth opportunity.</strong> Nonstop engagement across the channels your customers already use — in your brand's exact voice.",
     lblEntity: "Entity", lblReg: "Registration", lblAddr: "Address",
     lblSupport: "Support", lblPlatform: "Platform",
-    addr: "299/724, Sukhaphiban 5 Road, Anusawari Sub-district, Bang Khen District, Bangkok, Thailand"
+    entities: [
+      {
+        region: "Thailand",
+        name: "ONTHELINE INTERNATIONAL CO., LTD.",
+        reg: "0105564016423",
+        addr: "299/724, Sukhaphiban 5 Road, Anusawari Sub-district, Bang Khen District, Bangkok 10220, Thailand",
+        support: "support@dealmai.com",
+        platform: "dealmai.com · app.dealmai.com"
+      },
+      {
+        region: "Japan",
+        name: "ONTHELINE JAPAN LTD.",
+        reg: "0111-01-090261",
+        addr: "9th Floor, Nippon Building Annex, 1-2-18 Nihonbashi Kayabacho, Chuo-ku, Tokyo 103-0025, Japan",
+        support: "info@onthelinejp.com"
+      },
+      {
+        region: "Singapore",
+        name: "ONTHELINE INTERNATIONAL PTE. LTD.",
+        reg: "202436921D",
+        addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
+        support: "jimmy@onthelinem.com"
+      },
+      {
+        region: "HQ Korea",
+        name: "ONTHELINE CO., LTD.",
+        reg: "386-86-01488",
+        addr: "806, AU Tower, 68, Achasan-ro, Seongdong-gu, Seoul 04782, Republic of Korea",
+        support: "ip@onthelinem.com"
+      }
+    ]
   },
   th: {
     h1: "ปิดช่องว่างการดูแลลูกค้าทั่วโลก",
@@ -5814,11 +5844,41 @@ const ABOUT_DOC = {
     p2: "เราจึงพัฒนา <strong>DealMai</strong> ขึ้นมา แพลตฟอร์มระบบอัตโนมัติด้วย AI ที่ออกแบบมาเพื่อเปลี่ยนช่องทางแชทให้กลายเป็นสายการขายที่ปิดดีลได้จริง",
     p3: "ด้วยการรวมช่องทางอย่าง WhatsApp, Instagram, LINE และแชทบนเว็บไซต์ เข้ากับ AI สนทนาที่ทำงานบนหลักความน่าจะเป็น DealMai จึงพูดคุยได้เป็นธรรมชาติเหมือนมนุษย์ คัดกรองผู้ที่สนใจจริง นัดหมายให้อัตโนมัติ และดึงลูกค้าที่เงียบหายไปให้กลับมาสนใจอีกครั้ง ทำงานตลอด 24 ชั่วโมง และปรับน้ำเสียงให้เข้ากับเอกลักษณ์ของแต่ละแบรนด์ได้อย่างแนบเนียน DealMai จึงทำให้ทุกการติดต่อของลูกค้ากลายเป็นโอกาสเติบโตที่วัดผลได้ โดยไม่เพิ่มภาระให้ทีมงาน",
     h2: "หนึ่งเดียวในระดับสากล",
-    p4: "ในฐานะส่วนหนึ่งของกลุ่มบริษัท <strong>ONTHELINE</strong> ซึ่งมีการดำเนินงานครอบคลุมประเทศไทย ญี่ปุ่น และเกาหลีใต้ เราผสานความเชี่ยวชาญตลาดในแต่ละภูมิภาคเข้ากับโครงสร้างพื้นฐานเทคโนโลยีที่ล้ำสมัย ไม่ว่าคุณจะเป็นธุรกิจท้องถิ่นหรือธุรกิจข้ามพรมแดน ONTHELINE พร้อมมอบเครื่องมือ AI และความมั่นคงของระบบ เพื่อให้คุณขยายการสื่อสารกับลูกค้าได้อย่างราบรื่นทั่วเอเชียและไกลกว่านั้น",
+    p4: "ในฐานะส่วนหนึ่งของกลุ่มบริษัท <strong>ONTHELINE</strong> ซึ่งมีการดำเนินงานครอบคลุมประเทศไทย ญี่ปุ่น สิงคโปร์ และเกาหลีใต้ เราผสานความเชี่ยวชาญตลาดในแต่ละภูมิภาคเข้ากับโครงสร้างพื้นฐานเทคโนโลยีที่ล้ำสมัย ไม่ว่าคุณจะเป็นธุรกิจท้องถิ่นหรือธุรกิจข้ามพรมแดน ONTHELINE พร้อมมอบเครื่องมือ AI และความมั่นคงของระบบ เพื่อให้คุณขยายการสื่อสารกับลูกค้าได้อย่างราบรื่นทั่วเอเชียและไกลกว่านั้น",
     callout: "<strong>ทุกการติดต่อ คือโอกาสเติบโต</strong> ดูแลลูกค้าอย่างต่อเนื่องบนช่องทางที่พวกเขาใช้อยู่แล้ว ด้วยน้ำเสียงของแบรนด์คุณเอง",
     lblEntity: "นิติบุคคล", lblReg: "เลขทะเบียน", lblAddr: "ที่อยู่",
     lblSupport: "ฝ่ายสนับสนุน", lblPlatform: "แพลตฟอร์ม",
-    addr: "299/724 ถนนสุขาภิบาล 5 แขวงอนุสาวรีย์ เขตบางเขน กรุงเทพมหานคร ประเทศไทย"
+    entities: [
+      {
+        region: "ประเทศไทย",
+        name: "ONTHELINE INTERNATIONAL CO., LTD.",
+        reg: "0105564016423",
+        addr: "299/724 ถนนสุขาภิบาล 5 แขวงอนุสาวรีย์ เขตบางเขน กรุงเทพมหานคร 10220 ประเทศไทย",
+        support: "support@dealmai.com",
+        platform: "dealmai.com · app.dealmai.com"
+      },
+      {
+        region: "ญี่ปุ่น",
+        name: "ONTHELINE JAPAN LTD.",
+        reg: "0111-01-090261",
+        addr: "ชั้น 9 Nippon Building Annex, 1-2-18 Nihonbashi Kayabacho, Chuo-ku, โตเกียว 103-0025 ญี่ปุ่น",
+        support: "info@onthelinejp.com"
+      },
+      {
+        region: "สิงคโปร์",
+        name: "ONTHELINE INTERNATIONAL PTE. LTD.",
+        reg: "202436921D",
+        addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
+        support: "jimmy@onthelinem.com"
+      },
+      {
+        region: "สำนักงานใหญ่ เกาหลี",
+        name: "ONTHELINE CO., LTD.",
+        reg: "386-86-01488",
+        addr: "806, AU Tower, 68 Achasan-ro, Seongdong-gu, 서울 04782 สาธารณรัฐเกาหลี",
+        support: "ip@onthelinem.com"
+      }
+    ]
   },
   ko: {
     h1: "글로벌 리드 응대의 격차를 메우다",
@@ -5826,11 +5886,41 @@ const ABOUT_DOC = {
     p2: "이를 해결하기 위해 우리는 <strong>DealMai</strong>를 개발했습니다. 메시징 채널을 높은 전환율의 영업 파이프라인으로 바꾸도록 설계된 고도화된 AI 자동화 플랫폼입니다.",
     p3: "WhatsApp, Instagram, LINE, 웹 채팅과 같은 채널을 확률 기반 대화형 AI와 통합함으로써, DealMai는 사람처럼 자연스러운 상호작용으로 잠재 고객을 선별하고, 일정을 예약하며, 휴면 리드를 자동으로 재활성화합니다. 24시간 연중무휴로 작동하고 각 브랜드 고유의 목소리에 매끄럽게 적응하여, DealMai는 모든 고객 문의를 측정 가능한 성장 기회로 만듭니다 — 추가적인 운영 부담 없이.",
     h2: "하나의 글로벌 아이덴티티",
-    p4: "태국, 일본, 한국에 걸쳐 사업을 운영하는 <strong>ONTHELINE</strong> 기업 그룹의 일원으로서, 우리는 지역 시장에 대한 전문성과 최첨단 기술 인프라를 결합합니다. 로컬 기업이든 국경을 넘나드는 비즈니스든, ONTHELINE은 아시아를 넘어 고객 커뮤니케이션을 손쉽게 확장하는 데 필요한 AI 도구와 안정성을 제공합니다.",
+    p4: "태국, 일본, 싱가포르, 한국에 걸쳐 사업을 운영하는 <strong>ONTHELINE</strong> 기업 그룹의 일원으로서, 우리는 지역 시장에 대한 전문성과 최첨단 기술 인프라를 결합합니다. 로컬 기업이든 국경을 넘나드는 비즈니스든, ONTHELINE은 아시아를 넘어 고객 커뮤니케이션을 손쉽게 확장하는 데 필요한 AI 도구와 안정성을 제공합니다.",
     callout: "<strong>모든 문의가 성장의 기회입니다.</strong> 고객이 이미 사용 중인 채널에서, 브랜드 고유의 목소리 그대로 멈춤 없이 응대합니다.",
     lblEntity: "법인", lblReg: "등록번호", lblAddr: "주소",
     lblSupport: "지원", lblPlatform: "플랫폼",
-    addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, 방콕, 태국"
+    entities: [
+      {
+        region: "태국",
+        name: "ONTHELINE INTERNATIONAL CO., LTD.",
+        reg: "0105564016423",
+        addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, Bangkok 10220, 태국",
+        support: "support@dealmai.com",
+        platform: "dealmai.com · app.dealmai.com"
+      },
+      {
+        region: "일본",
+        name: "ONTHELINE JAPAN LTD.",
+        reg: "0111-01-090261",
+        addr: "니혼빌딩 별관 9층, 1-2-18 Nihonbashi Kayabacho, Chuo-ku, Tokyo 103-0025, 일본",
+        support: "info@onthelinejp.com"
+      },
+      {
+        region: "싱가포르",
+        name: "ONTHELINE INTERNATIONAL PTE. LTD.",
+        reg: "202436921D",
+        addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
+        support: "jimmy@onthelinem.com"
+      },
+      {
+        region: "본사 한국",
+        name: "ONTHELINE CO., LTD.",
+        reg: "386-86-01488",
+        addr: "서울특별시 성동구 아차산로 68 AU타워 806호 (우 04782), 대한민국",
+        support: "ip@onthelinem.com"
+      }
+    ]
   },
   ja: {
     h1: "グローバルなリード対応の溝を埋める",
@@ -5838,11 +5928,41 @@ const ABOUT_DOC = {
     p2: "この課題を解決するために、私たちは <strong>DealMai</strong> を開発しました。メッセージングチャネルを高い成約率を生む営業パイプラインへと変えるために設計された、先進的なAI自動化プラットフォームです。",
     p3: "WhatsApp、Instagram、LINE、ウェブチャットなどのチャネルを確率ベースの対話型AIと統合することで、DealMai は人間のように自然なやり取りを実現し、見込み客を選別し、アポイントを設定し、休眠リードを自動的に再活性化します。24時間365日稼働し、各ブランド固有のトーンにも滑らかに適応するため、DealMai はすべての顧客からの問い合わせを、運用負荷を増やすことなく測定可能な成長機会へと変えます。",
     h2: "ひとつのグローバル・アイデンティティ",
-    p4: "タイ・日本・韓国にまたがって事業を展開する <strong>ONTHELINE</strong> グループの一員として、私たちは各地域の市場に対する知見と最先端の技術基盤を融合させています。ローカル企業でも国境を越えるビジネスでも、ONTHELINE はアジアとその先へ顧客コミュニケーションを無理なく拡張するために必要なAIツールと安定性を提供します。",
+    p4: "タイ・日本・シンガポール・韓国にまたがって事業を展開する <strong>ONTHELINE</strong> グループの一員として、私たちは各地域の市場に対する知見と最先端の技術基盤を融合させています。ローカル企業でも国境を越えるビジネスでも、ONTHELINE はアジアとその先へ顧客コミュニケーションを無理なく拡張するために必要なAIツールと安定性を提供します。",
     callout: "<strong>すべての問い合わせが、成長の機会に。</strong> お客様がすでに使っているチャネルで、御社のブランドボイスのまま、途切れることなく対応します。",
     lblEntity: "法人", lblReg: "登記番号", lblAddr: "所在地",
     lblSupport: "サポート", lblPlatform: "プラットフォーム",
-    addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, バンコク, タイ"
+    entities: [
+      {
+        region: "タイ",
+        name: "ONTHELINE INTERNATIONAL CO., LTD.",
+        reg: "0105564016423",
+        addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, Bangkok 10220, タイ",
+        support: "support@dealmai.com",
+        platform: "dealmai.com · app.dealmai.com"
+      },
+      {
+        region: "日本",
+        name: "ONTHELINE JAPAN LTD.",
+        reg: "0111-01-090261",
+        addr: "〒103-0025 東京都中央区日本橋茅場町1-2-18 日本ビル別館9階",
+        support: "info@onthelinejp.com"
+      },
+      {
+        region: "シンガポール",
+        name: "ONTHELINE INTERNATIONAL PTE. LTD.",
+        reg: "202436921D",
+        addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
+        support: "jimmy@onthelinem.com"
+      },
+      {
+        region: "本社 韓国",
+        name: "ONTHELINE CO., LTD.",
+        reg: "386-86-01488",
+        addr: "〒04782 大韓民国ソウル特別市城東区峨嵯山路68 AUタワー806号",
+        support: "ip@onthelinem.com"
+      }
+    ]
   },
   zh: {
     h1: "弥合全球线索响应的鸿沟",
@@ -5850,11 +5970,41 @@ const ABOUT_DOC = {
     p2: "因此我们打造了 <strong>DealMai</strong> —— 一套先进的 AI 自动化平台，把消息渠道变成高转化销售管道。",
     p3: "通过把 WhatsApp、Instagram、LINE 与网站聊天等渠道，与概率式对话 AI 结合，DealMai 能像真人一样自然互动、筛选潜在客户、自动预约，并重新激活沉睡线索。7×24 小时运行，且能贴合各品牌语气，在不增加团队负担的前提下，把每一次咨询变成可衡量的增长机会。",
     h2: "同一全球身份",
-    p4: "作为业务覆盖泰国、日本与韩国的 <strong>ONTHELINE</strong> 集团一员，我们把区域市场经验与先进技术基础设施结合。无论本地企业还是跨境业务，ONTHELINE 都能提供扩展客户沟通所需的 AI 工具与稳定能力。",
+    p4: "作为业务覆盖泰国、日本、新加坡与韩国的 <strong>ONTHELINE</strong> 集团一员，我们把区域市场经验与先进技术基础设施结合。无论本地企业还是跨境业务，ONTHELINE 都能提供扩展客户沟通所需的 AI 工具与稳定能力。",
     callout: "<strong>每一次咨询，都是增长机会。</strong> 在客户已经使用的渠道上，以您品牌的语气全天候响应。",
     lblEntity: "主体", lblReg: "注册号", lblAddr: "地址",
     lblSupport: "支持", lblPlatform: "平台",
-    addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, 曼谷, 泰国"
+    entities: [
+      {
+        region: "泰国",
+        name: "ONTHELINE INTERNATIONAL CO., LTD.",
+        reg: "0105564016423",
+        addr: "299/724, Sukhaphiban 5 Road, Anusawari, Bang Khen, Bangkok 10220, 泰国",
+        support: "support@dealmai.com",
+        platform: "dealmai.com · app.dealmai.com"
+      },
+      {
+        region: "日本",
+        name: "ONTHELINE JAPAN LTD.",
+        reg: "0111-01-090261",
+        addr: "日本东京都中央区日本桥茅场町1-2-18 日本大厦别馆9层（邮编 103-0025）",
+        support: "info@onthelinejp.com"
+      },
+      {
+        region: "新加坡",
+        name: "ONTHELINE INTERNATIONAL PTE. LTD.",
+        reg: "202436921D",
+        addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
+        support: "jimmy@onthelinem.com"
+      },
+      {
+        region: "总部 韩国",
+        name: "ONTHELINE CO., LTD.",
+        reg: "386-86-01488",
+        addr: "大韩民国首尔特别市城东区峨嵯山路68 AU大厦806号（邮编 04782）",
+        support: "ip@onthelinem.com"
+      }
+    ]
   }
 };
 
@@ -5863,7 +6013,22 @@ const Docs = {
   // language they have selected, falling back to English for anything missing.
   aboutUs(){
     const lang = (State.currentLang && ABOUT_DOC[State.currentLang]) ? State.currentLang : "en";
-    const d = ABOUT_DOC[lang];
+    const d = ABOUT_DOC[lang] || ABOUT_DOC.en;
+    const entities = Array.isArray(d.entities) ? d.entities : (ABOUT_DOC.en.entities || []);
+    const entityHtml = entities.map(e => {
+      const platformLine = e.platform
+        ? `<div><span class="k">${d.lblPlatform}</span>${escapeHtml(e.platform)}</div>`
+        : "";
+      return `
+        <div class="doc-meta">
+          <div class="region">${escapeHtml(e.region)}</div>
+          <div><span class="k">${d.lblEntity}</span>${escapeHtml(e.name)}</div>
+          <div><span class="k">${d.lblReg}</span>${escapeHtml(e.reg)}</div>
+          <div><span class="k">${d.lblAddr}</span>${escapeHtml(e.addr)}</div>
+          <div><span class="k">${d.lblSupport}</span><a href="mailto:${escapeHtml(e.support)}">${escapeHtml(e.support)}</a></div>
+          ${platformLine}
+        </div>`;
+    }).join("");
     return `
       <h3>${d.h1}</h3>
       <p>${d.p1}</p>
@@ -5875,13 +6040,7 @@ const Docs = {
 
       <div class="doc-callout good">${d.callout}</div>
 
-      <div class="doc-meta">
-        <div><span class="k">${d.lblEntity}</span>ONTHELINE INTERNATIONAL COMPANY LIMITED</div>
-        <div><span class="k">${d.lblReg}</span>0105564016423</div>
-        <div><span class="k">${d.lblAddr}</span>${d.addr}</div>
-        <div><span class="k">${d.lblSupport}</span><a href="mailto:support@dealmai.com">support@dealmai.com</a></div>
-        <div><span class="k">${d.lblPlatform}</span>dealmai.com · app.dealmai.com</div>
-      </div>`;
+      <div class="doc-entities">${entityHtml}</div>`;
   },
 
   terms(){
