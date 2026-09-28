@@ -5818,21 +5818,18 @@ const ABOUT_DOC = {
       {
         region: "Japan",
         name: "ONTHELINE JAPAN LTD.",
-        reg: "0111-01-090261",
         addr: "9th Floor, Nippon Building Annex, 1-2-18 Nihonbashi Kayabacho, Chuo-ku, Tokyo 103-0025, Japan",
         support: "info@onthelinejp.com"
       },
       {
         region: "Singapore",
         name: "ONTHELINE INTERNATIONAL PTE. LTD.",
-        reg: "202436921D",
         addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
         support: "jimmy@onthelinem.com"
       },
       {
         region: "HQ Korea",
         name: "ONTHELINE CO., LTD.",
-        reg: "386-86-01488",
         addr: "806, AU Tower, 68, Achasan-ro, Seongdong-gu, Seoul 04782, Republic of Korea",
         support: "ip@onthelinem.com"
       }
@@ -5860,21 +5857,18 @@ const ABOUT_DOC = {
       {
         region: "ญี่ปุ่น",
         name: "ONTHELINE JAPAN LTD.",
-        reg: "0111-01-090261",
         addr: "ชั้น 9 Nippon Building Annex, 1-2-18 Nihonbashi Kayabacho, Chuo-ku, โตเกียว 103-0025 ญี่ปุ่น",
         support: "info@onthelinejp.com"
       },
       {
         region: "สิงคโปร์",
         name: "ONTHELINE INTERNATIONAL PTE. LTD.",
-        reg: "202436921D",
         addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
         support: "jimmy@onthelinem.com"
       },
       {
         region: "สำนักงานใหญ่ เกาหลี",
         name: "ONTHELINE CO., LTD.",
-        reg: "386-86-01488",
         addr: "806, AU Tower, 68 Achasan-ro, Seongdong-gu, 서울 04782 สาธารณรัฐเกาหลี",
         support: "ip@onthelinem.com"
       }
@@ -5902,21 +5896,18 @@ const ABOUT_DOC = {
       {
         region: "일본",
         name: "ONTHELINE JAPAN LTD.",
-        reg: "0111-01-090261",
         addr: "니혼빌딩 별관 9층, 1-2-18 Nihonbashi Kayabacho, Chuo-ku, Tokyo 103-0025, 일본",
         support: "info@onthelinejp.com"
       },
       {
         region: "싱가포르",
         name: "ONTHELINE INTERNATIONAL PTE. LTD.",
-        reg: "202436921D",
         addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
         support: "jimmy@onthelinem.com"
       },
       {
         region: "본사 한국",
         name: "ONTHELINE CO., LTD.",
-        reg: "386-86-01488",
         addr: "서울특별시 성동구 아차산로 68 AU타워 806호 (우 04782), 대한민국",
         support: "ip@onthelinem.com"
       }
@@ -5944,21 +5935,18 @@ const ABOUT_DOC = {
       {
         region: "日本",
         name: "ONTHELINE JAPAN LTD.",
-        reg: "0111-01-090261",
         addr: "〒103-0025 東京都中央区日本橋茅場町1-2-18 日本ビル別館9階",
         support: "info@onthelinejp.com"
       },
       {
         region: "シンガポール",
         name: "ONTHELINE INTERNATIONAL PTE. LTD.",
-        reg: "202436921D",
         addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
         support: "jimmy@onthelinem.com"
       },
       {
         region: "本社 韓国",
         name: "ONTHELINE CO., LTD.",
-        reg: "386-86-01488",
         addr: "〒04782 大韓民国ソウル特別市城東区峨嵯山路68 AUタワー806号",
         support: "ip@onthelinem.com"
       }
@@ -5986,21 +5974,18 @@ const ABOUT_DOC = {
       {
         region: "日本",
         name: "ONTHELINE JAPAN LTD.",
-        reg: "0111-01-090261",
         addr: "日本东京都中央区日本桥茅场町1-2-18 日本大厦别馆9层（邮编 103-0025）",
         support: "info@onthelinejp.com"
       },
       {
         region: "新加坡",
         name: "ONTHELINE INTERNATIONAL PTE. LTD.",
-        reg: "202436921D",
         addr: "182 Cecil Street, #23-02, Frasers Tower, Singapore 069547",
         support: "jimmy@onthelinem.com"
       },
       {
         region: "总部 韩国",
         name: "ONTHELINE CO., LTD.",
-        reg: "386-86-01488",
         addr: "大韩民国首尔特别市城东区峨嵯山路68 AU大厦806号（邮编 04782）",
         support: "ip@onthelinem.com"
       }
@@ -6016,6 +6001,9 @@ const Docs = {
     const d = ABOUT_DOC[lang] || ABOUT_DOC.en;
     const entities = Array.isArray(d.entities) ? d.entities : (ABOUT_DOC.en.entities || []);
     const entityHtml = entities.map(e => {
+      const regLine = e.reg
+        ? `<div><span class="k">${d.lblReg}</span>${escapeHtml(e.reg)}</div>`
+        : "";
       const platformLine = e.platform
         ? `<div><span class="k">${d.lblPlatform}</span>${escapeHtml(e.platform)}</div>`
         : "";
@@ -6023,7 +6011,7 @@ const Docs = {
         <div class="doc-meta">
           <div class="region">${escapeHtml(e.region)}</div>
           <div><span class="k">${d.lblEntity}</span>${escapeHtml(e.name)}</div>
-          <div><span class="k">${d.lblReg}</span>${escapeHtml(e.reg)}</div>
+          ${regLine}
           <div><span class="k">${d.lblAddr}</span>${escapeHtml(e.addr)}</div>
           <div><span class="k">${d.lblSupport}</span><a href="mailto:${escapeHtml(e.support)}">${escapeHtml(e.support)}</a></div>
           ${platformLine}
