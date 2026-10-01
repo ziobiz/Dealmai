@@ -12,7 +12,7 @@
 <link rel="icon" type="image/svg+xml" data-brand-favicon-default href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230bb6c4'/%3E%3Cstop offset='1' stop-color='%23d6299b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='38' font-weight='700' fill='%23fff' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root{
     /* Warm off-white palette */
@@ -44,10 +44,50 @@
 
     --kanit:'Kanit', system-ui, sans-serif;
     --mono:'JetBrains Mono', monospace;
+    /* Popular CJK faces for public KO / JA pages */
+    --font-ko:'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    --font-ja:'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+    --font-ui:var(--kanit);
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  html,body{background:var(--bg);color:var(--text);font-family:var(--kanit);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  html,body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   body{min-height:100vh;min-height:100dvh;position:relative}
+
+  /* Public marketing pages only — swap to popular KO/JA fonts when that language is active.
+     Admin / checkout / account keep the default Kanit stack. */
+  html[lang="ko"] #page-home,
+  html[lang="ko"] #page-packages,
+  html[lang="ko"] #page-about,
+  html[lang="ko"] #page-media,
+  html[lang="ko"] .topbar,
+  html[lang="ko"] .drawer,
+  html[lang="ko"] .footer{
+    --font-ui:var(--font-ko);
+    --kanit:var(--font-ko);
+    font-family:var(--font-ko);
+  }
+  html[lang="ja"] #page-home,
+  html[lang="ja"] #page-packages,
+  html[lang="ja"] #page-about,
+  html[lang="ja"] #page-media,
+  html[lang="ja"] .topbar,
+  html[lang="ja"] .drawer,
+  html[lang="ja"] .footer{
+    --font-ui:var(--font-ja);
+    --kanit:var(--font-ja);
+    font-family:var(--font-ja);
+  }
+  html[lang="ko"] #page-home,
+  html[lang="ko"] #page-packages,
+  html[lang="ko"] #page-about,
+  html[lang="ko"] #page-media,
+  html[lang="ja"] #page-home,
+  html[lang="ja"] #page-packages,
+  html[lang="ja"] #page-about,
+  html[lang="ja"] #page-media{
+    word-break:keep-all;
+    line-break:strict;
+  }
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-weight:inherit}
   input,select,textarea{font-family:inherit;color:inherit;font-weight:inherit}
@@ -1517,7 +1557,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001media1"></script>
+<script type="module" src="/app.js?v=20261001font1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
