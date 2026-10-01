@@ -32,8 +32,9 @@ _migration_export/
 # Large PR media (deployed to VPS separately; PDF/SVG may be committed)
 media/*.mp4
 media/*.MP4
-!media/deck-cover.svg
+<!media/deck-cover.svg
 !media/dealmai-deck.pdf
+!media/logo-dealmai.png
 !media/README.md
 
 _import_*.py

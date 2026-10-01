@@ -5580,27 +5580,35 @@ const DEFAULT_LOGO_DATA_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUA
 function applyBranding(){
   const name = (State.branding.siteName || DEFAULT_BRANDING.siteName).trim() || DEFAULT_BRANDING.siteName;
   const tagline = (State.branding.siteTagline || DEFAULT_BRANDING.siteTagline || "AI SALES AGENT PLATFORM").trim();
+  // Prefer admin-uploaded logo; otherwise the Deal Mai lockup in /media.
+  const logo = State.branding.logoDataUrl || "/media/logo-dealmai.png";
 
-  // 1. Public header uses typographic brand + tagline (marketing design).
-  //    Custom uploaded logos stay in Branding for favicon / future use, but the
-  //    topbar mark stays text so the public chrome matches the designed header.
+  // 1. Header — always show the brand logo image when available.
   const logoEl    = document.getElementById("brand-logo-img");
   const fallback  = document.getElementById("brand-wordmark-fallback");
   const glyphEl   = document.getElementById("brand-glyph");
   const textEl    = document.getElementById("brand-text");
   const taglineEl = document.getElementById("brand-tagline");
   if(taglineEl) taglineEl.textContent = tagline;
-  if(logoEl) logoEl.style.display = "none";
-  if(fallback) fallback.style.display = "flex";
-  if(glyphEl) glyphEl.textContent = (name[0] || "D").toUpperCase();
-  if(textEl){
-    const parts = name.split(/\s+/);
-    if(parts.length >= 2){
-      const first = parts[0];
-      const rest = parts.slice(1).join(" ");
-      textEl.innerHTML = `${escapeHtml(first)} <em>${escapeHtml(rest)}</em>`;
-    }else{
-      textEl.textContent = name;
+
+  if(logo && logoEl){
+    logoEl.src = logo;
+    logoEl.alt = name;
+    logoEl.style.display = "block";
+    if(fallback) fallback.style.display = "none";
+  }else{
+    if(logoEl) logoEl.style.display = "none";
+    if(fallback) fallback.style.display = "flex";
+    if(glyphEl) glyphEl.textContent = (name[0] || "D").toUpperCase();
+    if(textEl){
+      const parts = name.split(/\s+/);
+      if(parts.length >= 2){
+        const first = parts[0];
+        const rest = parts.slice(1).join(" ");
+        textEl.innerHTML = `${escapeHtml(first)} <em>${escapeHtml(rest)}</em>`;
+      }else{
+        textEl.textContent = name;
+      }
     }
   }
 

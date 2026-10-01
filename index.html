@@ -156,7 +156,7 @@
     border-right:none;
   }
   .topbar-brand .wordmark{justify-content:flex-start;max-width:100%}
-  .topbar-brand .brand-logo-img{height:40px;max-width:180px}
+  .topbar-brand .brand-logo-img{height:48px;max-width:220px;width:auto;object-fit:contain}
   .topbar-mid{
     display:flex;align-items:center;justify-content:center;gap:16px;min-width:0;
     padding:0;
@@ -1170,7 +1170,7 @@
     <!-- Brand sits in the same 240px column as the admin sidebar, centered. -->
     <div class="topbar-brand">
       <div class="wordmark" onclick="App.go('home')">
-        <img class="brand-logo-img" id="brand-logo-img" alt="" style="display:none;height:40px;max-width:180px;object-fit:contain" />
+        <img class="brand-logo-img" id="brand-logo-img" alt="Deal Mai" style="display:none;height:48px;max-width:220px;object-fit:contain" />
         <div class="brand-wordmark-fallback" id="brand-wordmark-fallback">
           <div class="wordmark-glyph" id="brand-glyph">D</div>
           <div class="wordmark-copy">
@@ -1675,7 +1675,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001strip3"></script>
+<script type="module" src="/app.js?v=20261001logo1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
