@@ -187,10 +187,10 @@ const DEFAULT_STRINGS = {
   "home.about.title-html":'Built by <span class="grad">ONTHELINE</span>',
   "home.about.lede":"DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea. We turn every inquiry into a growth opportunity, around the clock.",
   "home.about.cta":"About Us",
-  "about.page.kicker":"About Us",
+  "about.page.kicker":"04 / ABOUT US",
   "about.page.title":"ONTHELINE & DealMai",
   "about.page.sub":"Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea",
-  "media.page.kicker":"Media",
+  "media.page.kicker":"03 / MEDIA",
   "media.page.title-html":'See DealMai <span class="grad">in action</span>',
   "media.page.lede":"Watch the introduction video and download the presentation deck. Share them with your team or partners.",
   "media.video.title":"Introduction video",
@@ -1168,10 +1168,10 @@ const FULL_TRANSLATIONS = {
     "home.about.title-html":'Built by <span class="grad">ONTHELINE</span>',
     "home.about.lede":"DealMai คือแพลตฟอร์ม AI ช่วยขายของกลุ่ม ONTHELINE — ไทย ญี่ปุ่น สิงคโปร์ เกาหลีใต้ เปลี่ยนทุกการติดต่อเป็นโอกาสเติบโต 24 ชม.",
     "home.about.cta":"เกี่ยวกับเรา",
-    "about.page.kicker":"เกี่ยวกับเรา",
+    "about.page.kicker":"04 / ABOUT US",
     "about.page.title":"ONTHELINE & DealMai",
     "about.page.sub":"ปิดช่องว่างการดูแลลูกค้าระดับโลก · ไทย · ญี่ปุ่น · สิงคโปร์ · เกาหลีใต้",
-    "media.page.kicker":"สื่อ",
+    "media.page.kicker":"03 / MEDIA",
     "media.page.title-html":'See DealMai <span class="grad">in action</span>',
     "media.page.lede":"ดูวิดีโอแนะนำ ดาวน์โหลดเอกสารนำเสนอ และแชร์ให้ทีมหรือพาร์ทเนอร์",
     "media.video.title":"วิดีโอแนะนำ",
@@ -2075,10 +2075,10 @@ const FULL_TRANSLATIONS = {
     "home.about.title-html":'Built by <span class="grad">ONTHELINE</span>',
     "home.about.lede":"DealMai는 ONTHELINE 그룹의 AI 영업 플랫폼입니다. 태국·일본·싱가포르·한국에서, 모든 문의를 성장 기회로.",
     "home.about.cta":"회사 소개",
-    "about.page.kicker":"회사 소개",
+    "about.page.kicker":"04 / ABOUT US",
     "about.page.title":"ONTHELINE & DealMai",
     "about.page.sub":"글로벌 리드 응대의 격차를 메우다 · 태국 · 일본 · 싱가포르 · 한국",
-    "media.page.kicker":"미디어",
+    "media.page.kicker":"03 / MEDIA",
     "media.page.title-html":'See DealMai <span class="grad">in action</span>',
     "media.page.lede":"소개 영상 시청, 자료 다운로드, 팀·파트너와 공유까지.",
     "media.video.title":"소개 영상",
@@ -2988,10 +2988,10 @@ const FULL_TRANSLATIONS = {
     "home.about.title-html":'Built by <span class="grad">ONTHELINE</span>',
     "home.about.lede":"DealMaiはONTHELINEグループのAI営業プラットフォーム。タイ・日本・シンガポール・韓国で、問い合わせを成長機会に変えます。",
     "home.about.cta":"会社概要",
-    "about.page.kicker":"会社概要",
+    "about.page.kicker":"04 / ABOUT US",
     "about.page.title":"ONTHELINE & DealMai",
     "about.page.sub":"グローバルなリード対応の溝を埋める · タイ · 日本 · シンガポール · 韓国",
-    "media.page.kicker":"メディア",
+    "media.page.kicker":"03 / MEDIA",
     "media.page.title-html":'See DealMai <span class="grad">in action</span>',
     "media.page.lede":"紹介動画の視聴、資料のダウンロード、チームやパートナーへの共有。",
     "media.video.title":"紹介動画",
@@ -4092,10 +4092,10 @@ const FULL_TRANSLATIONS = {
     "home.about.title-html":'Built by <span class="grad">ONTHELINE</span>',
     "home.about.lede":"DealMai 是 ONTHELINE 集团的 AI 销售平台，覆盖泰国、日本、新加坡与韩国。让每一次咨询成为增长机会。",
     "home.about.cta":"关于我们",
-    "about.page.kicker":"关于我们",
+    "about.page.kicker":"04 / ABOUT US",
     "about.page.title":"ONTHELINE & DealMai",
     "about.page.sub":"连接全球客户互动 · 泰国 · 日本 · 新加坡 · 韩国",
-    "media.page.kicker":"媒体",
+    "media.page.kicker":"03 / MEDIA",
     "media.page.title-html":'See DealMai <span class="grad">in action</span>',
     "media.page.lede":"观看介绍视频、下载演示文稿，并与团队或合作伙伴分享。",
     "media.video.title":"介绍视频",
@@ -4881,6 +4881,8 @@ const I = {
     "home.about.title-html",
     "about.page.title",
     "about.modal.title",
+    "about.page.kicker",
+    "media.page.kicker",
     "media.page.title-html",
   ]),
 
@@ -7395,13 +7397,12 @@ const App = {
         </div>
       `).join("");
     }
-    // Marquee
-    const strip = document.getElementById("strip-track");
-    if(strip){
-      const items = ["WhatsApp","Instagram","Messenger","Web Chat","Voice Notes","PDF Understanding","Calendar Booking","Comment-to-DM"];
-      const html = `<span>${items.join("</span><span>")}</span>`;
-      strip.innerHTML = html + html;
-    }
+    // Marquee — fill every strip track (Home mid-page + Built-by blocks on Home/Package/Media)
+    const items = ["WhatsApp","Instagram","Messenger","Web Chat","Voice Notes","PDF Understanding","Calendar Booking","Comment-to-DM"];
+    const stripHtml = `<span>${items.join("</span><span>")}</span>`;
+    document.querySelectorAll(".strip-track").forEach(strip => {
+      strip.innerHTML = stripHtml + stripHtml;
+    });
     // Terminal
     const term = document.getElementById("hero-terminal");
     if(term){

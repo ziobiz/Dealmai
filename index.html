@@ -279,6 +279,7 @@
 
   /* Strip */
   .strip{margin-top:48px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;background:var(--bg-2)}
+  .strip + .site-about-cta{padding-top:48px}
   .strip-track{display:flex;gap:40px;padding:14px 0;white-space:nowrap;animation:scroll 55s linear infinite;font-family:var(--mono);font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.16em}
   .strip-track span{display:flex;align-items:center;gap:40px}
   .strip-track span::after{content:"◆";color:var(--teal)}
@@ -1245,9 +1246,9 @@
     <div class="cap-grid" id="cap-grid"></div>
   </div>
 
+  <div class="strip" aria-hidden="true"><div class="strip-track"></div></div>
   <div class="section site-about-cta" id="about-home">
     <div class="section-head">
-      <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
       <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
       <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
     </div>
@@ -1281,9 +1282,9 @@
     </div>
   </div>
 
+  <div class="strip" aria-hidden="true"><div class="strip-track"></div></div>
   <div class="section site-about-cta">
     <div class="section-head">
-      <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
       <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
       <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
     </div>
@@ -1298,7 +1299,7 @@
 <section class="page" id="page-media">
   <div class="section media-page">
     <div class="section-head">
-      <div class="num" data-i18n="media.page.kicker">Media</div>
+      <div class="num" lang="en" data-i18n="media.page.kicker">03 / MEDIA</div>
       <h2 lang="en" data-i18n="media.page.title-html">See DealMai <span class="grad">in action</span></h2>
       <p class="lede" data-i18n="media.page.lede">Watch the introduction video and download the presentation deck.</p>
     </div>
@@ -1342,9 +1343,9 @@
     </div>
   </div>
 
+  <div class="strip" aria-hidden="true"><div class="strip-track"></div></div>
   <div class="section site-about-cta">
     <div class="section-head">
-      <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
       <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
       <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
     </div>
@@ -1359,7 +1360,7 @@
 <section class="page" id="page-about">
   <div class="section about-page">
     <div class="section-head">
-      <div class="num" data-i18n="about.page.kicker">About Us</div>
+      <div class="num" lang="en" data-i18n="about.page.kicker">04 / ABOUT US</div>
       <h2 lang="en" data-i18n="about.page.title">ONTHELINE & DealMai</h2>
       <p class="lede" data-i18n="about.page.sub">Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea</p>
     </div>
@@ -1622,7 +1623,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001enlock1"></script>
+<script type="module" src="/app.js?v=20261001strip1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
