@@ -6858,6 +6858,8 @@ const App = {
     if(name === "media") this.renderMediaPage();
     // Home keeps a short About CTA section (hero unchanged).
     if(name === "home") this.renderHome();
+    // Keep feature marquees filled on every public marketing page.
+    if(name === "home" || name === "packages" || name === "media") this.fillFeatureStrips();
     if(name === "checkout") this.renderCheckout();
     if(name === "confirm" && !State.lastOrder){ this.go("packages", opts); return; }
     if(name === "payment-result") this.renderPaymentResult();
@@ -6869,7 +6871,8 @@ const App = {
     // (i.e. the back/forward button is what got us here).
     if(!fromPopstate){
       try{
-        const url = (name === "home") ? "/" : "/" + name;
+        // Use /press for the Media page so it does not collide with static /media/* assets.
+        const url = (name === "home") ? "/" : (name === "media" ? "/press" : ("/" + name));
         const state = { page: name };
         const cur = history.state;
         if(!(cur && cur.page === name)){
@@ -7283,6 +7286,15 @@ const App = {
     el.innerHTML = Docs.aboutUs();
   },
 
+  fillFeatureStrips(){
+    const items = ["WhatsApp","Instagram","Messenger","Web Chat","Voice Notes","PDF Understanding","Calendar Booking","Comment-to-DM"];
+    const one = `<span>${items.join("</span><span>")}</span>`;
+    const html = one + one;
+    document.querySelectorAll(".strip-track").forEach(strip => {
+      strip.innerHTML = html;
+    });
+  },
+
   renderMediaPage(){
     I.apply();
   },
@@ -7397,12 +7409,8 @@ const App = {
         </div>
       `).join("");
     }
-    // Marquee — fill every strip track (Home mid-page + Built-by blocks on Home/Package/Media)
-    const items = ["WhatsApp","Instagram","Messenger","Web Chat","Voice Notes","PDF Understanding","Calendar Booking","Comment-to-DM"];
-    const stripHtml = `<span>${items.join("</span><span>")}</span>`;
-    document.querySelectorAll(".strip-track").forEach(strip => {
-      strip.innerHTML = stripHtml + stripHtml;
-    });
+    // Marquee — fill every feature strip (Home / Package / Media)
+    this.fillFeatureStrips();
     // Terminal
     const term = document.getElementById("hero-terminal");
     if(term){
@@ -14887,7 +14895,7 @@ async function boot(){
     const hash = (location.hash || "").replace(/^#/, "");
 
     const KNOWN_ROUTES = new Set([
-      "packages", "about", "media", "checkout", "confirm", "payment-result",
+      "packages", "about", "media", "press", "checkout", "confirm", "payment-result",
       "account", "orders", "admin"
     ]);
 
@@ -14913,7 +14921,11 @@ async function boot(){
       }
     } else if(path !== "/" && path !== "/index.html"){
       const seg = path.replace(/^\//, "").replace(/\/$/, "").split("/")[0];
-      if(KNOWN_ROUTES.has(seg)){
+      // /press is the public Media page URL (avoids colliding with static /media/*).
+      // Exact /media (no file) also maps to the Media page for older links.
+      if(seg === "press" || seg === "media"){
+        App.go("media");
+      } else if(KNOWN_ROUTES.has(seg)){
         App.go(seg);
       }
     } else {
@@ -14937,11 +14949,17 @@ async function boot(){
     const genericOpen = document.getElementById("generic-modal")?.classList.contains("show");
     const drawerOpen  = document.getElementById("drawer")?.classList.contains("open");
 
+    const pageUrl = (page) => {
+      if(!page || page === "home") return "/";
+      if(page === "media") return "/press";
+      return "/" + page;
+    };
+
     const rePushIfState = () => {
       if(ev.state){
         const url = ev.state.adminTab
           ? "/admin/" + ev.state.adminTab
-          : (ev.state.page === "home" ? "/" : "/" + ev.state.page);
+          : pageUrl(ev.state.page);
         try{ history.pushState(ev.state, "", url); }catch(e){}
       }
     };

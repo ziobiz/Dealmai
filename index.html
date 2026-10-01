@@ -802,7 +802,8 @@
     overflow:hidden;background:#fff;cursor:pointer;transition:border-color .15s, transform .15s;
   }
   .media-cover:hover{border-color:var(--teal);transform:translateY(-1px)}
-  .media-cover img{width:100%;height:auto;display:block}
+  .media-cover img,
+  .media-cover svg{width:100%;height:auto;display:block;vertical-align:top}
   .footer-by{display:inline-block;margin-left:6px;color:var(--muted);letter-spacing:.08em}
 
   /* ===== Document modal (Terms / About) ===== */
@@ -1235,7 +1236,7 @@
     </div>
   </div>
 
-  <div class="strip"><div class="strip-track" id="strip-track"></div></div>
+  <div class="strip"><div class="strip-track" id="strip-track" data-feature-strip></div></div>
 
   <div class="section">
     <div class="section-head">
@@ -1246,7 +1247,7 @@
     <div class="cap-grid" id="cap-grid"></div>
   </div>
 
-  <div class="strip" aria-hidden="true"><div class="strip-track"></div></div>
+  <div class="strip" aria-hidden="true"><div class="strip-track" data-feature-strip></div></div>
   <div class="section site-about-cta" id="about-home">
     <div class="section-head">
       <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
@@ -1267,7 +1268,11 @@
       <h2 lang="en" data-i18n="pkg.title-html">Three ways to <span class="grad">launch.</span></h2>
       <p class="lede" data-i18n="pkg.lede">Three ways to begin. Each provisioned instantly with credentials by email.</p>
     </div>
+  </div>
 
+  <div class="strip" aria-hidden="true"><div class="strip-track" data-feature-strip></div></div>
+
+  <div class="section">
     <div class="tabs">
       <button class="tab active" data-tab="credit" onclick="App.setTab('credit')"><span class="tab-n">01</span><span data-i18n="pkg.tab.credit">Credit Purchase</span></button>
       <button class="tab" data-tab="onetime" onclick="App.setTab('onetime')"><span class="tab-n">02</span><span data-i18n="pkg.tab.onetime">1-Time Access</span></button>
@@ -1282,7 +1287,7 @@
     </div>
   </div>
 
-  <div class="strip" aria-hidden="true"><div class="strip-track"></div></div>
+  <div class="strip" aria-hidden="true"><div class="strip-track" data-feature-strip></div></div>
   <div class="section site-about-cta">
     <div class="section-head">
       <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
@@ -1303,6 +1308,11 @@
       <h2 lang="en" data-i18n="media.page.title-html">See DealMai <span class="grad">in action</span></h2>
       <p class="lede" data-i18n="media.page.lede">Watch the introduction video and download the presentation deck.</p>
     </div>
+  </div>
+
+  <div class="strip" aria-hidden="true"><div class="strip-track" data-feature-strip></div></div>
+
+  <div class="section media-page">
     <div class="media-grid">
       <div class="media-card media-video">
         <div class="media-card-h">
@@ -1326,7 +1336,30 @@
           <p data-i18n="media.pdf.hint">PDF · Autonomous Rev Engine overview</p>
         </div>
         <button type="button" class="media-cover" onclick="App.previewMediaPdf()" aria-label="Preview presentation">
-          <img src="/media/deck-cover.svg" alt="DealMai presentation cover" />
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="DealMai presentation cover">
+            <defs>
+              <linearGradient id="deck-bg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#f6f2ea"/>
+                <stop offset="1" stop-color="#efe9db"/>
+              </linearGradient>
+              <linearGradient id="deck-g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#0bb6c4"/>
+                <stop offset="1" stop-color="#d6299b"/>
+              </linearGradient>
+            </defs>
+            <rect width="960" height="540" rx="28" fill="url(#deck-bg)"/>
+            <circle cx="820" cy="90" r="140" fill="#0bb6c4" opacity="0.10"/>
+            <circle cx="120" cy="460" r="160" fill="#d6299b" opacity="0.08"/>
+            <rect x="56" y="56" width="848" height="428" rx="22" fill="#fffbf3" stroke="rgba(120,100,60,0.16)" stroke-width="2"/>
+            <rect x="56" y="56" width="848" height="6" rx="3" fill="url(#deck-g)"/>
+            <text x="96" y="140" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="4" fill="#069aa6">PRESENTATION</text>
+            <text x="96" y="220" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700" fill="#1f2126">DealMai</text>
+            <text x="96" y="280" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#3a3d44">The Autonomous Rev Engine</text>
+            <text x="96" y="340" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#6b6f78">AI Sales Agent · 24/7 lead engagement</text>
+            <rect x="96" y="390" width="180" height="44" rx="22" fill="url(#deck-g)"/>
+            <text x="186" y="418" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" fill="#ffffff">PDF DECK</text>
+            <text x="864" y="450" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#9a9eaa">by ONTHELINE INTERNATIONAL</text>
+          </svg>
         </button>
         <div class="media-pdf-actions">
           <button type="button" class="btn-primary" onclick="App.previewMediaPdf()">
@@ -1343,7 +1376,7 @@
     </div>
   </div>
 
-  <div class="strip" aria-hidden="true"><div class="strip-track"></div></div>
+  <div class="strip" aria-hidden="true"><div class="strip-track" data-feature-strip></div></div>
   <div class="section site-about-cta">
     <div class="section-head">
       <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
@@ -1623,7 +1656,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001strip1"></script>
+<script type="module" src="/app.js?v=20261001strip2"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
