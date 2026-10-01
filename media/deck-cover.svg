@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-label="DealMai presentation cover">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f6f2ea"/>
+      <stop offset="1" stop-color="#efe9db"/>
+    </linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0bb6c4"/>
+      <stop offset="1" stop-color="#d6299b"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" rx="28" fill="url(#bg)"/>
+  <circle cx="820" cy="90" r="140" fill="#0bb6c4" opacity="0.10"/>
+  <circle cx="120" cy="460" r="160" fill="#d6299b" opacity="0.08"/>
+  <rect x="56" y="56" width="848" height="428" rx="22" fill="#fffbf3" stroke="rgba(120,100,60,0.16)" stroke-width="2"/>
+  <rect x="56" y="56" width="848" height="6" rx="3" fill="url(#g)"/>
+  <text x="96" y="140" font-family="Arial, Helvetica, sans-serif" font-size="18" letter-spacing="4" fill="#069aa6">PRESENTATION</text>
+  <text x="96" y="220" font-family="Arial, Helvetica, sans-serif" font-size="54" font-weight="700" fill="#1f2126">DealMai</text>
+  <text x="96" y="280" font-family="Arial, Helvetica, sans-serif" font-size="28" fill="#3a3d44">The Autonomous Rev Engine</text>
+  <text x="96" y="340" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#6b6f78">AI Sales Agent · 24/7 lead engagement</text>
+  <rect x="96" y="390" width="180" height="44" rx="22" fill="url(#g)"/>
+  <text x="186" y="418" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="600" fill="#ffffff">PDF DECK</text>
+  <text x="864" y="450" text-anchor="end" font-family="Arial, Helvetica, sans-serif" font-size="14" fill="#9a9eaa">by ONTHELINE INTERNATIONAL</text>
+</svg>

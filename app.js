@@ -50,7 +50,7 @@ function langShort(code){
 const DEFAULT_STRINGS = {
   // Navigation
   "nav.home":"Home",
-  "nav.packages":"Packages",
+  "nav.packages":"Package",
   "nav.about":"About Us",
   "nav.media":"Media",
   "nav.admin":"Admin",
@@ -198,7 +198,11 @@ const DEFAULT_STRINGS = {
   "media.pdf.title":"Presentation deck",
   "media.pdf.hint":"PDF · Autonomous Rev Engine overview",
   "media.pdf.open":"Open PDF",
+  "media.pdf.preview":"Preview",
   "media.pdf.download":"Download",
+  "media.share":"Share",
+  "media.share.copied":"Link copied",
+  "media.share.failed":"Could not share",
   "footer.by":"by ONTHELINE INTERNATIONAL",
   "terms.modal.kicker":"Legal",
   "terms.modal.title":"Terms of Service & Privacy Policy",
@@ -1175,7 +1179,11 @@ const FULL_TRANSLATIONS = {
     "media.pdf.title":"เอกสารนำเสนอ",
     "media.pdf.hint":"PDF · ภาพรวม Autonomous Rev Engine",
     "media.pdf.open":"เปิด PDF",
+    "media.pdf.preview":"ดูตัวอย่าง",
     "media.pdf.download":"ดาวน์โหลด",
+    "media.share":"แชร์",
+    "media.share.copied":"คัดลอกลิงก์แล้ว",
+    "media.share.failed":"แชร์ไม่สำเร็จ",
     "footer.by":"โดย ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"ข้อกฎหมาย",
     "terms.modal.title":"ข้อกำหนดในการให้บริการและนโยบายความเป็นส่วนตัว",
@@ -2078,7 +2086,11 @@ const FULL_TRANSLATIONS = {
     "media.pdf.title":"프레젠테이션 자료",
     "media.pdf.hint":"PDF · Autonomous Rev Engine 개요",
     "media.pdf.open":"PDF 열기",
+    "media.pdf.preview":"미리보기",
     "media.pdf.download":"다운로드",
+    "media.share":"공유",
+    "media.share.copied":"링크가 복사되었습니다",
+    "media.share.failed":"공유하지 못했습니다",
     "footer.by":"by ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"법적 고지",
     "terms.modal.title":"서비스 약관 및 개인정보 처리방침",
@@ -2987,7 +2999,11 @@ const FULL_TRANSLATIONS = {
     "media.pdf.title":"プレゼン資料",
     "media.pdf.hint":"PDF · Autonomous Rev Engine 概要",
     "media.pdf.open":"PDFを開く",
+    "media.pdf.preview":"プレビュー",
     "media.pdf.download":"ダウンロード",
+    "media.share":"共有",
+    "media.share.copied":"リンクをコピーしました",
+    "media.share.failed":"共有できませんでした",
     "footer.by":"by ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"法的事項",
     "terms.modal.title":"利用規約およびプライバシーポリシー",
@@ -4087,7 +4103,11 @@ const FULL_TRANSLATIONS = {
     "media.pdf.title":"演示文稿",
     "media.pdf.hint":"PDF · Autonomous Rev Engine 概览",
     "media.pdf.open":"打开 PDF",
+    "media.pdf.preview":"预览",
     "media.pdf.download":"下载",
+    "media.share":"分享",
+    "media.share.copied":"链接已复制",
+    "media.share.failed":"无法分享",
     "footer.by":"by ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"法律条款",
     "terms.modal.title":"服务条款与隐私政策",
@@ -7238,8 +7258,36 @@ const App = {
   },
 
   renderMediaPage(){
-    // Video/PDF paths are static; i18n labels come from data-i18n via I.apply().
     I.apply();
+  },
+
+  previewMediaPdf(){
+    const url = "/media/dealmai-deck.pdf";
+    window.open(url, "_blank", "noopener,noreferrer");
+  },
+
+  async shareMedia(kind){
+    const isVideo = kind === "video";
+    const path = isVideo ? "/media/dealmai-intro.mp4" : "/media/dealmai-deck.pdf";
+    const url = new URL(path, location.origin).href;
+    const title = isVideo ? I.t("media.video.title") : I.t("media.pdf.title");
+    const text = I.t("media.page.lede");
+    try{
+      if(navigator.share){
+        await navigator.share({ title, text, url });
+        return;
+      }
+    }catch(e){
+      if(e && e.name === "AbortError") return;
+    }
+    try{
+      if(navigator.clipboard?.writeText){
+        await navigator.clipboard.writeText(url);
+        Toast.show(I.t("media.share.copied"), "ok");
+        return;
+      }
+    }catch{}
+    Toast.show(I.t("media.share.failed"), "err");
   },
 
   // Kept for modal deep-links / legacy callers — opens the About page instead.

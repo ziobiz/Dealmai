@@ -767,10 +767,13 @@
   .media-card-h p{font-size:12.5px;color:var(--muted);margin:0 0 14px;font-weight:300}
   .media-video-wrap{border-radius:12px;overflow:hidden;background:#0b1220;aspect-ratio:16/9}
   .media-video-wrap video{width:100%;height:100%;display:block;background:#000}
-  .media-pdf-actions{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
-  .media-pdf-frame{
-    width:100%;min-height:420px;border:1px solid var(--line);border-radius:12px;background:#fff;
+  .media-pdf-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;margin-bottom:0}
+  .media-cover{
+    display:block;width:100%;padding:0;border:1px solid var(--line);border-radius:12px;
+    overflow:hidden;background:#fff;cursor:pointer;transition:border-color .15s, transform .15s;
   }
+  .media-cover:hover{border-color:var(--teal);transform:translateY(-1px)}
+  .media-cover img{width:100%;height:auto;display:block}
   .footer-by{display:inline-block;margin-left:6px;color:var(--muted);letter-spacing:.08em}
 
   /* ===== Document modal (Terms / About) ===== */
@@ -1122,9 +1125,9 @@
     <div class="topbar-mid">
       <nav class="nav-desktop" id="nav-desktop">
         <button data-nav="home" class="active" onclick="App.go('home')" data-i18n="nav.home">Home</button>
-        <button data-nav="packages" onclick="App.go('packages')" data-i18n="nav.packages">Packages</button>
-        <button data-nav="about" onclick="App.go('about')" data-i18n="nav.about">About Us</button>
+        <button data-nav="packages" onclick="App.go('packages')" data-i18n="nav.packages">Package</button>
         <button data-nav="media" onclick="App.go('media')" data-i18n="nav.media">Media</button>
+        <button data-nav="about" onclick="App.go('about')" data-i18n="nav.about">About Us</button>
         <button data-nav="account" id="nav-account-btn" onclick="App.go('account')" data-i18n="nav.account" style="display:none">My Account</button>
         <button data-nav="orders" id="nav-orders-btn" onclick="App.go('orders')" data-i18n="nav.orders" style="display:none">My Orders</button>
         <button data-nav="admin" id="nav-admin-btn" onclick="App.go('admin')" data-i18n="nav.admin" style="display:none">Admin</button>
@@ -1166,9 +1169,9 @@
     <button class="x" onclick="App.closeDrawer()">×</button>
   </div>
   <button class="nav-item" onclick="App.go('home');App.closeDrawer()"><span data-i18n="nav.home">Home</span><span>›</span></button>
-  <button class="nav-item" onclick="App.go('packages');App.closeDrawer()"><span data-i18n="nav.packages">Packages</span><span>›</span></button>
-  <button class="nav-item" onclick="App.go('about');App.closeDrawer()"><span data-i18n="nav.about">About Us</span><span>›</span></button>
+  <button class="nav-item" onclick="App.go('packages');App.closeDrawer()"><span data-i18n="nav.packages">Package</span><span>›</span></button>
   <button class="nav-item" onclick="App.go('media');App.closeDrawer()"><span data-i18n="nav.media">Media</span><span>›</span></button>
+  <button class="nav-item" onclick="App.go('about');App.closeDrawer()"><span data-i18n="nav.about">About Us</span><span>›</span></button>
   <button class="nav-item" id="drawer-account-btn" onclick="App.go('account');App.closeDrawer()" style="display:none"><span data-i18n="nav.account">My Account</span><span>›</span></button>
   <button class="nav-item" id="drawer-orders-btn" onclick="App.go('orders');App.closeDrawer()" style="display:none"><span data-i18n="nav.orders">My Orders</span><span>›</span></button>
   <button class="nav-item" id="drawer-admin-btn" onclick="App.go('admin');App.closeDrawer()" style="display:none"><span data-i18n="nav.admin">Admin</span><span>›</span></button>
@@ -1214,7 +1217,7 @@
     <div class="cap-grid" id="cap-grid"></div>
   </div>
 
-  <div class="section" id="about-home">
+  <div class="section site-about-cta" id="about-home">
     <div class="section-head">
       <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
       <h2 data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
@@ -1223,57 +1226,6 @@
     <div class="home-about-cta">
       <button class="btn-ghost" onclick="App.go('about')"><span data-i18n="home.about.cta">About Us</span><span class="arr">→</span></button>
       <button class="btn-ghost" onclick="App.go('media')"><span data-i18n="nav.media">Media</span><span class="arr">→</span></button>
-    </div>
-  </div>
-</section>
-
-<!-- ===== ABOUT US (dedicated page) ===== -->
-<section class="page" id="page-about">
-  <div class="section about-page">
-    <div class="section-head">
-      <div class="num" data-i18n="about.page.kicker">About Us</div>
-      <h2 data-i18n="about.page.title">ONTHELINE & DealMai</h2>
-      <p class="lede" data-i18n="about.page.sub">Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea</p>
-    </div>
-    <div class="about-page-body" id="about-page-body"></div>
-  </div>
-</section>
-
-<!-- ===== MEDIA (video + PDF) ===== -->
-<section class="page" id="page-media">
-  <div class="section media-page">
-    <div class="section-head">
-      <div class="num" data-i18n="media.page.kicker">Media</div>
-      <h2 data-i18n="media.page.title-html">See DealMai <span class="grad">in action</span></h2>
-      <p class="lede" data-i18n="media.page.lede">Watch the introduction video and download the presentation deck.</p>
-    </div>
-    <div class="media-grid">
-      <div class="media-card media-video">
-        <div class="media-card-h">
-          <h3 data-i18n="media.video.title">Introduction video</h3>
-          <p data-i18n="media.video.hint">Best viewed with sound on</p>
-        </div>
-        <div class="media-video-wrap">
-          <video id="media-intro-video" controls playsinline preload="metadata" poster="">
-            <source src="/media/dealmai-intro.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </div>
-      <div class="media-card media-pdf">
-        <div class="media-card-h">
-          <h3 data-i18n="media.pdf.title">Presentation deck</h3>
-          <p data-i18n="media.pdf.hint">PDF · Autonomous Rev Engine overview</p>
-        </div>
-        <div class="media-pdf-actions">
-          <a class="btn-primary" href="/media/dealmai-deck.pdf" target="_blank" rel="noopener">
-            <span data-i18n="media.pdf.open">Open PDF</span><span class="arr">→</span>
-          </a>
-          <a class="btn-ghost" href="/media/dealmai-deck.pdf" download="DealMai-Presentation.pdf">
-            <span data-i18n="media.pdf.download">Download</span>
-          </a>
-        </div>
-        <iframe class="media-pdf-frame" title="DealMai presentation" src="/media/dealmai-deck.pdf#view=FitH"></iframe>
-      </div>
     </div>
   </div>
 </section>
@@ -1299,6 +1251,91 @@
       <div class="pkg-grid grid-5" id="grid-sub"></div>
       <p style="font-size:13px;color:var(--muted);margin-top:20px;max-width:680px;line-height:1.6;font-style:italic;font-weight:300" data-i18n="pkg.sub.note">Credit on a subscription expires at the end of each cycle. To continue mid-cycle, add a Credit Purchase top-up.</p>
     </div>
+  </div>
+
+  <div class="section site-about-cta">
+    <div class="section-head">
+      <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
+      <h2 data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
+      <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
+    </div>
+    <div class="home-about-cta">
+      <button class="btn-ghost" onclick="App.go('about')"><span data-i18n="home.about.cta">About Us</span><span class="arr">→</span></button>
+      <button class="btn-ghost" onclick="App.go('media')"><span data-i18n="nav.media">Media</span><span class="arr">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== MEDIA (video + presentation) ===== -->
+<section class="page" id="page-media">
+  <div class="section media-page">
+    <div class="section-head">
+      <div class="num" data-i18n="media.page.kicker">Media</div>
+      <h2 data-i18n="media.page.title-html">See DealMai <span class="grad">in action</span></h2>
+      <p class="lede" data-i18n="media.page.lede">Watch the introduction video and download the presentation deck.</p>
+    </div>
+    <div class="media-grid">
+      <div class="media-card media-video">
+        <div class="media-card-h">
+          <h3 data-i18n="media.video.title">Introduction video</h3>
+          <p data-i18n="media.video.hint">Best viewed with sound on</p>
+        </div>
+        <div class="media-video-wrap">
+          <video id="media-intro-video" controls playsinline preload="metadata">
+            <source src="/media/dealmai-intro.mp4" type="video/mp4" />
+          </video>
+        </div>
+        <div class="media-pdf-actions" style="margin-top:14px;margin-bottom:0">
+          <button type="button" class="btn-ghost" onclick="App.shareMedia('video')">
+            <span data-i18n="media.share">Share</span>
+          </button>
+        </div>
+      </div>
+      <div class="media-card media-pdf">
+        <div class="media-card-h">
+          <h3 data-i18n="media.pdf.title">Presentation deck</h3>
+          <p data-i18n="media.pdf.hint">PDF · Autonomous Rev Engine overview</p>
+        </div>
+        <button type="button" class="media-cover" onclick="App.previewMediaPdf()" aria-label="Preview presentation">
+          <img src="/media/deck-cover.svg" alt="DealMai presentation cover" />
+        </button>
+        <div class="media-pdf-actions">
+          <button type="button" class="btn-primary" onclick="App.previewMediaPdf()">
+            <span data-i18n="media.pdf.preview">Preview</span><span class="arr">→</span>
+          </button>
+          <a class="btn-ghost" href="/media/dealmai-deck.pdf" download="DealMai-Presentation.pdf">
+            <span data-i18n="media.pdf.download">Download</span>
+          </a>
+          <button type="button" class="btn-ghost" onclick="App.shareMedia('pdf')">
+            <span data-i18n="media.share">Share</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section site-about-cta">
+    <div class="section-head">
+      <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
+      <h2 data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
+      <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
+    </div>
+    <div class="home-about-cta">
+      <button class="btn-ghost" onclick="App.go('about')"><span data-i18n="home.about.cta">About Us</span><span class="arr">→</span></button>
+      <button class="btn-ghost" onclick="App.go('media')"><span data-i18n="nav.media">Media</span><span class="arr">→</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT US (dedicated page — different layout) ===== -->
+<section class="page" id="page-about">
+  <div class="section about-page">
+    <div class="section-head">
+      <div class="num" data-i18n="about.page.kicker">About Us</div>
+      <h2 data-i18n="about.page.title">ONTHELINE & DealMai</h2>
+      <p class="lede" data-i18n="about.page.sub">Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea</p>
+    </div>
+    <div class="about-page-body" id="about-page-body"></div>
   </div>
 </section>
 
@@ -1557,7 +1594,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001font1"></script>
+<script type="module" src="/app.js?v=20261001media2"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

@@ -29,9 +29,12 @@ _check_*.py
 _migrate_*.py
 _migration_export/
 
-# Large PR media (deployed to VPS separately; PDF may be committed)
+# Large PR media (deployed to VPS separately; PDF/SVG may be committed)
 media/*.mp4
 media/*.MP4
+!media/deck-cover.svg
+!media/dealmai-deck.pdf
+!media/README.md
 
 _import_*.py
 _seed_*.py
