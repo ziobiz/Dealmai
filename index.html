@@ -88,6 +88,34 @@
     word-break:keep-all;
     line-break:strict;
   }
+
+  /* Brand headlines stay English — keep Latin display face + sizing */
+  .hero h1[lang="en"],
+  .section-head h2[lang="en"]{
+    font-family:'Kanit', system-ui, sans-serif;
+    word-break:normal;
+    line-break:auto;
+    overflow-wrap:normal;
+  }
+
+  /* Locale body copy: size for natural reading, not matching EN pixel-for-pixel */
+  html[lang="th"] .hero p.lede{font-size:15.5px;line-height:1.75;max-width:34em}
+  html[lang="ko"] .hero p.lede{font-size:15px;line-height:1.8;max-width:32em}
+  html[lang="ja"] .hero p.lede{font-size:15px;line-height:1.85;max-width:34em}
+  html[lang="zh-CN"] .hero p.lede,
+  html[lang="zh"] .hero p.lede{font-size:15px;line-height:1.8;max-width:32em}
+
+  html[lang="th"] .section-head .lede{font-size:13.5px;line-height:1.7}
+  html[lang="ko"] .section-head .lede{font-size:13.5px;line-height:1.75}
+  html[lang="ja"] .section-head .lede{font-size:13.5px;line-height:1.8}
+  html[lang="zh-CN"] .section-head .lede,
+  html[lang="zh"] .section-head .lede{font-size:13.5px;line-height:1.75}
+
+  html[lang="th"] .cap p,
+  html[lang="ko"] .cap p,
+  html[lang="ja"] .cap p,
+  html[lang="zh-CN"] .cap p,
+  html[lang="zh"] .cap p{font-size:12.5px;line-height:1.65}
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-weight:inherit}
   input,select,textarea{font-family:inherit;color:inherit;font-weight:inherit}
@@ -1187,7 +1215,7 @@
     <div class="hero-grid">
       <div>
         <div class="hero-eyebrow"><span class="pulse"></span><span data-i18n="hero.eyebrow">AI SALES AGENT · LIVE NETWORK</span></div>
-        <h1 data-i18n="hero.title-html"></h1>
+        <h1 lang="en" data-i18n="hero.title-html">Sell<br/>while you <span class="grad">sleep.</span><br/><span class="outline">Literally.</span></h1>
         <p class="lede" data-i18n="hero.lede">An autonomous AI sales agent that qualifies leads, handles objections, books meetings and closes deals — 24 hours a day, in four languages.</p>
         <div class="hero-actions">
           <button class="btn-primary" onclick="App.go('packages')"><span data-i18n="hero.cta-primary">Browse Packages</span><span class="arr">→</span></button>
@@ -1211,7 +1239,7 @@
   <div class="section">
     <div class="section-head">
       <div class="num" data-i18n="caps.num">01 / CAPABILITIES</div>
-      <h2 data-i18n="caps.title-html"></h2>
+      <h2 lang="en" data-i18n="caps.title-html">Not a bot. A <span class="grad">closer.</span></h2>
       <p class="lede" data-i18n="caps.lede">Drop in your URL. The agent reads your products and starts selling in fifteen minutes.</p>
     </div>
     <div class="cap-grid" id="cap-grid"></div>
@@ -1220,7 +1248,7 @@
   <div class="section site-about-cta" id="about-home">
     <div class="section-head">
       <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
-      <h2 data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
+      <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
       <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
     </div>
     <div class="home-about-cta">
@@ -1235,7 +1263,7 @@
   <div class="section">
     <div class="section-head">
       <div class="num" data-i18n="pkg.num">02 / PRICING</div>
-      <h2 data-i18n="pkg.title-html"></h2>
+      <h2 lang="en" data-i18n="pkg.title-html">Three ways to <span class="grad">launch.</span></h2>
       <p class="lede" data-i18n="pkg.lede">Three ways to begin. Each provisioned instantly with credentials by email.</p>
     </div>
 
@@ -1256,7 +1284,7 @@
   <div class="section site-about-cta">
     <div class="section-head">
       <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
-      <h2 data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
+      <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
       <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
     </div>
     <div class="home-about-cta">
@@ -1271,7 +1299,7 @@
   <div class="section media-page">
     <div class="section-head">
       <div class="num" data-i18n="media.page.kicker">Media</div>
-      <h2 data-i18n="media.page.title-html">See DealMai <span class="grad">in action</span></h2>
+      <h2 lang="en" data-i18n="media.page.title-html">See DealMai <span class="grad">in action</span></h2>
       <p class="lede" data-i18n="media.page.lede">Watch the introduction video and download the presentation deck.</p>
     </div>
     <div class="media-grid">
@@ -1317,7 +1345,7 @@
   <div class="section site-about-cta">
     <div class="section-head">
       <div class="num" data-i18n="home.about.num">02 / ABOUT</div>
-      <h2 data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
+      <h2 lang="en" data-i18n="home.about.title-html">Built by <span class="grad">ONTHELINE</span></h2>
       <p class="lede" data-i18n="home.about.lede">DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea.</p>
     </div>
     <div class="home-about-cta">
@@ -1332,7 +1360,7 @@
   <div class="section about-page">
     <div class="section-head">
       <div class="num" data-i18n="about.page.kicker">About Us</div>
-      <h2 data-i18n="about.page.title">ONTHELINE & DealMai</h2>
+      <h2 lang="en" data-i18n="about.page.title">ONTHELINE & DealMai</h2>
       <p class="lede" data-i18n="about.page.sub">Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea</p>
     </div>
     <div class="about-page-body" id="about-page-body"></div>
@@ -1594,7 +1622,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001media2"></script>
+<script type="module" src="/app.js?v=20261001enlock1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
