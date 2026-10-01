@@ -143,39 +143,54 @@
     background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.06  0 0 0 0 0.04  0 0 0 0 0.01  0 0 0 0.07 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
   }
 
-  /* Topbar — brand column matches admin sidebar (240px), session meta between nav and right controls */
-  .topbar{position:sticky;top:0;z-index:50;background:rgba(246,242,234,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+  /* Topbar — marketing header: brand | capsule nav | lang + sign-in */
+  .topbar{position:sticky;top:0;z-index:50;background:rgba(246,242,234,.92);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
   .topbar-inner{
-    max-width:none;margin:0;padding:0;
-    display:grid;grid-template-columns:240px minmax(0,1fr) auto;
-    align-items:stretch;min-height:56px;
+    max-width:1480px;margin:0 auto;padding:0 22px;
+    display:grid;grid-template-columns:auto minmax(0,1fr) auto;
+    align-items:center;min-height:64px;gap:18px;
   }
   .topbar-brand{
-    display:flex;align-items:center;justify-content:center;
-    padding:10px 12px;box-sizing:border-box;width:240px;
-    border-right:1px solid var(--line);
+    display:flex;align-items:center;justify-content:flex-start;
+    padding:10px 0;box-sizing:border-box;width:auto;min-width:0;
+    border-right:none;
   }
-  .topbar-brand .wordmark{justify-content:center;max-width:100%}
-  .topbar-brand .brand-logo-img{height:36px;max-width:168px}
+  .topbar-brand .wordmark{justify-content:flex-start;max-width:100%}
+  .topbar-brand .brand-logo-img{height:40px;max-width:180px}
   .topbar-mid{
-    display:flex;align-items:center;gap:16px;min-width:0;
-    padding:0 18px;
+    display:flex;align-items:center;justify-content:center;gap:16px;min-width:0;
+    padding:0;
   }
   .wordmark{display:flex;align-items:center;gap:11px;cursor:pointer;min-width:0}
   .wordmark-glyph{
     width:36px;height:36px;border-radius:9px;
     background:var(--grad-1);
-    display:flex;align-items:center;justify-content:center;color:var(--bg);font-weight:700;font-size:17px;
+    display:none;align-items:center;justify-content:center;color:var(--bg);font-weight:700;font-size:17px;
     box-shadow:0 4px 14px -4px rgba(214,41,155,.4),0 2px 6px -2px rgba(11,182,196,.3);
     flex:none;
   }
-  .wordmark-text{font-weight:500;font-size:18px;letter-spacing:.005em;white-space:nowrap}
+  .brand-wordmark-fallback{display:flex;align-items:center;gap:10px;min-width:0}
+  .wordmark-copy{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;line-height:1.1}
+  .wordmark-text{
+    font-family:var(--kanit);
+    font-weight:500;font-size:22px;letter-spacing:-.01em;white-space:nowrap;color:var(--text);
+  }
   .wordmark-text em{font-style:normal;background:var(--grad-1);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:600}
+  .wordmark-tagline{
+    font-family:var(--mono);
+    font-size:9px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--muted);font-weight:500;white-space:nowrap;
+  }
 
-  .nav-desktop{display:flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:99px;font-size:13px;flex:none}
-  .nav-desktop button{padding:8px 16px;color:var(--muted);border-radius:99px;transition:all .25s;font-weight:400;letter-spacing:.005em;white-space:nowrap}
+  .nav-desktop{
+    display:flex;gap:2px;padding:4px;
+    background:rgba(255,255,255,.72);border:1px solid var(--line);
+    border-radius:99px;font-size:13px;flex:none;
+    box-shadow:0 1px 0 rgba(255,255,255,.6) inset;
+  }
+  .nav-desktop button{padding:8px 18px;color:var(--muted);border-radius:99px;transition:all .25s;font-weight:400;letter-spacing:.005em;white-space:nowrap}
   .nav-desktop button:hover{color:var(--text)}
-  .nav-desktop button.active{background:var(--text);color:var(--bg);box-shadow:0 2px 8px -2px rgba(0,0,0,.18)}
+  .nav-desktop button.active{background:var(--text);color:#fff;box-shadow:0 2px 8px -2px rgba(0,0,0,.18)}
 
   .session-meta{
     display:none;align-items:center;gap:14px;margin-left:auto;
@@ -187,18 +202,27 @@
   .session-meta .sm-label{opacity:.78;flex:none}
   .session-meta .sm-val{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis}
 
-  .top-right{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0 20px 0 10px}
-  .lang-picker{display:flex;align-items:center;gap:2px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.1em;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:3px}
-  .lang-picker button{padding:6px 9px;color:var(--muted);border-radius:5px;transition:all .2s;font-family:var(--mono)}
-  .lang-picker button.on{background:var(--grad-1-soft);color:var(--teal-deep)}
+  .top-right{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding:0}
+  .lang-picker{
+    display:flex;align-items:center;gap:2px;font-family:var(--mono);font-size:10px;
+    text-transform:uppercase;letter-spacing:.1em;
+    background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:10px;padding:3px;
+  }
+  .lang-picker button{padding:7px 9px;color:var(--muted);border-radius:7px;transition:all .2s;font-family:var(--mono)}
+  .lang-picker button.on{background:var(--grad-1-soft);color:var(--teal-deep);font-weight:600}
   .lang-picker button.locked{opacity:.34;cursor:not-allowed;text-decoration:line-through;text-decoration-thickness:1px}
 
   .login-btn{
-    padding:9px 16px;font-size:12.5px;letter-spacing:.005em;font-weight:500;
-    background:var(--grad-1);color:var(--bg);
-    border-radius:8px;transition:transform .25s,box-shadow .25s;white-space:nowrap;
+    padding:10px 18px;font-size:13px;letter-spacing:.01em;font-weight:500;
+    background:var(--grad-1);color:#fff;
+    border-radius:10px;transition:transform .25s,box-shadow .25s;white-space:nowrap;
+    box-shadow:0 8px 20px -12px rgba(214,41,155,.55);
   }
-  .login-btn:hover{transform:translateY(-1px);box-shadow:0 10px 26px -10px rgba(214,41,155,.5)}
+  .login-btn:hover{transform:translateY(-1px);box-shadow:0 12px 28px -10px rgba(214,41,155,.55)}
+  .login-btn.is-out{
+    background:transparent;color:var(--text);border:1px solid var(--line-2);box-shadow:none;
+  }
+  .login-btn.is-out:hover{border-color:var(--teal);color:var(--teal-deep);box-shadow:none}
 
   .mobile-menu-btn{display:none;padding:9px;border:1px solid var(--line);background:var(--surface);border-radius:8px;color:var(--text)}
   .mobile-menu-btn svg{width:18px;height:18px}
@@ -946,9 +970,9 @@
     .translate-row.head{display:none}
     .section{padding:48px 20px}
     .hero{padding:40px 20px 36px}
-    .topbar-inner{grid-template-columns:minmax(120px,auto) minmax(0,1fr) auto}
-    .topbar-brand{width:auto;min-width:120px;border-right:none;padding:10px 14px;justify-content:flex-start}
-    .topbar-mid{padding:0 10px}
+    .topbar-inner{grid-template-columns:minmax(120px,auto) minmax(0,1fr) auto;padding:0 14px;gap:10px;min-height:58px}
+    .topbar-brand{width:auto;min-width:120px;border-right:none;padding:8px 0;justify-content:flex-start}
+    .topbar-mid{padding:0;justify-content:flex-end}
     .session-meta{display:none !important}
     .top-right{padding:0 14px 0 6px}
     .summary{position:static}
@@ -967,7 +991,8 @@
     .section{padding:36px 18px}
     .checkout{padding:32px 18px}
     .confirm{padding:48px 20px 40px}
-    .wordmark-text{font-size:16px}
+    .wordmark-text{font-size:18px}
+    .wordmark-tagline{font-size:8px;letter-spacing:.12em}
     .wordmark-glyph{width:32px;height:32px;font-size:15px}
     .lang-picker{display:none}
     .modal{padding:24px}
@@ -1145,10 +1170,13 @@
     <!-- Brand sits in the same 240px column as the admin sidebar, centered. -->
     <div class="topbar-brand">
       <div class="wordmark" onclick="App.go('home')">
-        <img class="brand-logo-img" id="brand-logo-img" alt="" style="display:none;height:36px;max-width:168px;object-fit:contain" />
-        <div class="brand-wordmark-fallback" id="brand-wordmark-fallback" style="display:flex;align-items:center;gap:10px">
+        <img class="brand-logo-img" id="brand-logo-img" alt="" style="display:none;height:40px;max-width:180px;object-fit:contain" />
+        <div class="brand-wordmark-fallback" id="brand-wordmark-fallback">
           <div class="wordmark-glyph" id="brand-glyph">D</div>
-          <div class="wordmark-text" id="brand-text">Deal <em>Pro</em></div>
+          <div class="wordmark-copy">
+            <div class="wordmark-text" id="brand-text">Deal <em>Mai</em></div>
+            <div class="wordmark-tagline" id="brand-tagline">AI SALES AGENT PLATFORM</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1656,7 +1684,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001strip2"></script>
+<script type="module" src="/app.js?v=20261001topbar1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

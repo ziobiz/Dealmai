@@ -36,7 +36,7 @@ const SUPPORTED_LANGS = [
   { code:"th", name:"Thai",     native:"ไทย",      short:"TH" },
   { code:"ko", name:"Korean",   native:"한국어",    short:"KR" },
   { code:"ja", name:"Japanese", native:"日本語",    short:"JP" },
-  { code:"zh", name:"Chinese",  native:"中文",      short:"CH" }
+  { code:"zh", name:"Chinese",  native:"中文",      short:"CN" }
 ];
 
 /** Display label for language pills/admin (EN/TH/KR/JP/CH). Internal code stays en/th/ko/ja/zh. */
@@ -5566,9 +5566,8 @@ function subscribeCustomerCollections(){
 // admin view, it gets written to Firestore (config/branding.logoDataUrl)
 // and overrides this fallback on every browser via the realtime listener.
 const DEFAULT_BRANDING = {
-  siteName: "Deal Pro",
-  // Default site name in HTML wordmark glyph (the "D" in the box)
-  // Used to compute first-letter when admin renames
+  siteName: "Deal Mai",
+  siteTagline: "AI SALES AGENT PLATFORM",
 };
 
 // Base64 PNG of the original Deal Pro logo (320×95px, ~29KB).
@@ -5580,32 +5579,28 @@ const DEFAULT_LOGO_DATA_URL = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAUA
 // Called on boot, on every realtime branding update, and after page navigations.
 function applyBranding(){
   const name = (State.branding.siteName || DEFAULT_BRANDING.siteName).trim() || DEFAULT_BRANDING.siteName;
-  const logo = State.branding.logoDataUrl || null;
+  const tagline = (State.branding.siteTagline || DEFAULT_BRANDING.siteTagline || "AI SALES AGENT PLATFORM").trim();
 
-  // 1. Header — show uploaded image if present, otherwise fallback wordmark
+  // 1. Public header uses typographic brand + tagline (marketing design).
+  //    Custom uploaded logos stay in Branding for favicon / future use, but the
+  //    topbar mark stays text so the public chrome matches the designed header.
   const logoEl    = document.getElementById("brand-logo-img");
   const fallback  = document.getElementById("brand-wordmark-fallback");
   const glyphEl   = document.getElementById("brand-glyph");
   const textEl    = document.getElementById("brand-text");
-  if(logo && logoEl){
-    logoEl.src = logo;
-    logoEl.style.display = "block";
-    if(fallback) fallback.style.display = "none";
-  }else{
-    if(logoEl) logoEl.style.display = "none";
-    if(fallback) fallback.style.display = "flex";
-    if(glyphEl) glyphEl.textContent = (name[0] || "D").toUpperCase();
-    if(textEl){
-      // Render as "First <em>Rest</em>" so the em-styled second word still has
-      // the gradient look when present (e.g. "Deal Pro" → "Deal <em>Pro</em>")
-      const parts = name.split(/\s+/);
-      if(parts.length >= 2){
-        const first = parts[0];
-        const rest = parts.slice(1).join(" ");
-        textEl.innerHTML = `${escapeHtml(first)} <em>${escapeHtml(rest)}</em>`;
-      }else{
-        textEl.textContent = name;
-      }
+  const taglineEl = document.getElementById("brand-tagline");
+  if(taglineEl) taglineEl.textContent = tagline;
+  if(logoEl) logoEl.style.display = "none";
+  if(fallback) fallback.style.display = "flex";
+  if(glyphEl) glyphEl.textContent = (name[0] || "D").toUpperCase();
+  if(textEl){
+    const parts = name.split(/\s+/);
+    if(parts.length >= 2){
+      const first = parts[0];
+      const rest = parts.slice(1).join(" ");
+      textEl.innerHTML = `${escapeHtml(first)} <em>${escapeHtml(rest)}</em>`;
+    }else{
+      textEl.textContent = name;
     }
   }
 
@@ -7130,6 +7125,7 @@ const App = {
     if(authBtn){
       authBtn.textContent = isAuthed ? I.t("nav.signout") : I.t("nav.login");
       authBtn.removeAttribute("data-i18n");
+      authBtn.classList.toggle("is-out", isAuthed && !isAdmin);
       authBtn.style.display = isAdmin ? "none" : "";
     }
 
