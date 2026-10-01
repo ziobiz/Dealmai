@@ -51,6 +51,8 @@ const DEFAULT_STRINGS = {
   // Navigation
   "nav.home":"Home",
   "nav.packages":"Packages",
+  "nav.about":"About Us",
+  "nav.media":"Media",
   "nav.admin":"Admin",
   "nav.login":"Sign In",
   "nav.signout":"Sign Out",
@@ -176,11 +178,28 @@ const DEFAULT_STRINGS = {
   "toast.checkout.needTerms":"Please read and accept the Terms of Service before paying",
   "about.eyebrow":"About ONTHELINE & DealMai",
   "about.heading-html":"Every inquiry becomes a <em>growth opportunity</em>.",
-  "about.teaser-html":"At <strong>ONTHELINE</strong>, we recognized that traditional chatbots and delayed responses cause businesses to lose valuable leads every day. We created <strong>DealMai</strong> to bridge this gap through 24/7 AI-driven engagement. Operating across major messaging channels like WhatsApp, Instagram, and LINE, DealMai delivers human-like conversations that qualify prospects, book appointments, and reactivate contacts in your brand\'s exact voice. As part of the global ONTHELINE network (Thailand, Japan, South Korea), we help businesses turn every inquiry into a growth opportunity, nonstop.",
+  "about.teaser-html":"At <strong>ONTHELINE</strong>, we recognized that traditional chatbots and delayed responses cause businesses to lose valuable leads every day. We created <strong>DealMai</strong> to bridge this gap through 24/7 AI-driven engagement. Operating across major messaging channels like WhatsApp, Instagram, and LINE, DealMai delivers human-like conversations that qualify prospects, book appointments, and reactivate contacts in your brand\'s exact voice. As part of the global ONTHELINE network (Thailand, Japan, Singapore, South Korea), we help businesses turn every inquiry into a growth opportunity, nonstop.",
   "about.readmore":"Read our story",
   "about.modal.kicker":"About Us",
   "about.modal.title":"ONTHELINE & DealMai",
   "about.modal.sub":"Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea",
+  "home.about.num":"02 / ABOUT",
+  "home.about.title-html":'Built by <span class="grad">ONTHELINE</span>',
+  "home.about.lede":"DealMai is the AI sales platform of the ONTHELINE group — operating across Thailand, Japan, Singapore, and South Korea. We turn every inquiry into a growth opportunity, around the clock.",
+  "home.about.cta":"About Us",
+  "about.page.kicker":"About Us",
+  "about.page.title":"ONTHELINE & DealMai",
+  "about.page.sub":"Bridging the gap in global lead engagement · Thailand · Japan · Singapore · South Korea",
+  "media.page.kicker":"Media",
+  "media.page.title-html":'See DealMai <span class="grad">in action</span>',
+  "media.page.lede":"Watch the introduction video and download the presentation deck. Share them with your team or partners.",
+  "media.video.title":"Introduction video",
+  "media.video.hint":"Best viewed with sound on",
+  "media.pdf.title":"Presentation deck",
+  "media.pdf.hint":"PDF · Autonomous Rev Engine overview",
+  "media.pdf.open":"Open PDF",
+  "media.pdf.download":"Download",
+  "footer.by":"by ONTHELINE INTERNATIONAL",
   "terms.modal.kicker":"Legal",
   "terms.modal.title":"Terms of Service & Privacy Policy",
   "terms.modal.sub":"DealMai Master Terms of Service & Platform Agreement · Effective July 31, 2026",
@@ -1017,6 +1036,8 @@ const FULL_TRANSLATIONS = {
     // Navigation
     "nav.home":"หน้าหลัก",
     "nav.packages":"แพ็คเกจ",
+    "nav.about":"เกี่ยวกับเรา",
+    "nav.media":"สื่อ",
     "nav.admin":"ระบบหลังบ้าน",
     "nav.login":"เข้าสู่ระบบ",
     "nav.signout":"ออกจากระบบ",
@@ -1139,6 +1160,23 @@ const FULL_TRANSLATIONS = {
     "about.modal.kicker":"เกี่ยวกับเรา",
     "about.modal.title":"ONTHELINE และ DealMai",
     "about.modal.sub":"ปิดช่องว่างการดูแลลูกค้าระดับโลก · ไทย · ญี่ปุ่น · สิงคโปร์ · เกาหลีใต้",
+    "home.about.num":"02 / เกี่ยวกับเรา",
+    "home.about.title-html":'สร้างโดย <span class="grad">ONTHELINE</span>',
+    "home.about.lede":"DealMai คือแพลตฟอร์ม AI ช่วยขายของกลุ่ม ONTHELINE ครอบคลุมไทย ญี่ปุ่น สิงคโปร์ และเกาหลีใต้ เราเปลี่ยนทุกการติดต่อให้เป็นโอกาสเติบโตตลอด 24 ชั่วโมง",
+    "home.about.cta":"เกี่ยวกับเรา",
+    "about.page.kicker":"เกี่ยวกับเรา",
+    "about.page.title":"ONTHELINE และ DealMai",
+    "about.page.sub":"ปิดช่องว่างการดูแลลูกค้าระดับโลก · ไทย · ญี่ปุ่น · สิงคโปร์ · เกาหลีใต้",
+    "media.page.kicker":"สื่อ",
+    "media.page.title-html":'ชม DealMai <span class="grad">จริง ๆ</span>',
+    "media.page.lede":"ดูวิดีโอแนะนำและดาวน์โหลดเอกสารนำเสนอ เพื่อแชร์กับทีมหรือพาร์ทเนอร์ของคุณ",
+    "media.video.title":"วิดีโอแนะนำ",
+    "media.video.hint":"แนะนำให้เปิดเสียงขณะรับชม",
+    "media.pdf.title":"เอกสารนำเสนอ",
+    "media.pdf.hint":"PDF · ภาพรวม Autonomous Rev Engine",
+    "media.pdf.open":"เปิด PDF",
+    "media.pdf.download":"ดาวน์โหลด",
+    "footer.by":"โดย ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"ข้อกฎหมาย",
     "terms.modal.title":"ข้อกำหนดในการให้บริการและนโยบายความเป็นส่วนตัว",
     "terms.modal.sub":"ข้อกำหนดหลักในการให้บริการและข้อตกลงแพลตฟอร์ม DealMai · มีผล 31 กรกฎาคม 2026",
@@ -1901,6 +1939,8 @@ const FULL_TRANSLATIONS = {
     // Navigation
     "nav.home":"홈",
     "nav.packages":"패키지",
+    "nav.about":"회사 소개",
+    "nav.media":"미디어",
     "nav.admin":"관리자",
     "nav.login":"로그인",
     "nav.signout":"로그아웃",
@@ -2023,6 +2063,23 @@ const FULL_TRANSLATIONS = {
     "about.modal.kicker":"회사 소개",
     "about.modal.title":"ONTHELINE & DealMai",
     "about.modal.sub":"글로벌 리드 응대의 격차를 메우다 · 태국 · 일본 · 싱가포르 · 한국",
+    "home.about.num":"02 / 소개",
+    "home.about.title-html":'<span class="grad">ONTHELINE</span>이 만듭니다',
+    "home.about.lede":"DealMai는 태국·일본·싱가포르·한국에서 운영하는 ONTHELINE 그룹의 AI 영업 플랫폼입니다. 모든 문의를 멈추지 않는 성장 기회로 바꿉니다.",
+    "home.about.cta":"회사 소개",
+    "about.page.kicker":"회사 소개",
+    "about.page.title":"ONTHELINE & DealMai",
+    "about.page.sub":"글로벌 리드 응대의 격차를 메우다 · 태국 · 일본 · 싱가포르 · 한국",
+    "media.page.kicker":"미디어",
+    "media.page.title-html":'DealMai를 <span class="grad">직접</span> 확인하세요',
+    "media.page.lede":"소개 영상을 시청하고 프레젠테이션 자료를 내려받으세요. 팀과 파트너에게 공유하기 좋습니다.",
+    "media.video.title":"소개 영상",
+    "media.video.hint":"소리를 켜고 시청하는 것을 권장합니다",
+    "media.pdf.title":"프레젠테이션 자료",
+    "media.pdf.hint":"PDF · Autonomous Rev Engine 개요",
+    "media.pdf.open":"PDF 열기",
+    "media.pdf.download":"다운로드",
+    "footer.by":"by ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"법적 고지",
     "terms.modal.title":"서비스 약관 및 개인정보 처리방침",
     "terms.modal.sub":"DealMai 마스터 서비스 약관 및 플랫폼 계약 · 2026년 7월 31일 시행",
@@ -2791,6 +2848,8 @@ const FULL_TRANSLATIONS = {
     // Navigation
     "nav.home":"ホーム",
     "nav.packages":"パッケージ",
+    "nav.about":"会社概要",
+    "nav.media":"メディア",
     "nav.admin":"管理画面",
     "nav.login":"ログイン",
     "nav.signout":"ログアウト",
@@ -2913,6 +2972,23 @@ const FULL_TRANSLATIONS = {
     "about.modal.kicker":"会社概要",
     "about.modal.title":"ONTHELINE & DealMai",
     "about.modal.sub":"グローバルなリード対応の溝を埋める · タイ · 日本 · シンガポール · 韓国",
+    "home.about.num":"02 / 会社概要",
+    "home.about.title-html":'<span class="grad">ONTHELINE</span> が開発',
+    "home.about.lede":"DealMai は、タイ・日本・シンガポール・韓国で展開する ONTHELINE グループの AI 営業プラットフォームです。あらゆる問い合わせを、止まらない成長の機会へ変えます。",
+    "home.about.cta":"会社概要",
+    "about.page.kicker":"会社概要",
+    "about.page.title":"ONTHELINE & DealMai",
+    "about.page.sub":"グローバルなリード対応の溝を埋める · タイ · 日本 · シンガポール · 韓国",
+    "media.page.kicker":"メディア",
+    "media.page.title-html":'DealMai を<span class="grad">映像で</span>見る',
+    "media.page.lede":"紹介動画の視聴とプレゼン資料のダウンロードができます。チームやパートナーへの共有にもご利用ください。",
+    "media.video.title":"紹介動画",
+    "media.video.hint":"音声をオンにしてご覧ください",
+    "media.pdf.title":"プレゼン資料",
+    "media.pdf.hint":"PDF · Autonomous Rev Engine 概要",
+    "media.pdf.open":"PDFを開く",
+    "media.pdf.download":"ダウンロード",
+    "footer.by":"by ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"法的事項",
     "terms.modal.title":"利用規約およびプライバシーポリシー",
     "terms.modal.sub":"DealMai マスター利用規約およびプラットフォーム契約 · 2026年7月31日施行",
@@ -3676,6 +3752,8 @@ const FULL_TRANSLATIONS = {
   zh: {
     "nav.home":"首页",
     "nav.packages":"套餐",
+    "nav.about":"关于我们",
+    "nav.media":"媒体",
     "nav.admin":"管理后台",
     "nav.login":"登录",
     "nav.signout":"退出",
@@ -3994,6 +4072,23 @@ const FULL_TRANSLATIONS = {
     "about.modal.kicker":"关于我们",
     "about.modal.title":"ONTHELINE 与 DealMai",
     "about.modal.sub":"连接全球客户互动 · 泰国 · 日本 · 新加坡 · 韩国",
+    "home.about.num":"02 / 关于我们",
+    "home.about.title-html":'由 <span class="grad">ONTHELINE</span> 打造',
+    "home.about.lede":"DealMai 是 ONTHELINE 集团的 AI 销售平台，业务覆盖泰国、日本、新加坡与韩国。我们让每一次咨询都成为持续增长的机会。",
+    "home.about.cta":"关于我们",
+    "about.page.kicker":"关于我们",
+    "about.page.title":"ONTHELINE 与 DealMai",
+    "about.page.sub":"连接全球客户互动 · 泰国 · 日本 · 新加坡 · 韩国",
+    "media.page.kicker":"媒体",
+    "media.page.title-html":'亲眼看看 <span class="grad">DealMai</span>',
+    "media.page.lede":"观看介绍视频并下载演示文稿，方便与团队或合作伙伴分享。",
+    "media.video.title":"介绍视频",
+    "media.video.hint":"建议打开声音观看",
+    "media.pdf.title":"演示文稿",
+    "media.pdf.hint":"PDF · Autonomous Rev Engine 概览",
+    "media.pdf.open":"打开 PDF",
+    "media.pdf.download":"下载",
+    "footer.by":"by ONTHELINE INTERNATIONAL",
     "terms.modal.kicker":"法律条款",
     "terms.modal.title":"服务条款与隐私政策",
     "terms.modal.sub":"DealMai 服务条款与平台协议 · 2026 年 7 月 31 日生效",
@@ -6712,9 +6807,11 @@ const App = {
     // PACKAGES state (kept in sync by subscribePackages) is reflected
     // immediately when the page becomes visible.
     if(name === "packages") this.renderPackages();
-    // About Us teaser lives on both Home and Packages — re-render on entry so
-    // it picks up the current language.
-    if(name === "home" || name === "packages") this.renderAboutBlocks();
+    // Public About / Media pages — re-render localised body when entered.
+    if(name === "about") this.renderAboutPage();
+    if(name === "media") this.renderMediaPage();
+    // Home keeps a short About CTA section (hero unchanged).
+    if(name === "home") this.renderHome();
     if(name === "checkout") this.renderCheckout();
     if(name === "confirm" && !State.lastOrder){ this.go("packages", opts); return; }
     if(name === "payment-result") this.renderPaymentResult();
@@ -6799,10 +6896,7 @@ const App = {
     this.updateAuthUI();
     this.renderHome();
     this.renderPackages();
-    this.renderAboutBlocks();
-    // If the About document modal is open, rebuild it so its body switches
-    // language too. (The Terms modal is English-only, so it's left alone.)
-    if(document.querySelector('.doc-modal[data-doc="about"]')) this.openAboutModal();
+    this.renderAboutPage();
     if(document.getElementById("page-checkout").classList.contains("show")) this.renderCheckout();
     // Customer-facing pages are built with JS template literals (not just
     // [data-i18n] elements), so I.apply() alone can't relabel their content +
@@ -7135,37 +7229,24 @@ const App = {
   closeModal(){ document.getElementById("generic-modal").classList.remove("show"); },
 
   // ===== ABOUT US =====
-  // Renders the short "About ONTHELINE & DealMai" teaser into the Home and
-  // Packages pages. The full text opens in a scrollable document modal.
-  renderAboutBlocks(){
-    const html = `
-      <div class="about-block">
-        <div class="about-eyebrow">${I.t("about.eyebrow")}</div>
-        <h3>${I.t("about.heading-html")}</h3>
-        <p>${I.t("about.teaser-html")}</p>
-        <button class="about-more" onclick="App.openAboutModal()">
-          <span>${I.t("about.readmore")}</span><span class="arr">→</span>
-        </button>
-      </div>`;
-    const homeEl = document.getElementById("about-home");
-    const pkgEl  = document.getElementById("about-packages");
-    if(homeEl) homeEl.innerHTML = html;
-    if(pkgEl)  pkgEl.innerHTML  = html;
+  // Full company story is a dedicated /about page. Home keeps a short CTA
+  // section under Capabilities (hero is never replaced).
+  renderAboutPage(){
+    const el = document.getElementById("about-page-body");
+    if(!el) return;
+    el.innerHTML = Docs.aboutUs();
   },
 
+  renderMediaPage(){
+    // Video/PDF paths are static; i18n labels come from data-i18n via I.apply().
+    I.apply();
+  },
+
+  // Kept for modal deep-links / legacy callers — opens the About page instead.
+  renderAboutBlocks(){ /* no-op: about teasers are static in index.html */ },
+
   openAboutModal(){
-    this.showModal(`
-      <div class="doc-modal" data-doc="about">
-        <div class="doc-head">
-          <div class="kicker">${I.t("about.modal.kicker")}</div>
-          <h2>${I.t("about.modal.title")}</h2>
-          <div class="sub">${I.t("about.modal.sub")}</div>
-        </div>
-        <div class="doc-body">${Docs.aboutUs()}</div>
-        <div class="doc-foot">
-          <button class="btn-primary" onclick="App.closeModal()"><span>${I.t("doc.close")}</span></button>
-        </div>
-      </div>`);
+    this.go("about");
   },
 
   // ===== TERMS OF SERVICE / PRIVACY POLICY =====
@@ -14720,7 +14801,7 @@ async function boot(){
   App.updateAuthUI();
   App.renderHome();
   App.renderPackages();
-  App.renderAboutBlocks();
+  App.renderAboutPage();
 
   // ----------------------------------------------------------------
   // Initial routing from URL pathname (deep-linking support)
@@ -14733,7 +14814,7 @@ async function boot(){
     const hash = (location.hash || "").replace(/^#/, "");
 
     const KNOWN_ROUTES = new Set([
-      "packages", "checkout", "confirm", "payment-result",
+      "packages", "about", "media", "checkout", "confirm", "payment-result",
       "account", "orders", "admin"
     ]);
 
