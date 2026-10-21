@@ -1,18 +1,18 @@
 'use strict';
 
-/** Stable folder and file labels. They do not follow the admin UI language. */
+/** English folder and file titles. They do not follow the admin UI language. */
 const KIND_LABEL = {
-  invoice: '주문확인서',
-  receipt: '결제영수증',
-  credentials: '로그인정보',
-  dmchamp_access: 'AI워크스페이스안내',
-  dmchamp_linked: 'AI워크스페이스연결',
-  refund_cancel: '환불취소',
-  partial_refund: '부분환불'
+  invoice: 'Invoice',
+  receipt: 'Receipt',
+  credentials: 'Credentials',
+  dmchamp_access: 'AI_Workspace_Access',
+  dmchamp_linked: 'AI_Workspace_Linked',
+  refund_cancel: 'Refund_Cancel',
+  partial_refund: 'Partial_Refund'
 };
 
 function kindLabel(kind) {
-  return KIND_LABEL[kind] || String(kind || '메일').replace(/[^\w가-힣.-]+/g, '');
+  return KIND_LABEL[kind] || String(kind || 'Mail').replace(/[^\w.-]+/g, '_');
 }
 
 function safePart(value) {
@@ -45,7 +45,7 @@ function seoulStamp(when) {
 
 /**
  * 파일성격_일자_시간_내용.pdf
- * Example: 주문확인서_20261021_233045_DP-OT-HMP7JX.pdf
+ * Example: Invoice_20261021_233045_DP-OT-HMP7JX.pdf
  */
 function buildEmailPdfName({ kind, when, ref, to }) {
   const stamp = seoulStamp(when || new Date());
