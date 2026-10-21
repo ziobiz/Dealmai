@@ -813,6 +813,8 @@ const DEFAULT_STRINGS = {
   "admin.emails.col.select":"Select",
   "admin.emails.resend.none":"—",
   "admin.emails.resend.line":"Resent {n} · {when}",
+  "admin.emails.action.selectAll":"Select all",
+  "admin.emails.action.clearAll":"Clear all",
   "admin.emails.action.resendSelected":"Resend selected",
   "admin.emails.resendSelected.none":"Select at least one email.",
   "admin.emails.resendSelected.done":"Queued {n} for resend. They send within 5 minutes.",
@@ -1820,6 +1822,8 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.select":"เลือก",
     "admin.emails.resend.none":"—",
     "admin.emails.resend.line":"ส่งใหม่ {n} ครั้ง · {when}",
+    "admin.emails.action.selectAll":"เลือกทั้งหมด",
+    "admin.emails.action.clearAll":"ยกเลิกทั้งหมด",
     "admin.emails.action.resendSelected":"ส่งที่เลือกใหม่",
     "admin.emails.resendSelected.none":"เลือกอีเมลอย่างน้อย 1 ฉบับ",
     "admin.emails.resendSelected.done":"จัดคิวส่งใหม่ {n} ฉบับ จะส่งภายใน 5 นาที",
@@ -2759,6 +2763,8 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.select":"선택",
     "admin.emails.resend.none":"—",
     "admin.emails.resend.line":"재전송 {n}회 · {when}",
+    "admin.emails.action.selectAll":"모두선택",
+    "admin.emails.action.clearAll":"모두해제",
     "admin.emails.action.resendSelected":"선택 재전송",
     "admin.emails.resendSelected.none":"메일을 하나 이상 선택하세요.",
     "admin.emails.resendSelected.done":"{n}건을 재전송 대기열에 넣었습니다. 5분 안에 발송됩니다.",
@@ -3627,6 +3633,8 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.select":"選択",
     "admin.emails.resend.none":"—",
     "admin.emails.resend.line":"再送信 {n}回 · {when}",
+    "admin.emails.action.selectAll":"すべて選択",
+    "admin.emails.action.clearAll":"すべて解除",
     "admin.emails.action.resendSelected":"選択を再送信",
     "admin.emails.resendSelected.none":"メールを1件以上選択してください。",
     "admin.emails.resendSelected.done":"{n}件を再送信キューに入れました。5分以内に送信されます。",
@@ -4480,6 +4488,8 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.select":"选择",
     "admin.emails.resend.none":"—",
     "admin.emails.resend.line":"重发 {n} 次 · {when}",
+    "admin.emails.action.selectAll":"全选",
+    "admin.emails.action.clearAll":"全部取消",
     "admin.emails.action.resendSelected":"重发所选",
     "admin.emails.resendSelected.none":"请至少选择一封邮件。",
     "admin.emails.resendSelected.done":"已将 {n} 封加入重发队列，将在 5 分钟内发送。",
@@ -11013,6 +11023,8 @@ function renderAdminEmails(){
         </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-ghost" type="button" onclick="AdminActions.selectAllEmails()">${escapeHtml(I.t("admin.emails.action.selectAll"))}</button>
+        <button class="btn-ghost" type="button" onclick="AdminActions.clearAllEmails()">${escapeHtml(I.t("admin.emails.action.clearAll"))}</button>
         <button class="btn-primary" type="button" onclick="AdminActions.resendSelectedEmails()"><span>${escapeHtml(I.t("admin.emails.action.resendSelected"))}${selectedCount ? " ("+selectedCount+")" : ""}</span></button>
         ${pendingCount > 0 ? `<button class="btn-ghost" onclick="AdminActions.cancelAllPending()" style="border-color:var(--amber);color:var(--amber)">Cancel All Pending (${pendingCount})</button>` : ""}
         ${processedCount > 0 ? `<button class="btn-ghost" onclick="AdminActions.clearProcessedEmails()">Clear Processed (${processedCount})</button>` : ""}
@@ -13113,6 +13125,15 @@ const AdminActions = {
     if(!State.emailSelected) State.emailSelected = {};
     if(on) State.emailSelected[id] = true;
     else delete State.emailSelected[id];
+    renderAdminEmails();
+  },
+
+  selectAllEmails(){
+    this.toggleEmailVisible(true);
+  },
+
+  clearAllEmails(){
+    State.emailSelected = {};
     renderAdminEmails();
   },
 
