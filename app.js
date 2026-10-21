@@ -12143,19 +12143,35 @@ const AdminActions = {
 
   async previewInvoicePdf(id){
     if(!id) return;
+    const width = Math.min(960, Math.max(720, Math.floor((window.screen.availWidth || 1200) * 0.72)));
+    const height = Math.min(900, Math.max(640, Math.floor((window.screen.availHeight || 900) * 0.86)));
+    const left = Math.max(0, Math.floor(((window.screen.availWidth || width) - width) / 2));
+    const top = Math.max(0, Math.floor(((window.screen.availHeight || height) - height) / 2));
+    const features = [
+      "popup=yes",
+      "width=" + width,
+      "height=" + height,
+      "left=" + left,
+      "top=" + top,
+      "resizable=yes",
+      "scrollbars=yes"
+    ].join(",");
+    const opened = window.open("", "dealmaiInvoicePreview", features);
+    if(!opened){
+      Toast.show(I.t("admin.invoices.previewBlocked"), "err");
+      return;
+    }
     try{
+      opened.document.title = I.t("admin.invoices.preview");
+      opened.document.body.textContent = I.t("admin.invoices.loading");
       const blob = await this._fetchInvoicePdfBlob(id);
       const url = URL.createObjectURL(blob);
-      const opened = window.open(url, "_blank", "noopener,noreferrer");
-      if(!opened){
-        URL.revokeObjectURL(url);
-        throw new Error(I.t("admin.invoices.previewBlocked"));
-      }
+      opened.location.href = url;
       setTimeout(() => URL.revokeObjectURL(url), 60000);
     }catch(e){
       console.error("[invoices] preview failed:", e);
-      const blocked = e && e.message === I.t("admin.invoices.previewBlocked");
-      Toast.show(e.message || I.t(blocked ? "admin.invoices.previewBlocked" : "admin.invoices.previewFailed"), "err");
+      try{ opened.close(); }catch(_){}
+      Toast.show(e.message || I.t("admin.invoices.previewFailed"), "err");
     }
   },
 
