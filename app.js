@@ -791,6 +791,10 @@ const DEFAULT_STRINGS = {
   "admin.emails.col.kind":"Kind",
   "admin.emails.col.status":"Status",
   "admin.emails.action.view":"View",
+  "admin.emails.action.customer":"Customer",
+  "admin.emails.customer.loading":"Rendering the customer email…",
+  "admin.emails.customer.failed":"Could not render the customer email.",
+  "admin.emails.customer.note":"This is the template the customer receives. Opening it does not send the email.",
   "admin.emails.status.supportOnly":"support only",
   "admin.emails.status.supportOnly.title":"ontheline email — delivered to support inbox only; the customer was not emailed",
   "admin.emails.status.supportOnly.note":"This is an ontheline email. It was delivered to the support inbox only — the customer did NOT receive it (ontheline handles customer communication directly).",
@@ -1800,6 +1804,10 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.kind":"ประเภท",
     "admin.emails.col.status":"สถานะ",
     "admin.emails.action.view":"ดู",
+    "admin.emails.action.customer":"สำหรับลูกค้า",
+    "admin.emails.customer.loading":"กำลังสร้างอีเมลลูกค้า…",
+    "admin.emails.customer.failed":"สร้างอีเมลลูกค้าไม่สำเร็จ",
+    "admin.emails.customer.note":"นี่คือเทมเพลตที่ลูกค้าได้รับ การเปิดดูนี้ไม่ส่งอีเมล",
     "admin.emails.status.supportOnly":"เฉพาะ support",
     "admin.emails.status.supportOnly.title":"อีเมล ontheline — ส่งเข้ากล่อง support เท่านั้น ลูกค้าไม่ได้รับอีเมล",
     "admin.emails.status.supportOnly.note":"นี่คืออีเมลจาก ontheline ส่งเข้ากล่อง support เท่านั้น — ลูกค้าไม่ได้รับ (ontheline จัดการการสื่อสารกับลูกค้าเอง)",
@@ -2741,6 +2749,10 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.kind":"종류",
     "admin.emails.col.status":"상태",
     "admin.emails.action.view":"보기",
+    "admin.emails.action.customer":"고객용",
+    "admin.emails.customer.loading":"고객용 메일을 만드는 중…",
+    "admin.emails.customer.failed":"고객용 메일을 만들지 못했습니다.",
+    "admin.emails.customer.note":"고객에게 발송되는 템플릿입니다. 이 화면에서는 메일이 나가지 않습니다.",
     "admin.emails.status.supportOnly":"지원팀만",
     "admin.emails.status.supportOnly.title":"ontheline 이메일 — 지원팀 받은편지함으로만 전송됨; 고객에게는 전송되지 않음",
     "admin.emails.status.supportOnly.note":"이 이메일은 ontheline 이메일입니다. 지원팀 받은편지함으로만 전송되었으며 고객은 받지 않았습니다(ontheline이 고객 커뮤니케이션을 직접 처리함).",
@@ -3611,6 +3623,10 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.kind":"種類",
     "admin.emails.col.status":"ステータス",
     "admin.emails.action.view":"表示",
+    "admin.emails.action.customer":"顧客向け",
+    "admin.emails.customer.loading":"顧客向けメールを作成しています…",
+    "admin.emails.customer.failed":"顧客向けメールを作成できませんでした。",
+    "admin.emails.customer.note":"お客様が受け取るテンプレートです。表示してもメールは送信されません。",
     "admin.emails.status.supportOnly":"サポートのみ",
     "admin.emails.status.supportOnly.title":"onthelineメール — サポート受信箱のみに配信。顧客には送信されていません",
     "admin.emails.status.supportOnly.note":"これはonthelineメールです。サポート受信箱のみに配信され、顧客は受信していません（onthelineが顧客とのやり取りを直接処理します）。",
@@ -4466,6 +4482,10 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.kind":"种类",
     "admin.emails.col.status":"状态",
     "admin.emails.action.view":"查看",
+    "admin.emails.action.customer":"客户版",
+    "admin.emails.customer.loading":"正在生成客户邮件…",
+    "admin.emails.customer.failed":"无法生成客户邮件。",
+    "admin.emails.customer.note":"这是客户收到的模板。打开预览不会发送邮件。",
     "admin.emails.status.supportOnly":"仅支持邮箱",
     "admin.emails.status.supportOnly.title":"ontheline 邮件 — 只发到支持邮箱，客户未收到",
     "admin.emails.status.supportOnly.note":"这是 ontheline 邮件。只发送到支持邮箱，客户没有收到（由 ontheline 直接与客户沟通）。",
@@ -10980,10 +11000,13 @@ function renderAdminEmails(){
       : e.status === "failed" ? `<span class="status-tag failed"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.failed"))}</span>`
       : e.status === "cancelled" ? `<span class="status-tag" style="background:rgba(120,120,120,.12);color:#787878"><span class="d" style="background:#787878"></span>${escapeHtml(I.t("admin.emails.status.cancelled"))}</span>`
       : `<span class="status-tag pending"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.pending"))}</span>`;
+    const customerBtn = `<button onclick="AdminActions.previewCustomerEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.customer"))}</button>`;
     const actions = e.status === "pending"
       ? `<button onclick="AdminActions.viewEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.view"))}</button>
+         ${customerBtn}
          <button class="danger" onclick="AdminActions.cancelEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.cancel"))}</button>`
       : `<button onclick="AdminActions.viewEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.view"))}</button>
+         ${customerBtn}
          <button onclick="AdminActions.resendEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.resend"))}</button>`;
     return `
       <tr>
@@ -13104,6 +13127,59 @@ const AdminActions = {
         <div class="footer-em">© ${escapeHtml(brandName)} · ${escapeHtml((e.lang||"en").toUpperCase())} · This is a preview — actual email is rendered server-side and sent via Resend.</div>
       </div>
     `);
+  },
+
+  async previewCustomerEmail(id){
+    if(!id) return;
+    const ticket = (this._emailPreviewTicket = (this._emailPreviewTicket || 0) + 1);
+    const stillOpen = () => this._emailPreviewTicket === ticket && document.getElementById("generic-modal")?.classList.contains("show");
+    App.showModal(`
+      <button class="close" onclick="App.closeModal()">×</button>
+      <h2>${escapeHtml(I.t("admin.emails.action.customer"))}</h2>
+      <div class="sub">${escapeHtml(I.t("admin.emails.customer.loading"))}</div>
+    `);
+    const post = async (path, force) => {
+      const idToken = await this._adminIdToken(force);
+      return fetch(path, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: "Bearer " + idToken },
+        body: JSON.stringify({ id })
+      });
+    };
+    try{
+      const paths = ["/api/admin-email-preview", "/.netlify/functions/admin-email-preview"];
+      let res = null;
+      for(const path of paths){
+        res = await post(path, false);
+        if(res.status === 401) res = await post(path, true);
+        if(res.status !== 404) break;
+      }
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok) throw new Error(data.error || "preview failed");
+      if(!stillOpen()) return;
+      const supportNote = data.status === "sent_support_only"
+        ? `<div style="margin:0 0 12px;padding:10px 14px;background:rgba(11,182,196,.08);border-left:3px solid #0bb6c4;border-radius:4px;font-size:12.5px;color:var(--teal-deep)">${escapeHtml(I.t("admin.emails.status.supportOnly.note"))}</div>`
+        : "";
+      App.showModal(`
+        <button class="close" onclick="App.closeModal()">×</button>
+        <h2>${escapeHtml(I.t("admin.emails.action.customer"))}</h2>
+        <div class="sub">${escapeHtml(I.t("admin.emails.col.subject"))}: ${escapeHtml(data.subject || "")}${data.to ? " · " + escapeHtml(data.to) : ""}</div>
+        <p style="margin:-8px 0 12px;font-size:12.5px;color:var(--muted)">${escapeHtml(I.t("admin.emails.customer.note"))}</p>
+        ${supportNote}
+        <iframe class="email-customer-frame" id="email-customer-frame" title="${escapeHtml(I.t("admin.emails.action.customer"))}" sandbox="allow-popups allow-popups-to-escape-sandbox"></iframe>
+      `);
+      const frame = document.getElementById("email-customer-frame");
+      if(frame) frame.srcdoc = data.html || "";
+    }catch(err){
+      console.warn("customer email preview failed", err);
+      if(!stillOpen()) return;
+      Toast.show(I.t("admin.emails.customer.failed"), "err");
+      App.showModal(`
+        <button class="close" onclick="App.closeModal()">×</button>
+        <h2>${escapeHtml(I.t("admin.emails.action.customer"))}</h2>
+        <div class="sub">${escapeHtml(I.t("admin.emails.customer.failed"))}</div>
+      `);
+    }
   },
 
   async resendEmail(id){
