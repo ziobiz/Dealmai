@@ -658,35 +658,28 @@
   #invoices-table .inv-money{line-height:1.4;font-weight:600}
   #invoices-table .inv-ccy{font-weight:400;color:var(--muted)}
 
-  /* Settings menus: full cell grid and centered columns */
-  .settings-grid table{border-collapse:collapse;border:1px solid var(--line-2)}
-  .settings-grid th,
-  .settings-grid td{
-    text-align:center !important;
-    vertical-align:middle;
-    border:1px solid var(--line-2);
-  }
-  .settings-grid tr:last-child td{border-bottom:1px solid var(--line-2)}
-  .settings-grid .row-actions{justify-content:center}
-
-  /* SMTP accounts: same card as Global mail options, light pastel grid */
-  .smtp-account-card{margin-bottom:18px}
-  .smtp-account-card > h3{margin-bottom:6px}
-  .smtp-account-card .table-wrap{margin-top:12px}
-  .smtp-account-card table{
-    min-width:0;
-    width:100%;
+  /* Settings menus: centered columns, same pastel grid as SMTP accounts */
+  .settings-grid table{
     border-collapse:collapse;
     border:1px solid rgba(196,192,184,.55);
     background:rgba(255,252,247,.45);
   }
-  .smtp-account-card th,
-  .smtp-account-card td{
+  .settings-grid th,
+  .settings-grid td{
+    text-align:center !important;
+    vertical-align:middle;
     border:1px solid rgba(196,192,184,.5) !important;
     background:transparent;
   }
-  .smtp-account-card thead th{background:rgba(236,232,224,.65)}
-  .smtp-account-card tbody tr:hover td{background:rgba(236,232,224,.35)}
+  .settings-grid thead th{background:rgba(236,232,224,.65)}
+  .settings-grid tbody tr:hover td{background:rgba(236,232,224,.35)}
+  .settings-grid .row-actions{justify-content:center}
+
+  /* SMTP accounts: same card padding as Global mail options */
+  .smtp-account-card{margin-bottom:18px}
+  .smtp-account-card > h3{margin-bottom:6px}
+  .smtp-account-card .table-wrap{margin-top:12px}
+  .smtp-account-card table{min-width:0;width:100%}
 
   /* Webhook */
   .webhook-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
@@ -1743,7 +1736,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261021smtp1"></script>
+<script type="module" src="/app.js?v=20261021grid2"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
