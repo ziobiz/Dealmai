@@ -11129,10 +11129,8 @@ function renderAdminSmtp(){
       </div>
     </div>
 
-    <div class="panel">
-      <div class="admin-head" style="margin-bottom:10px">
-        <h3 style="margin:0;font-size:15px">${I.t("admin.smtp.accounts.title")}</h3>
-      </div>
+    <div class="wh-card smtp-account-card">
+      <h3>${I.t("admin.smtp.accounts.title")}</h3>
       <div class="table-wrap">
         ${accounts.length === 0
           ? `<div class="empty-state">${I.t("admin.smtp.accounts.empty")}</div>`
