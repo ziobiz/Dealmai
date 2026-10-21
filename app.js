@@ -4839,6 +4839,8 @@ const State = {
   invoiceDateFilter: "today",     // default: today's invoices
   invoicePageSize: 50,
   invoicePage: 1,
+  emailPageSize: 50,
+  emailPage: 1,
   smtpAccounts: [],
   smtpConfig: { defaultAccountId: null, replyTo: "", supportBcc: "support@dealmai.com", testRewriteTo: "" },
   driveAutomation: { kinds: {}, parentFolderId: "", clientEmail: "", hasKey: false },
@@ -10999,6 +11001,8 @@ function ensureEmailFilter(){
   if(!State.emailKindFilter) State.emailKindFilter = "all";
   if(State.emailQuery == null) State.emailQuery = "";
   if(!State.emailSelected) State.emailSelected = {};
+  if(State.emailPageSize == null) State.emailPageSize = 50;
+  if(!State.emailPage) State.emailPage = 1;
   if(!State.emailFilter.from || !State.emailFilter.to){
     const d = computeEmailDateRange();
     if(!State.emailFilter.from) State.emailFilter.from = d.from;
@@ -11054,11 +11058,16 @@ function renderAdminEmails(){
     return hay.includes(q);
   });
 
+  const emailPager = paginateList(filtered, State.emailPageSize || 50, State.emailPage || 1);
+  State.emailPage = emailPager.page;
+  const pageRows = emailPager.slice;
+  State.emailPageIds = pageRows.map(e => e.id);
+
   const counts = (State.emails || []).reduce((a,e) => { a[e.status]=(a[e.status]||0)+1; return a; }, {});
   const pendingCount = counts.pending || 0;
   const processedCount = (counts.sent||0) + (counts.failed||0) + (counts.cancelled||0) + (counts.sent_support_only||0);
   const selectedCount = Object.keys(State.emailSelected || {}).length;
-  const visibleIds = filtered.map(e => e.id);
+  const visibleIds = pageRows.map(e => e.id);
   const allChecked = visibleIds.length > 0 && visibleIds.every(id => State.emailSelected[id]);
 
   const deliveredLabel = (e) => {
@@ -11073,7 +11082,7 @@ function renderAdminEmails(){
     return escapeHtml(I.t("admin.emails.resend.line", { n: String(n || 1), when }));
   };
 
-  const rows = filtered.map(e => {
+  const rows = pageRows.map(e => {
     const statusTag = e.status === "sent" ? `<span class="status-tag sent"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.sent"))}</span>`
       : e.status === "sent_support_only" ? `<span class="status-tag" style="background:rgba(11,182,196,.12);color:var(--teal-deep)" title="${escapeHtml(I.t("admin.emails.status.supportOnly.title"))}"><span class="d" style="background:var(--teal-deep)"></span>${escapeHtml(I.t("admin.emails.status.supportOnly"))}</span>`
       : e.status === "failed" ? `<span class="status-tag failed"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.failed"))}</span>`
@@ -11157,7 +11166,7 @@ function renderAdminEmails(){
         ${filtered.length === 0 ? `<div class="empty-state">${escapeHtml(emptyText)}</div>` :
         `<table>
           <thead><tr>
-            <th><input type="checkbox" ${allChecked ? "checked" : ""} onchange="AdminActions.toggleEmailVisible(this.checked)" aria-label="${escapeHtml(I.t("admin.emails.col.select"))}"></th>
+            <th><input type="checkbox" ${allChecked ? "checked" : ""} onchange="AdminActions.toggleEmailPage(this.checked)" aria-label="${escapeHtml(I.t("admin.emails.col.select"))}"></th>
             <th>${escapeHtml(I.t("admin.emails.col.time"))}</th>
             <th>${escapeHtml(I.t("admin.emails.col.to"))}</th>
             <th>${escapeHtml(I.t("admin.emails.col.subject"))}</th>
@@ -11171,6 +11180,13 @@ function renderAdminEmails(){
         </table>`}
       </div>
     </div>
+    ${renderPageSizeBar({
+      total: filtered.length,
+      page: State.emailPage || 1,
+      pageSize: State.emailPageSize || 50,
+      setSizeFn: "AdminActions.setEmailPageSize",
+      setPageFn: "AdminActions.setEmailPage"
+    })}
   `;
   if(focusSearch){
     const box = document.getElementById("em-q");
@@ -13347,6 +13363,27 @@ const AdminActions = {
     renderAdminEmails();
   },
 
+  toggleEmailPage(on){
+    if(!State.emailSelected) State.emailSelected = {};
+    const ids = State.emailPageIds || [];
+    ids.forEach(id => {
+      if(on) State.emailSelected[id] = true;
+      else delete State.emailSelected[id];
+    });
+    renderAdminEmails();
+  },
+
+  setEmailPageSize(size){
+    State.emailPageSize = size === "all" ? "all" : (Number(size) || 50);
+    State.emailPage = 1;
+    renderAdminEmails();
+  },
+
+  setEmailPage(page){
+    State.emailPage = Math.max(1, Number(page) || 1);
+    renderAdminEmails();
+  },
+
   toggleEmailVisible(on){
     if(!State.emailSelected) State.emailSelected = {};
     ensureEmailFilter();
@@ -13371,17 +13408,20 @@ const AdminActions = {
 
   setEmailQuery(value){
     State.emailQuery = value || "";
+    State.emailPage = 1;
     renderAdminEmails();
   },
 
   setEmailKind(kind){
     State.emailKindFilter = EMAIL_KIND_OPTIONS.includes(kind) ? kind : "all";
+    State.emailPage = 1;
     renderAdminEmails();
   },
 
   setEmailDateFilter(mode){
     const allowed = new Set(["today","yesterday","month","lastMonth"]);
     State.emailDateFilter = allowed.has(mode) ? mode : "today";
+    State.emailPage = 1;
     const range = computeEmailDateRange();
     ensureEmailFilter();
     State.emailFilter.from = range.from;
@@ -13394,6 +13434,7 @@ const AdminActions = {
     if(which === "from") State.emailFilter.from = value || "";
     if(which === "to") State.emailFilter.to = value || "";
     State.emailDateFilter = "period";
+    State.emailPage = 1;
     renderAdminEmails();
   },
 
@@ -13404,6 +13445,7 @@ const AdminActions = {
     if(fromEl) State.emailFilter.from = fromEl.value || State.emailFilter.from;
     if(toEl) State.emailFilter.to = toEl.value || State.emailFilter.to;
     State.emailDateFilter = "period";
+    State.emailPage = 1;
     renderAdminEmails();
   },
 
