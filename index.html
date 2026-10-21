@@ -12,7 +12,7 @@
 <link rel="icon" type="image/svg+xml" data-brand-favicon-default href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230bb6c4'/%3E%3Cstop offset='1' stop-color='%23d6299b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Ctext x='32' y='44' font-family='Arial,sans-serif' font-size='38' font-weight='700' fill='%23fff' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&family=JetBrains+Mono:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <style>
   :root{
     /* Warm off-white palette */
@@ -44,8 +44,9 @@
 
     --kanit:'Kanit', system-ui, sans-serif;
     --mono:'JetBrains Mono', monospace;
-    /* Popular CJK faces for public KO / JA pages */
-    --font-ko:'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+    /* Same Korean face as PG admin (Malgun Gothic / Apple SD Gothic Neo) */
+    --font-pg:-apple-system, BlinkMacSystemFont, "Malgun Gothic", "Apple SD Gothic Neo", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-ko:var(--font-pg);
     --font-ja:'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
     --font-ui:var(--kanit);
   }
@@ -53,18 +54,14 @@
   html,body{background:var(--bg);color:var(--text);font-family:var(--font-ui);font-weight:300;-webkit-font-smoothing:antialiased;overflow-x:hidden}
   body{min-height:100vh;min-height:100dvh;position:relative}
 
-  /* Public marketing pages only — swap to popular KO/JA fonts when that language is active.
-     Admin / checkout / account keep the default Kanit stack. */
-  html[lang="ko"] #page-home,
-  html[lang="ko"] #page-packages,
-  html[lang="ko"] #page-about,
-  html[lang="ko"] #page-media,
-  html[lang="ko"] .topbar,
-  html[lang="ko"] .drawer,
-  html[lang="ko"] .footer{
+  /* Korean uses the PG face everywhere (Malgun Gothic stack), all languages share one size scale. */
+  html[lang="ko"]{
     --font-ui:var(--font-ko);
     --kanit:var(--font-ko);
+  }
+  html[lang="ko"] body{
     font-family:var(--font-ko);
+    font-weight:400;
   }
   html[lang="ja"] #page-home,
   html[lang="ja"] #page-packages,
@@ -98,24 +95,7 @@
     overflow-wrap:normal;
   }
 
-  /* Locale body copy: size for natural reading, not matching EN pixel-for-pixel */
-  html[lang="th"] .hero p.lede{font-size:15.5px;line-height:1.75;max-width:34em}
-  html[lang="ko"] .hero p.lede{font-size:15px;line-height:1.8;max-width:32em}
-  html[lang="ja"] .hero p.lede{font-size:15px;line-height:1.85;max-width:34em}
-  html[lang="zh-CN"] .hero p.lede,
-  html[lang="zh"] .hero p.lede{font-size:15px;line-height:1.8;max-width:32em}
-
-  html[lang="th"] .section-head .lede{font-size:13.5px;line-height:1.7}
-  html[lang="ko"] .section-head .lede{font-size:13.5px;line-height:1.75}
-  html[lang="ja"] .section-head .lede{font-size:13.5px;line-height:1.8}
-  html[lang="zh-CN"] .section-head .lede,
-  html[lang="zh"] .section-head .lede{font-size:13.5px;line-height:1.75}
-
-  html[lang="th"] .cap p,
-  html[lang="ko"] .cap p,
-  html[lang="ja"] .cap p,
-  html[lang="zh-CN"] .cap p,
-  html[lang="zh"] .cap p{font-size:12.5px;line-height:1.65}
+  /* One body size for every language — same scale, not a per-locale bump */
   a{color:inherit;text-decoration:none}
   button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;font-weight:inherit}
   input,select,textarea{font-family:inherit;color:inherit;font-weight:inherit}
@@ -467,7 +447,10 @@
   .confirm.failed .seal svg{color:var(--red)}
 
   /* ===== ADMIN ===== */
-  .admin-shell{display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 67px)}
+  .admin-shell{
+    display:grid;grid-template-columns:240px 1fr;min-height:calc(100vh - 67px);
+    font-family:var(--font-pg);font-size:12px;line-height:1.5;font-weight:400;
+  }
   .admin-side{background:var(--surface-2);backdrop-filter:blur(14px);border-right:1px solid var(--line);padding:16px 0 28px;position:sticky;top:67px;align-self:start;height:calc(100vh - 67px);overflow-y:auto}
   .admin-side .side-title{font-family:var(--mono);font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted-2);padding:18px 24px 8px;font-weight:500}
   .admin-side .side-title:first-child{padding-top:0}
@@ -619,6 +602,61 @@
   .row-actions button{padding:5px 10px;border-radius:6px;font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);border:1px solid var(--line);transition:all .15s;background:var(--surface)}
   .row-actions button:hover{color:var(--teal-deep);border-color:var(--teal)}
   .row-actions button.danger:hover{color:var(--red);border-color:var(--red)}
+
+  /* Admin type scale matches PG (12px body, 13px titles/headers) for every language */
+  .admin-shell,
+  .admin-shell button,
+  .admin-shell input,
+  .admin-shell select,
+  .admin-shell textarea,
+  .admin-shell th,
+  .admin-shell td,
+  .admin-shell h1,
+  .admin-shell h3,
+  .admin-shell p,
+  .admin-shell .crumbs,
+  .admin-shell .filter-pill,
+  .admin-shell .row-actions button,
+  .admin-shell .status-tag,
+  .admin-shell .src-tag,
+  .admin-shell .side-title,
+  .admin-shell .lab,
+  .admin-shell .side-nav-link,
+  .admin-shell .side-item,
+  .admin-shell .admin-tab,
+  .admin-shell .ps-btn,
+  .admin-shell .ps-page{
+    font-family:var(--font-pg);
+  }
+  .admin-shell .admin-head h1{font-size:13px;font-weight:700;letter-spacing:0;line-height:1.4}
+  .admin-shell .admin-head .crumbs{font-size:13px;font-weight:700;letter-spacing:0;text-transform:none}
+  .admin-shell .adm-sub{font-size:11px;line-height:1.5;color:var(--muted);max-width:640px;margin:8px 0 0}
+  .admin-shell .stat .lab{font-size:11px;letter-spacing:0;text-transform:none}
+  .admin-shell .stat .val{font-size:16px;font-weight:600}
+  .admin-shell .stat .val .unit{font-size:12px}
+  .admin-shell .stat .val.val-multi{font-size:13px}
+  .admin-shell .stat-currency-line .amt{font-size:13px}
+  .admin-shell .stat-currency-line .ccode,
+  .admin-shell .stat-currency-line .sym{font-size:12px}
+  .admin-shell .panel-h h3{font-size:12px;font-weight:700}
+  .admin-shell .filter-pill{font-size:12px;letter-spacing:0;text-transform:none}
+  .admin-shell .side-nav-link{font-size:13px;font-weight:600}
+  .admin-shell .side-item{font-size:12px}
+  .admin-shell .admin-tab{font-size:12px}
+  .admin-shell table{font-size:12px}
+  .admin-shell th{font-size:13px;font-weight:500;letter-spacing:0;text-transform:none;padding:10px 12px}
+  .admin-shell td{font-size:12px;font-weight:400;padding:10px 12px}
+  .admin-shell .row-actions button{font-size:12px;letter-spacing:0;text-transform:none;font-weight:500}
+  .admin-shell .status-tag,
+  .admin-shell .src-tag{font-size:12px;letter-spacing:0;text-transform:none}
+  .admin-shell .inv-field{
+    display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);
+  }
+  #invoices-table th,
+  #invoices-table td{text-align:center;vertical-align:middle}
+  #invoices-table .row-actions{justify-content:center}
+  #invoices-table .inv-money{line-height:1.4;font-weight:600}
+  #invoices-table .inv-ccy{font-weight:400;color:var(--muted)}
 
   /* Webhook */
   .webhook-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
@@ -1169,27 +1207,27 @@
   <div class="topbar-inner">
     <!-- Brand sits in the same 240px column as the admin sidebar, centered. -->
     <div class="topbar-brand">
-      <div class="wordmark" onclick="App.go('home')">
+    <div class="wordmark" onclick="App.go('home')">
         <img class="brand-logo-img" id="brand-logo-img" alt="Deal Mai" style="display:none;height:48px;max-width:220px;object-fit:contain" />
         <div class="brand-wordmark-fallback" id="brand-wordmark-fallback">
-          <div class="wordmark-glyph" id="brand-glyph">D</div>
+        <div class="wordmark-glyph" id="brand-glyph">D</div>
           <div class="wordmark-copy">
             <div class="wordmark-text" id="brand-text">Deal <em>Mai</em></div>
             <div class="wordmark-tagline" id="brand-tagline">AI SALES AGENT PLATFORM</div>
-          </div>
-        </div>
+      </div>
+    </div>
       </div>
     </div>
     <div class="topbar-mid">
-      <nav class="nav-desktop" id="nav-desktop">
-        <button data-nav="home" class="active" onclick="App.go('home')" data-i18n="nav.home">Home</button>
+    <nav class="nav-desktop" id="nav-desktop">
+      <button data-nav="home" class="active" onclick="App.go('home')" data-i18n="nav.home">Home</button>
         <button data-nav="packages" onclick="App.go('packages')" data-i18n="nav.packages">Package</button>
         <button data-nav="media" onclick="App.go('media')" data-i18n="nav.media">Media</button>
         <button data-nav="about" onclick="App.go('about')" data-i18n="nav.about">About Us</button>
-        <button data-nav="account" id="nav-account-btn" onclick="App.go('account')" data-i18n="nav.account" style="display:none">My Account</button>
-        <button data-nav="orders" id="nav-orders-btn" onclick="App.go('orders')" data-i18n="nav.orders" style="display:none">My Orders</button>
-        <button data-nav="admin" id="nav-admin-btn" onclick="App.go('admin')" data-i18n="nav.admin" style="display:none">Admin</button>
-      </nav>
+      <button data-nav="account" id="nav-account-btn" onclick="App.go('account')" data-i18n="nav.account" style="display:none">My Account</button>
+      <button data-nav="orders" id="nav-orders-btn" onclick="App.go('orders')" data-i18n="nav.orders" style="display:none">My Orders</button>
+      <button data-nav="admin" id="nav-admin-btn" onclick="App.go('admin')" data-i18n="nav.admin" style="display:none">Admin</button>
+    </nav>
       <div class="session-meta" id="session-meta" aria-live="polite">
         <span class="sm-item"><span class="sm-label" data-i18n="session.ip">Access IP</span><span class="sm-val" id="session-ip">—</span></span>
         <span class="sm-item"><span class="sm-label" data-i18n="session.accessAt">Access time</span><span class="sm-val" id="session-access-at">—</span></span>
@@ -1587,12 +1625,12 @@
     <button class="close" onclick="App.closeLogin()">×</button>
 
     <div id="login-step-credentials" class="show">
-      <h2 data-i18n="login.title-html"></h2>
-      <div class="sub" data-i18n="login.sub">Access your Deal Pro account</div>
-      <div class="field"><label data-i18n="login.email">Email</label><input id="li-email" type="email" placeholder="you@example.com" autocomplete="email" /></div>
-      <div class="field"><label data-i18n="login.password">Password</label><input id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password" /></div>
-      <button class="btn-primary" onclick="App.doLogin()"><span data-i18n="login.cta">Sign In</span><span class="arr">→</span></button>
-      <button onclick="App.forgotPassword()" style="margin-top:10px;background:transparent;color:var(--teal-deep);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:6px;text-align:center;width:100%;cursor:pointer">Forgot Password?</button>
+    <h2 data-i18n="login.title-html"></h2>
+    <div class="sub" data-i18n="login.sub">Access your Deal Pro account</div>
+    <div class="field"><label data-i18n="login.email">Email</label><input id="li-email" type="email" placeholder="you@example.com" autocomplete="email" /></div>
+    <div class="field"><label data-i18n="login.password">Password</label><input id="li-pass" type="password" placeholder="••••••••" autocomplete="current-password" /></div>
+    <button class="btn-primary" onclick="App.doLogin()"><span data-i18n="login.cta">Sign In</span><span class="arr">→</span></button>
+    <button onclick="App.forgotPassword()" style="margin-top:10px;background:transparent;color:var(--teal-deep);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:6px;text-align:center;width:100%;cursor:pointer">Forgot Password?</button>
       <div class="login-switch">
         <span data-i18n="login.noAccount">No account?</span>
         <button type="button" onclick="App.openSignup()" data-i18n="login.createAccount">Create account</button>
@@ -1675,7 +1713,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261001logo1"></script>
+<script type="module" src="/app.js?v=20261021inv2"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

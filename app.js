@@ -364,7 +364,10 @@ const DEFAULT_STRINGS = {
   "admin.invoices.col.tx":"Transaction",
   "admin.invoices.col.amount":"Amount",
   "admin.invoices.col.status":"Status",
-  "admin.invoices.col.actions":"Actions",
+  "admin.invoices.col.actions":"Remarks",
+  "admin.invoices.preview":"Preview",
+  "admin.invoices.previewFailed":"Could not open the preview.",
+  "admin.invoices.previewBlocked":"Pop-up blocked. Allow pop-ups in your browser and try again.",
   "admin.invoices.pdf":"PDF",
   "admin.invoices.pdfFailed":"PDF download failed",
   "admin.invoices.status.issued":"Issued",
@@ -1325,13 +1328,17 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.loading":"กำลังโหลด…",
     "admin.invoices.loadFailed":"โหลดใบแจ้งหนี้ไม่สำเร็จ",
     "admin.invoices.notConfigured":"ยังไม่ได้ตั้งค่า Invoice Service บนเซิร์ฟเวอร์",
+    "admin.invoices.authExpired":"เซสชันหมดอายุ ออกจากระบบแล้วเข้าสู่ระบบใหม่ แล้วเปิด Invoice อีกครั้ง",
     "admin.invoices.col.issued":"วันที่ออก",
     "admin.invoices.col.no":"เลขที่",
     "admin.invoices.col.ticket":"ออเดอร์ / Ticket",
     "admin.invoices.col.tx":"ธุรกรรม",
     "admin.invoices.col.amount":"จำนวนเงิน",
     "admin.invoices.col.status":"สถานะ",
-    "admin.invoices.col.actions":"การทำงาน",
+    "admin.invoices.col.actions":"หมายเหตุ",
+    "admin.invoices.preview":"ดูตัวอย่าง",
+    "admin.invoices.previewFailed":"เปิดตัวอย่างไม่ได้",
+    "admin.invoices.previewBlocked":"ป๊อปอัปถูกบล็อก อนุญาตป๊อปอัปในเบราว์เซอร์แล้วลองใหม่",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"ดาวน์โหลด PDF ไม่สำเร็จ",
     "admin.invoices.status.issued":"ออกแล้ว",
@@ -2180,7 +2187,10 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.col.tx":"거래",
     "admin.invoices.col.amount":"금액",
     "admin.invoices.col.status":"상태",
-    "admin.invoices.col.actions":"작업",
+    "admin.invoices.col.actions":"비고",
+    "admin.invoices.preview":"미리보기",
+    "admin.invoices.previewFailed":"미리보기를 열지 못했습니다.",
+    "admin.invoices.previewBlocked":"팝업이 차단되었습니다. 브라우저에서 팝업을 허용한 뒤 다시 시도해 주세요.",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"PDF 다운로드 실패",
     "admin.invoices.status.issued":"발행",
@@ -3082,13 +3092,17 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.loading":"読み込み中…",
     "admin.invoices.loadFailed":"インボイスを読み込めませんでした",
     "admin.invoices.notConfigured":"サーバーに Invoice Service が設定されていません。",
+    "admin.invoices.authExpired":"ログインの有効期限が切れました。一度ログアウトして再ログインし、インボイスを開き直してください。",
     "admin.invoices.col.issued":"発行日",
     "admin.invoices.col.no":"番号",
     "admin.invoices.col.ticket":"注文 / Ticket",
     "admin.invoices.col.tx":"取引",
     "admin.invoices.col.amount":"金額",
     "admin.invoices.col.status":"状態",
-    "admin.invoices.col.actions":"操作",
+    "admin.invoices.col.actions":"備考",
+    "admin.invoices.preview":"プレビュー",
+    "admin.invoices.previewFailed":"プレビューを開けませんでした。",
+    "admin.invoices.previewBlocked":"ポップアップがブロックされました。ブラウザで許可してから再試行してください。",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"PDFのダウンロードに失敗しました",
     "admin.invoices.status.issued":"発行済",
@@ -3904,13 +3918,17 @@ const FULL_TRANSLATIONS = {
     "admin.invoices.loading":"加载中…",
     "admin.invoices.loadFailed":"无法加载发票",
     "admin.invoices.notConfigured":"服务器未配置 Invoice Service。",
+    "admin.invoices.authExpired":"登录已过期。请退出后重新登录，再打开发票。",
     "admin.invoices.col.issued":"开具日期",
     "admin.invoices.col.no":"发票号",
     "admin.invoices.col.ticket":"订单 / Ticket",
     "admin.invoices.col.tx":"交易",
     "admin.invoices.col.amount":"金额",
     "admin.invoices.col.status":"状态",
-    "admin.invoices.col.actions":"操作",
+    "admin.invoices.col.actions":"备注",
+    "admin.invoices.preview":"预览",
+    "admin.invoices.previewFailed":"无法打开预览。",
+    "admin.invoices.previewBlocked":"弹窗被拦截。请允许浏览器弹窗后重试。",
     "admin.invoices.pdf":"PDF",
     "admin.invoices.pdfFailed":"PDF 下载失败",
     "admin.invoices.status.issued":"已开具",
@@ -9549,7 +9567,7 @@ function renderAdminInvoices(){
       ? n.toLocaleString(appLocale(), { minimumFractionDigits: 2, maximumFractionDigits: 2 })
       : String(amount ?? "");
     const cur = currency || "USD";
-    return `<div style="line-height:1.4"><div style="font-weight:600;font-family:var(--mono)">${escapeHtml(num)} <span style="font-size:10px;color:var(--muted)">${escapeHtml(cur)}</span></div></div>`;
+    return `<div class="inv-money">${escapeHtml(num)} <span class="inv-ccy">${escapeHtml(cur)}</span></div>`;
   };
 
   const statusCell = (status) => {
@@ -9571,16 +9589,18 @@ function renderAdminInvoices(){
   const bodyRows = rows.map(r => {
     const ticket = r.ticket_no && !String(r.ticket_no).startsWith("SIM-") ? r.ticket_no : "—";
     const tx = r.source_transaction_id || "—";
+    const pdfArgs = `'${escapeHtml(r.id)}','${escapeHtml(r.invoice_no || "invoice")}'`;
     return `<tr>
-      <td style="font-family:var(--mono);font-size:12px">${escapeHtml(fmtDate(r.issued_at))}</td>
-      <td style="font-family:var(--mono);font-size:12px">${escapeHtml(r.invoice_no || "")}</td>
-      <td style="font-family:var(--mono);font-size:11.5px">${escapeHtml(ticket)}</td>
-      <td style="font-family:var(--mono);font-size:11px;color:var(--muted)">${escapeHtml(tx)}</td>
+      <td>${escapeHtml(fmtDate(r.issued_at))}</td>
+      <td>${escapeHtml(r.invoice_no || "")}</td>
+      <td>${escapeHtml(ticket)}</td>
+      <td>${escapeHtml(tx)}</td>
       <td>${fmtMoneyCell(r.amount, r.currency)}</td>
       <td>${statusCell(r.status)}</td>
       <td>
         <div class="row-actions">
-          <button type="button" onclick="AdminActions.downloadInvoicePdf('${escapeHtml(r.id)}','${escapeHtml(r.invoice_no || "invoice")}')">${escapeHtml(I.t("admin.invoices.pdf"))}</button>
+          <button type="button" onclick="AdminActions.previewInvoicePdf(${pdfArgs})">${escapeHtml(I.t("admin.invoices.preview"))}</button>
+          <button type="button" onclick="AdminActions.downloadInvoicePdf(${pdfArgs})">${escapeHtml(I.t("admin.invoices.pdf"))}</button>
         </div>
       </td>
     </tr>`;
@@ -9612,7 +9632,7 @@ function renderAdminInvoices(){
       <div>
         <div class="crumbs">${escapeHtml(I.t("admin.invoices.crumb"))} · <span style="color:var(--teal-deep)">${escapeHtml(from)} → ${escapeHtml(to)}</span></div>
         <h1>${I.t("admin.invoices.title-html")}</h1>
-        <p class="adm-sub" style="margin:8px 0 0;max-width:640px;color:var(--muted);font-size:13px;line-height:1.45">${escapeHtml(I.t("admin.invoices.sub"))}</p>
+        <p class="adm-sub">${escapeHtml(I.t("admin.invoices.sub"))}</p>
       </div>
       <button class="btn-primary" type="button" onclick="AdminActions.loadInvoices()"><span>${escapeHtml(I.t("admin.invoices.refresh"))}</span><span class="arr">→</span></button>
     </div>
@@ -9621,11 +9641,11 @@ function renderAdminInvoices(){
       <div class="stat accent"><div class="lab">${escapeHtml(I.t("admin.invoices.stat.amount"))}</div><div class="val${Object.keys(invoiceTotalsByCurrency).length > 1 ? " val-multi" : ""}">${renderCurrencyTotalsHtml(invoiceTotalsByCurrency)}</div></div>
     </div>
     <div class="filters invoice-date-row" style="margin:0 0 14px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
-      <label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">
+      <label class="inv-field">
         ${escapeHtml(I.t("admin.invoices.from"))}
         <input type="date" id="inv-from" class="orders-dropdown-filter" value="${escapeHtml(from)}" onchange="AdminActions.setInvoiceCustomDate('from', this.value)" style="min-width:140px" />
       </label>
-      <label style="display:flex;flex-direction:column;gap:4px;font-size:11px;color:var(--muted);font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase">
+      <label class="inv-field">
         ${escapeHtml(I.t("admin.invoices.to"))}
         <input type="date" id="inv-to" class="orders-dropdown-filter" value="${escapeHtml(to)}" onchange="AdminActions.setInvoiceCustomDate('to', this.value)" style="min-width:140px" />
       </label>
@@ -12108,19 +12128,41 @@ const AdminActions = {
     renderAdminOrders();
   },
 
+  async _fetchInvoicePdfBlob(id){
+    const res = await this._fetchInvoicesApi(
+      "/api/invoices/" + encodeURIComponent(id) + "/pdf",
+      { accept: "application/pdf,*/*" }
+    );
+    if(!res.ok){
+      const data = await res.json().catch(() => ({}));
+      if(res.status === 401) throw new Error(I.t("admin.invoices.authExpired"));
+      throw new Error(data.error || I.t("admin.invoices.pdfFailed"));
+    }
+    return res.blob();
+  },
+
+  async previewInvoicePdf(id){
+    if(!id) return;
+    try{
+      const blob = await this._fetchInvoicePdfBlob(id);
+      const url = URL.createObjectURL(blob);
+      const opened = window.open(url, "_blank", "noopener,noreferrer");
+      if(!opened){
+        URL.revokeObjectURL(url);
+        throw new Error(I.t("admin.invoices.previewBlocked"));
+      }
+      setTimeout(() => URL.revokeObjectURL(url), 60000);
+    }catch(e){
+      console.error("[invoices] preview failed:", e);
+      const blocked = e && e.message === I.t("admin.invoices.previewBlocked");
+      Toast.show(e.message || I.t(blocked ? "admin.invoices.previewBlocked" : "admin.invoices.previewFailed"), "err");
+    }
+  },
+
   async downloadInvoicePdf(id, invoiceNo){
     if(!id) return;
     try{
-      const res = await this._fetchInvoicesApi(
-        "/api/invoices/" + encodeURIComponent(id) + "/pdf",
-        { accept: "application/pdf,*/*" }
-      );
-      if(!res.ok){
-        const data = await res.json().catch(() => ({}));
-        if(res.status === 401) throw new Error(I.t("admin.invoices.authExpired"));
-        throw new Error(data.error || I.t("admin.invoices.pdfFailed"));
-      }
-      const blob = await res.blob();
+      const blob = await this._fetchInvoicePdfBlob(id);
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
