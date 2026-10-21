@@ -658,6 +658,17 @@
   #invoices-table .inv-money{line-height:1.4;font-weight:600}
   #invoices-table .inv-ccy{font-weight:400;color:var(--muted)}
 
+  /* Settings menus: full cell grid and centered columns */
+  .settings-grid table{border-collapse:collapse;border:1px solid var(--line-2)}
+  .settings-grid th,
+  .settings-grid td{
+    text-align:center !important;
+    vertical-align:middle;
+    border:1px solid var(--line-2);
+  }
+  .settings-grid tr:last-child td{border-bottom:1px solid var(--line-2)}
+  .settings-grid .row-actions{justify-content:center}
+
   /* Webhook */
   .webhook-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
   .wh-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:24px;backdrop-filter:blur(14px)}
@@ -1601,18 +1612,18 @@
       <div class="admin-view" id="adm-staff" style="display:none"></div>
       <div class="admin-view" id="adm-users" style="display:none"></div>
       <div class="admin-view" id="adm-packages" style="display:none"></div>
-      <div class="admin-view" id="adm-webhook" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-webhook" style="display:none"></div>
       <div class="admin-view" id="adm-partners" style="display:none"></div>
       <div class="admin-view" id="adm-paygw" style="display:none"></div>
-      <div class="admin-view" id="adm-currencies" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-currencies" style="display:none"></div>
       <div class="admin-view" id="adm-chillpay" style="display:none"></div>
-      <div class="admin-view" id="adm-emails" style="display:none"></div>
-      <div class="admin-view" id="adm-smtp" style="display:none"></div>
-      <div class="admin-view" id="adm-domain" style="display:none"></div>
-      <div class="admin-view" id="adm-server" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-emails" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-smtp" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-domain" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-server" style="display:none"></div>
       <div class="admin-view" id="adm-languages" style="display:none"></div>
-      <div class="admin-view" id="adm-branding" style="display:none"></div>
-      <div class="admin-view" id="adm-dmchamp" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-branding" style="display:none"></div>
+      <div class="admin-view settings-grid" id="adm-dmchamp" style="display:none"></div>
       <div class="admin-view" id="adm-paymentgw" style="display:none"></div>
       <div class="admin-view" id="adm-password" style="display:none"></div>
     </main>
@@ -1713,7 +1724,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261021inv3"></script>
+<script type="module" src="/app.js?v=20261021grid1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
