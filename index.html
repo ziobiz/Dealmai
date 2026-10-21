@@ -675,6 +675,59 @@
   .settings-grid tbody tr:hover td{background:rgba(236,232,224,.35)}
   .settings-grid .row-actions{justify-content:center}
 
+  /* Drive automation card: kind names stay on one line */
+  .drive-auto-card .sub{margin:0 0 16px;max-width:none}
+  .drive-auto-block{margin-bottom:16px}
+  .drive-auto-card .drive-auto-label{
+    display:block;
+    margin:0 0 8px;
+    font-family:var(--font-pg);
+    font-size:12px;
+    font-weight:500;
+    letter-spacing:0;
+    text-transform:none;
+    color:var(--text);
+  }
+  .drive-auto-kinds{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+    gap:8px;
+  }
+  .drive-auto-card .drive-auto-kind{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    min-height:40px;
+    margin:0;
+    padding:8px 12px;
+    border:1px solid var(--line);
+    border-radius:8px;
+    background:rgba(255,252,247,.6);
+    font-family:var(--font-pg);
+    font-size:13px;
+    font-weight:400;
+    line-height:1.3;
+    letter-spacing:0;
+    text-transform:none;
+    color:var(--text);
+    white-space:nowrap;
+  }
+  .drive-auto-kind input{flex:none;margin:0;width:auto}
+  .drive-auto-card input[type="text"],
+  .drive-auto-card textarea{
+    width:100%;
+    box-sizing:border-box;
+    padding:12px 14px;
+    background:rgba(255,251,243,.65);
+    border:1px solid var(--line-2);
+    border-radius:9px;
+    font-size:13px;
+    font-weight:400;
+    color:var(--text);
+  }
+  .drive-auto-card textarea{min-height:96px;resize:vertical;font-family:var(--mono);font-size:12px}
+  .drive-auto-hint{margin-top:6px;font-size:12px;line-height:1.45;color:var(--muted)}
+
   /* SMTP accounts: same card padding as Global mail options */
   .smtp-account-card{margin-bottom:18px}
   .smtp-account-card > h3{margin-bottom:6px}
@@ -1737,7 +1790,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261021mail4"></script>
+<script type="module" src="/app.js?v=20261021mail5"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

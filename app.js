@@ -11246,25 +11246,25 @@ function renderAdminSmtp(){
       </div>
     </div>
 
-    <div class="wh-card" style="margin-bottom:18px">
+    <div class="wh-card drive-auto-card" style="margin-bottom:18px">
       <h3>${I.t("admin.smtp.auto.title")}</h3>
-      <p style="margin:6px 0 14px;color:var(--muted);font-size:13px;line-height:1.5">${escapeHtml(I.t("admin.smtp.auto.sub"))}</p>
-      <div class="field" style="margin-bottom:14px">
-        <label>${escapeHtml(I.t("admin.smtp.auto.kinds"))}</label>
-        <div style="display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px">
-          ${EMAIL_KIND_OPTIONS.map(k => `<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="drive-kind-${k}" ${(State.driveAutomation && State.driveAutomation.kinds && State.driveAutomation.kinds[k]) ? "checked" : ""}> ${escapeHtml(emailKindLabel(k))}</label>`).join("")}
+      <p class="sub">${escapeHtml(I.t("admin.smtp.auto.sub"))}</p>
+      <div class="drive-auto-block">
+        <div class="drive-auto-label">${escapeHtml(I.t("admin.smtp.auto.kinds"))}</div>
+        <div class="drive-auto-kinds">
+          ${EMAIL_KIND_OPTIONS.map(k => `<label class="drive-auto-kind"><input type="checkbox" id="drive-kind-${k}" ${(State.driveAutomation && State.driveAutomation.kinds && State.driveAutomation.kinds[k]) ? "checked" : ""}><span>${escapeHtml(emailKindLabel(k))}</span></label>`).join("")}
         </div>
       </div>
-      <div class="field" style="margin-bottom:14px">
-        <label>${escapeHtml(I.t("admin.smtp.auto.folder"))}</label>
+      <div class="drive-auto-block">
+        <label class="drive-auto-label" for="drive-folder">${escapeHtml(I.t("admin.smtp.auto.folder"))}</label>
         <input id="drive-folder" type="text" value="${escapeHtml((State.driveAutomation && State.driveAutomation.parentFolderId) || "")}" placeholder="https://drive.google.com/drive/folders/…">
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">${escapeHtml(I.t("admin.smtp.auto.folder.hint"))}</div>
+        <div class="drive-auto-hint">${escapeHtml(I.t("admin.smtp.auto.folder.hint"))}</div>
       </div>
-      <div class="field" style="margin-bottom:14px">
-        <label>${escapeHtml(I.t("admin.smtp.auto.account"))}</label>
-        ${(State.driveAutomation && State.driveAutomation.hasKey) ? `<div style="font-size:12px;margin-bottom:6px">${escapeHtml(I.t("admin.smtp.auto.account.saved", { email: State.driveAutomation.clientEmail || "" }))}</div>` : ""}
-        <textarea id="drive-json" rows="4" placeholder='{"type":"service_account","client_email":"…","private_key":"…"}' style="width:100%;font-family:var(--mono);font-size:12px"></textarea>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">${escapeHtml(I.t("admin.smtp.auto.account.hint"))}</div>
+      <div class="drive-auto-block">
+        <label class="drive-auto-label" for="drive-json">${escapeHtml(I.t("admin.smtp.auto.account"))}</label>
+        ${(State.driveAutomation && State.driveAutomation.hasKey) ? `<div class="drive-auto-hint" style="margin-top:0;margin-bottom:6px">${escapeHtml(I.t("admin.smtp.auto.account.saved", { email: State.driveAutomation.clientEmail || "" }))}</div>` : ""}
+        <textarea id="drive-json" rows="4" placeholder='{"type":"service_account","client_email":"…","private_key":"…"}'></textarea>
+        <div class="drive-auto-hint">${escapeHtml(I.t("admin.smtp.auto.account.hint"))}</div>
       </div>
       <button class="btn-primary" type="button" onclick="AdminActions.saveDriveAutomation()"><span>${escapeHtml(I.t("admin.smtp.auto.save"))}</span><span class="arr">→</span></button>
     </div>
