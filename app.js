@@ -792,6 +792,8 @@ const DEFAULT_STRINGS = {
   "admin.emails.col.status":"Status",
   "admin.emails.action.view":"View",
   "admin.emails.action.customer":"Customer",
+  "admin.emails.action.pdf":"PDF",
+  "admin.emails.pdf.failed":"Could not create the PDF.",
   "admin.emails.customer.loading":"Rendering the customer email…",
   "admin.emails.customer.failed":"Could not render the customer email.",
   "admin.emails.customer.note":"This is the template the customer receives. Opening it does not send the email.",
@@ -842,6 +844,17 @@ const DEFAULT_STRINGS = {
   "admin.smtp.global.testRewrite.hint":"When set, every outbound message is redirected to this address (subject tagged). Leave empty in production.",
   "admin.smtp.global.default":"Default account",
   "admin.smtp.global.save":"Save options",
+  "admin.smtp.auto.title":"Automation",
+  "admin.smtp.auto.sub":"After a selected email is sent, the same customer template is saved as a PDF in that kind's Google Drive folder. A failed upload does not stop the customer email.",
+  "admin.smtp.auto.kinds":"Email kinds to archive",
+  "admin.smtp.auto.folder":"Parent Google Drive folder",
+  "admin.smtp.auto.folder.hint":"Paste the folder link or folder ID. Each kind is stored in its own folder underneath.",
+  "admin.smtp.auto.account":"Google service account",
+  "admin.smtp.auto.account.hint":"Paste the service account JSON. Share the parent folder with that account as an editor. Leave blank to keep the saved key.",
+  "admin.smtp.auto.account.saved":"Key saved for {email}",
+  "admin.smtp.auto.save":"Save automation",
+  "admin.smtp.auto.saved":"Automation saved",
+  "admin.smtp.auto.invalidJson":"The service account JSON is missing client_email or private_key.",
   "admin.smtp.accounts.title":"SMTP accounts",
   "admin.smtp.accounts.add":"Add account",
   "admin.smtp.accounts.empty":"No SMTP accounts yet. Add one to send mail from the queue.",
@@ -1805,6 +1818,8 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.status":"สถานะ",
     "admin.emails.action.view":"ดู",
     "admin.emails.action.customer":"สำหรับลูกค้า",
+    "admin.emails.action.pdf":"PDF",
+    "admin.emails.pdf.failed":"สร้าง PDF ไม่สำเร็จ",
     "admin.emails.customer.loading":"กำลังสร้างอีเมลลูกค้า…",
     "admin.emails.customer.failed":"สร้างอีเมลลูกค้าไม่สำเร็จ",
     "admin.emails.customer.note":"นี่คือเทมเพลตที่ลูกค้าได้รับ การเปิดดูนี้ไม่ส่งอีเมล",
@@ -1956,6 +1971,17 @@ const FULL_TRANSLATIONS = {
     "admin.smtp.global.testRewrite.hint":"เมื่อตั้งค่า อีเมลขาออกทั้งหมดจะถูกส่งไปยังที่อยู่นี้และติดป้ายในหัวข้อ ควรเว้นว่างในระบบจริง",
     "admin.smtp.global.default":"บัญชีเริ่มต้น",
     "admin.smtp.global.save":"บันทึกตัวเลือก",
+    "admin.smtp.auto.title":"ระบบอัตโนมัติ",
+    "admin.smtp.auto.sub":"หลังส่งอีเมลที่เลือก ระบบจะบันทึกเทมเพลตลูกค้าเป็น PDF ลงโฟลเดอร์ Google Drive ของประเภทนั้น หากอัปโหลดไม่สำเร็จ อีเมลลูกค้ายังส่งตามปกติ",
+    "admin.smtp.auto.kinds":"ประเภทอีเมลที่จะจัดเก็บ",
+    "admin.smtp.auto.folder":"โฟลเดอร์ Google Drive หลัก",
+    "admin.smtp.auto.folder.hint":"วางลิงก์โฟลเดอร์หรือรหัสโฟลเดอร์ แต่ละประเภทจะถูกเก็บในโฟลเดอร์ย่อยของตัวเอง",
+    "admin.smtp.auto.account":"บัญชีบริการ Google",
+    "admin.smtp.auto.account.hint":"วาง JSON ของบัญชีบริการ แชร์โฟลเดอร์หลักให้บัญชีนั้นเป็นผู้แก้ไข เว้นว่างไว้เพื่อใช้คีย์เดิม",
+    "admin.smtp.auto.account.saved":"บันทึกคีย์ของ {email} แล้ว",
+    "admin.smtp.auto.save":"บันทึกระบบอัตโนมัติ",
+    "admin.smtp.auto.saved":"บันทึกระบบอัตโนมัติแล้ว",
+    "admin.smtp.auto.invalidJson":"JSON ของบัญชีบริการไม่มี client_email หรือ private_key",
     "admin.smtp.accounts.title":"บัญชี SMTP",
     "admin.smtp.accounts.add":"เพิ่มบัญชี",
     "admin.smtp.accounts.empty":"ยังไม่มีบัญชี SMTP กรุณาเพิ่มบัญชีเพื่อส่งอีเมลจากคิว",
@@ -2750,6 +2776,19 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.status":"상태",
     "admin.emails.action.view":"보기",
     "admin.emails.action.customer":"고객용",
+    "admin.emails.action.pdf":"PDF",
+    "admin.emails.pdf.failed":"PDF를 만들지 못했습니다.",
+    "admin.smtp.auto.title":"자동화 관리",
+    "admin.smtp.auto.sub":"선택한 메일은 발송된 뒤 고객용 템플릿 PDF로 구글 드라이브의 종류별 폴더에 올라갑니다. 업로드가 실패해도 고객 메일은 그대로 발송됩니다.",
+    "admin.smtp.auto.kinds":"자동화할 메일 종류",
+    "admin.smtp.auto.folder":"구글 드라이브 상위 폴더",
+    "admin.smtp.auto.folder.hint":"폴더 링크 또는 폴더 ID를 넣습니다. 종류마다 그 아래 폴더로만 올라갑니다.",
+    "admin.smtp.auto.account":"구글 서비스 계정",
+    "admin.smtp.auto.account.hint":"서비스 계정 JSON을 붙여넣습니다. 상위 폴더를 그 계정에 편집자로 공유하세요. 비워 두면 저장된 키를 유지합니다.",
+    "admin.smtp.auto.account.saved":"{email} 키가 저장되어 있습니다",
+    "admin.smtp.auto.save":"자동화 저장",
+    "admin.smtp.auto.saved":"자동화를 저장했습니다",
+    "admin.smtp.auto.invalidJson":"서비스 계정 JSON에 client_email 또는 private_key가 없습니다.",
     "admin.emails.customer.loading":"고객용 메일을 만드는 중…",
     "admin.emails.customer.failed":"고객용 메일을 만들지 못했습니다.",
     "admin.emails.customer.note":"고객에게 발송되는 템플릿입니다. 이 화면에서는 메일이 나가지 않습니다.",
@@ -3624,6 +3663,8 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.status":"ステータス",
     "admin.emails.action.view":"表示",
     "admin.emails.action.customer":"顧客向け",
+    "admin.emails.action.pdf":"PDF",
+    "admin.emails.pdf.failed":"PDFを作成できませんでした。",
     "admin.emails.customer.loading":"顧客向けメールを作成しています…",
     "admin.emails.customer.failed":"顧客向けメールを作成できませんでした。",
     "admin.emails.customer.note":"お客様が受け取るテンプレートです。表示してもメールは送信されません。",
@@ -3849,6 +3890,17 @@ const FULL_TRANSLATIONS = {
     "admin.smtp.global.testRewrite.hint":"設定すると、すべての送信メールがこのアドレスに転送され、件名にテスト用の印が付きます。本番環境では空欄にしてください。",
     "admin.smtp.global.default":"既定のアカウント",
     "admin.smtp.global.save":"設定を保存",
+    "admin.smtp.auto.title":"自動保存",
+    "admin.smtp.auto.sub":"選んだメールは送信後、お客様向けテンプレートのPDFとして種類別のGoogleドライブフォルダに保存されます。アップロードに失敗してもお客様へのメールは送信されます。",
+    "admin.smtp.auto.kinds":"保存するメールの種類",
+    "admin.smtp.auto.folder":"Googleドライブの親フォルダ",
+    "admin.smtp.auto.folder.hint":"フォルダのリンクまたはフォルダIDを入力します。種類ごとにその下のフォルダへ保存されます。",
+    "admin.smtp.auto.account":"Googleサービスアカウント",
+    "admin.smtp.auto.account.hint":"サービスアカウントのJSONを貼り付けます。親フォルダをそのアカウントに編集者として共有してください。空欄の場合は保存済みの鍵を維持します。",
+    "admin.smtp.auto.account.saved":"{email} の鍵が保存されています",
+    "admin.smtp.auto.save":"自動保存を更新",
+    "admin.smtp.auto.saved":"自動保存を更新しました",
+    "admin.smtp.auto.invalidJson":"サービスアカウントJSONに client_email または private_key がありません。",
     "admin.smtp.accounts.title":"SMTPアカウント",
     "admin.smtp.accounts.add":"アカウントを追加",
     "admin.smtp.accounts.empty":"SMTPアカウントがありません。メールを送信するにはアカウントを追加してください。",
@@ -4483,6 +4535,8 @@ const FULL_TRANSLATIONS = {
     "admin.emails.col.status":"状态",
     "admin.emails.action.view":"查看",
     "admin.emails.action.customer":"客户版",
+    "admin.emails.action.pdf":"PDF",
+    "admin.emails.pdf.failed":"无法生成 PDF。",
     "admin.emails.customer.loading":"正在生成客户邮件…",
     "admin.emails.customer.failed":"无法生成客户邮件。",
     "admin.emails.customer.note":"这是客户收到的模板。打开预览不会发送邮件。",
@@ -4560,6 +4614,17 @@ const FULL_TRANSLATIONS = {
     "admin.smtp.global.testRewrite.hint":"设置后，所有外发邮件都会改发至此地址，并在主题中标记测试。正式环境请留空。",
     "admin.smtp.global.default":"默认账户",
     "admin.smtp.global.save":"保存设置",
+    "admin.smtp.auto.title":"自动归档",
+    "admin.smtp.auto.sub":"所选邮件发出后，会把客户模板另存为 PDF，放到该种类对应的 Google 云端硬盘文件夹。上传失败不会影响客户邮件发送。",
+    "admin.smtp.auto.kinds":"要归档的邮件种类",
+    "admin.smtp.auto.folder":"Google 云端硬盘上级文件夹",
+    "admin.smtp.auto.folder.hint":"粘贴文件夹链接或文件夹 ID。每种邮件只上传到各自的子文件夹。",
+    "admin.smtp.auto.account":"Google 服务账号",
+    "admin.smtp.auto.account.hint":"粘贴服务账号 JSON。请把上级文件夹以编辑者身份共享给该账号。留空则保留已保存的密钥。",
+    "admin.smtp.auto.account.saved":"已保存 {email} 的密钥",
+    "admin.smtp.auto.save":"保存自动归档",
+    "admin.smtp.auto.saved":"已保存自动归档",
+    "admin.smtp.auto.invalidJson":"服务账号 JSON 缺少 client_email 或 private_key。",
     "admin.smtp.accounts.title":"SMTP 账户",
     "admin.smtp.accounts.add":"添加账户",
     "admin.smtp.accounts.empty":"暂无 SMTP 账户。请先添加账户以发送队列中的邮件。",
@@ -4776,6 +4841,7 @@ const State = {
   invoicePage: 1,
   smtpAccounts: [],
   smtpConfig: { defaultAccountId: null, replyTo: "", supportBcc: "support@dealmai.com", testRewriteTo: "" },
+  driveAutomation: { kinds: {}, parentFolderId: "", clientEmail: "", hasKey: false },
   // Branding (loaded from Firestore config/branding doc; falls back to defaults below)
   branding: {
     siteName: "Deal Pro",
@@ -5680,6 +5746,19 @@ function subscribeCollections(){
       if(v === "smtp") renderAdminSmtp();
     }
   }, onErr("config/smtp")));
+  State.unsubs.push(onSnapshot(doc(db,"config","driveAutomation"), snap => {
+    const data = snap.exists ? (snap.data() || {}) : {};
+    State.driveAutomation = {
+      kinds: data.kinds || {},
+      parentFolderId: data.parentFolderId || "",
+      clientEmail: data.clientEmail || "",
+      hasKey: !!(data.privateKey && String(data.privateKey).includes("BEGIN"))
+    };
+    if(document.getElementById("page-admin")?.classList.contains("show")){
+      const v = document.querySelector(".side-item.active")?.dataset.admin;
+      if(v === "smtp") renderAdminSmtp();
+    }
+  }, onErr("config/driveAutomation")));
 
   // ontheline Partners + Payment Gateways (admin-managed reference lists).
   // Each doc: { code, companyName, createdAt }. Used to validate incoming
@@ -11001,12 +11080,15 @@ function renderAdminEmails(){
       : e.status === "cancelled" ? `<span class="status-tag" style="background:rgba(120,120,120,.12);color:#787878"><span class="d" style="background:#787878"></span>${escapeHtml(I.t("admin.emails.status.cancelled"))}</span>`
       : `<span class="status-tag pending"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.pending"))}</span>`;
     const customerBtn = `<button onclick="AdminActions.previewCustomerEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.customer"))}</button>`;
+    const pdfBtn = `<button onclick="AdminActions.downloadEmailPdf('${e.id}')">${escapeHtml(I.t("admin.emails.action.pdf"))}</button>`;
     const actions = e.status === "pending"
       ? `<button onclick="AdminActions.viewEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.view"))}</button>
          ${customerBtn}
+         ${pdfBtn}
          <button class="danger" onclick="AdminActions.cancelEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.cancel"))}</button>`
       : `<button onclick="AdminActions.viewEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.view"))}</button>
          ${customerBtn}
+         ${pdfBtn}
          <button onclick="AdminActions.resendEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.resend"))}</button>`;
     return `
       <tr>
@@ -11162,6 +11244,29 @@ function renderAdminSmtp(){
         <button class="btn-primary" onclick="AdminActions.saveSmtpOptions()"><span>${I.t("admin.smtp.global.save")}</span><span class="arr">→</span></button>
         <button class="btn-ghost" onclick="AdminActions.queueSmtpTest()">${I.t("admin.smtp.btn.test")}</button>
       </div>
+    </div>
+
+    <div class="wh-card" style="margin-bottom:18px">
+      <h3>${I.t("admin.smtp.auto.title")}</h3>
+      <p style="margin:6px 0 14px;color:var(--muted);font-size:13px;line-height:1.5">${escapeHtml(I.t("admin.smtp.auto.sub"))}</p>
+      <div class="field" style="margin-bottom:14px">
+        <label>${escapeHtml(I.t("admin.smtp.auto.kinds"))}</label>
+        <div style="display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px">
+          ${EMAIL_KIND_OPTIONS.map(k => `<label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="drive-kind-${k}" ${(State.driveAutomation && State.driveAutomation.kinds && State.driveAutomation.kinds[k]) ? "checked" : ""}> ${escapeHtml(emailKindLabel(k))}</label>`).join("")}
+        </div>
+      </div>
+      <div class="field" style="margin-bottom:14px">
+        <label>${escapeHtml(I.t("admin.smtp.auto.folder"))}</label>
+        <input id="drive-folder" type="text" value="${escapeHtml((State.driveAutomation && State.driveAutomation.parentFolderId) || "")}" placeholder="https://drive.google.com/drive/folders/…">
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">${escapeHtml(I.t("admin.smtp.auto.folder.hint"))}</div>
+      </div>
+      <div class="field" style="margin-bottom:14px">
+        <label>${escapeHtml(I.t("admin.smtp.auto.account"))}</label>
+        ${(State.driveAutomation && State.driveAutomation.hasKey) ? `<div style="font-size:12px;margin-bottom:6px">${escapeHtml(I.t("admin.smtp.auto.account.saved", { email: State.driveAutomation.clientEmail || "" }))}</div>` : ""}
+        <textarea id="drive-json" rows="4" placeholder='{"type":"service_account","client_email":"…","private_key":"…"}' style="width:100%;font-family:var(--mono);font-size:12px"></textarea>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">${escapeHtml(I.t("admin.smtp.auto.account.hint"))}</div>
+      </div>
+      <button class="btn-primary" type="button" onclick="AdminActions.saveDriveAutomation()"><span>${escapeHtml(I.t("admin.smtp.auto.save"))}</span><span class="arr">→</span></button>
     </div>
 
     <div class="wh-card smtp-account-card">
@@ -13129,6 +13234,25 @@ const AdminActions = {
     `);
   },
 
+  async _postEmailPreview(body){
+    const paths = ["/api/admin-email-preview", "/.netlify/functions/admin-email-preview"];
+    let res = null;
+    for(const path of paths){
+      const send = async (force) => {
+        const idToken = await this._adminIdToken(force);
+        return fetch(path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + idToken },
+          body: JSON.stringify(body)
+        });
+      };
+      res = await send(false);
+      if(res.status === 401) res = await send(true);
+      if(res.status !== 404) break;
+    }
+    return res;
+  },
+
   async previewCustomerEmail(id){
     if(!id) return;
     const ticket = (this._emailPreviewTicket = (this._emailPreviewTicket || 0) + 1);
@@ -13138,22 +13262,8 @@ const AdminActions = {
       <h2>${escapeHtml(I.t("admin.emails.action.customer"))}</h2>
       <div class="sub">${escapeHtml(I.t("admin.emails.customer.loading"))}</div>
     `);
-    const post = async (path, force) => {
-      const idToken = await this._adminIdToken(force);
-      return fetch(path, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: "Bearer " + idToken },
-        body: JSON.stringify({ id })
-      });
-    };
     try{
-      const paths = ["/api/admin-email-preview", "/.netlify/functions/admin-email-preview"];
-      let res = null;
-      for(const path of paths){
-        res = await post(path, false);
-        if(res.status === 401) res = await post(path, true);
-        if(res.status !== 404) break;
-      }
+      const res = await this._postEmailPreview({ id });
       const data = await res.json().catch(() => ({}));
       if(!res.ok) throw new Error(data.error || "preview failed");
       if(!stillOpen()) return;
@@ -13179,6 +13289,30 @@ const AdminActions = {
         <h2>${escapeHtml(I.t("admin.emails.action.customer"))}</h2>
         <div class="sub">${escapeHtml(I.t("admin.emails.customer.failed"))}</div>
       `);
+    }
+  },
+
+  async downloadEmailPdf(id){
+    if(!id) return;
+    try{
+      const res = await this._postEmailPreview({ id, format: "pdf" });
+      const data = await res.json().catch(() => ({}));
+      if(!res.ok || !data.pdfBase64) throw new Error(data.error || "pdf");
+      const bin = atob(data.pdfBase64);
+      const bytes = new Uint8Array(bin.length);
+      for(let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+      const blob = new Blob([bytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = data.filename || "email.pdf";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    }catch(err){
+      console.warn("email pdf failed", err);
+      Toast.show(I.t("admin.emails.pdf.failed"), "err");
     }
   },
 
@@ -14504,6 +14638,46 @@ const AdminActions = {
     }catch(e){
       console.error(e);
       Toast.show("Save failed: " + (e.code || e.message),"err");
+    }
+  },
+
+  async saveDriveAutomation(){
+    if(!State.user) return Toast.show("Not signed in","err");
+    try{
+      const kinds = {};
+      EMAIL_KIND_OPTIONS.forEach(k => {
+        kinds[k] = !!document.getElementById("drive-kind-" + k)?.checked;
+      });
+      let folder = (document.getElementById("drive-folder")?.value || "").trim();
+      const link = folder.match(/folders\/([a-zA-Z0-9_-]+)/);
+      if(link) folder = link[1];
+      const payload = {
+        kinds,
+        parentFolderId: folder,
+        updatedAt: serverTimestamp(),
+        updatedBy: State.user.email || State.user.uid
+      };
+      const raw = (document.getElementById("drive-json")?.value || "").trim();
+      if(raw){
+        let parsed;
+        try{ parsed = JSON.parse(raw); }
+        catch(e){ Toast.show(I.t("admin.smtp.auto.invalidJson"), "err"); return; }
+        const email = String(parsed.client_email || "").trim();
+        const key = String(parsed.private_key || "");
+        if(!email || !key.includes("BEGIN")){
+          Toast.show(I.t("admin.smtp.auto.invalidJson"), "err");
+          return;
+        }
+        payload.clientEmail = email;
+        payload.privateKey = key;
+      }
+      await setDoc(doc(db,"config","driveAutomation"), payload, { merge: true });
+      const box = document.getElementById("drive-json");
+      if(box) box.value = "";
+      Toast.show(I.t("admin.smtp.auto.saved"), "ok");
+    }catch(e){
+      console.error(e);
+      Toast.show("Save failed: " + (e.code || e.message), "err");
     }
   },
 

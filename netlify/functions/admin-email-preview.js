@@ -11,6 +11,8 @@
 
 const { admin, db, ensureApp, firebaseUnavailableResponse } = require('./lib/firebase-admin-app');
 const { renderEmail } = require('./lib/email-templates');
+const { htmlToPdf } = require('./lib/email-pdf');
+const { buildEmailPdfName } = require('./lib/email-pdf-name');
 
 const corsHeaders = {
   'Content-Type': 'application/json',
@@ -90,6 +92,21 @@ exports.handler = async (event) => {
 
   try {
     const rendered = await renderEmail(data.kind, data.lang || 'en', order, db);
+    if (String(body.format || '') === 'pdf') {
+      const pdf = await htmlToPdf(rendered.html);
+      const filename = buildEmailPdfName({
+        kind: data.kind,
+        when: new Date(),
+        ref: order.ref || data.orderRef || '',
+        to: data.to || ''
+      });
+      return jsonResp(200, {
+        ok: true,
+        filename,
+        pdfBase64: pdf.toString('base64'),
+        subject: rendered.subject
+      });
+    }
     return jsonResp(200, {
       ok: true,
       subject: rendered.subject,

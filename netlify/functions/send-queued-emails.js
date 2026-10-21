@@ -20,6 +20,7 @@ const nodemailer = require('nodemailer');
 const { admin, db } = require('./lib/firebase-admin-app');
 const { renderEmail } = require('./lib/email-templates');
 const { loadSmtpSettings } = require('./lib/smtp-settings');
+const { archiveSentEmail } = require('./lib/drive-archive');
 
 const DEFAULT_SUPPORT_BCC = 'support@dealmai.com';
 
@@ -195,6 +196,18 @@ async function processEmailDoc(docSnap) {
       customerDelivered: fromOntheline ? false : true,
       lastError: admin.firestore.FieldValue.delete()
     });
+    try {
+      await archiveSentEmail({
+        db,
+        queueRef: docSnap.ref,
+        kind: data.kind,
+        html,
+        order,
+        to: data.to
+      });
+    } catch (archiveErr) {
+      console.warn('[drive] archive threw after send:', archiveErr.message || archiveErr);
+    }
     return { id: docId, status: fromOntheline ? 'sent_support_only' : 'sent', providerId: result.id };
   } catch (err) {
     console.error(`Failed to send ${docId}:`, err.message);
