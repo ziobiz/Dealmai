@@ -5,7 +5,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import {
   getFirestore, collection, doc, getDoc, getDocs, setDoc, addDoc,
-  updateDoc, deleteDoc, deleteField, query, where, orderBy, limit, serverTimestamp,
+  updateDoc, deleteDoc, deleteField, query, where, orderBy, limit, serverTimestamp, increment,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 import {
@@ -798,6 +798,32 @@ const DEFAULT_STRINGS = {
   "admin.emails.kind.invoice":"Invoice",
   "admin.emails.kind.receipt":"Receipt",
   "admin.emails.kind.credentials":"Credentials",
+  "admin.emails.kind.dmchamp_access":"AI workspace access",
+  "admin.emails.kind.dmchamp_linked":"AI workspace linked",
+  "admin.emails.kind.refund_cancel":"Refund / cancel",
+  "admin.emails.kind.partial_refund":"Partial refund",
+  "admin.emails.kind.all":"All kinds",
+  "admin.emails.crumb":"Console / Email Queue",
+  "admin.emails.search.placeholder":"Recipient or subject",
+  "admin.emails.col.delivered":"Delivered",
+  "admin.emails.delivered.yes":"Sent",
+  "admin.emails.delivered.support":"Sent to support",
+  "admin.emails.delivered.no":"Not sent",
+  "admin.emails.col.resend":"Resend",
+  "admin.emails.col.select":"Select",
+  "admin.emails.resend.none":"—",
+  "admin.emails.resend.line":"Resent {n} · {when}",
+  "admin.emails.action.resendSelected":"Resend selected",
+  "admin.emails.resendSelected.none":"Select at least one email.",
+  "admin.emails.resendSelected.done":"Queued {n} for resend. They send within 5 minutes.",
+  "admin.emails.empty":"No emails queued yet.",
+  "admin.emails.empty.filtered":"No emails match this filter.",
+  "admin.emails.status.sent":"Sent",
+  "admin.emails.status.failed":"Failed",
+  "admin.emails.status.pending":"Pending",
+  "admin.emails.status.cancelled":"Cancelled",
+  "admin.emails.action.cancel":"Cancel",
+  "admin.emails.toast.resendQueued":"Queued for resend — it will send within 5 minutes",
 
   // Admin · SMTP accounts
   "admin.smtp.crumbs":"Console / Email SMTP",
@@ -1779,6 +1805,32 @@ const FULL_TRANSLATIONS = {
     "admin.emails.kind.invoice":"ใบกำกับ",
     "admin.emails.kind.receipt":"ใบเสร็จ",
     "admin.emails.kind.credentials":"ข้อมูลเข้าใช้",
+    "admin.emails.kind.dmchamp_access":"เข้าใช้เวิร์กสเปซ AI",
+    "admin.emails.kind.dmchamp_linked":"เชื่อมเวิร์กสเปซ AI",
+    "admin.emails.kind.refund_cancel":"คืนเงิน/ยกเลิก",
+    "admin.emails.kind.partial_refund":"คืนเงินบางส่วน",
+    "admin.emails.kind.all":"ทุกประเภท",
+    "admin.emails.crumb":"Console / Email Queue",
+    "admin.emails.search.placeholder":"ผู้รับหรือหัวข้อ",
+    "admin.emails.col.delivered":"ส่งแล้ว",
+    "admin.emails.delivered.yes":"ส่งแล้ว",
+    "admin.emails.delivered.support":"ส่งถึง support",
+    "admin.emails.delivered.no":"ยังไม่ส่ง",
+    "admin.emails.col.resend":"ส่งใหม่",
+    "admin.emails.col.select":"เลือก",
+    "admin.emails.resend.none":"—",
+    "admin.emails.resend.line":"ส่งใหม่ {n} ครั้ง · {when}",
+    "admin.emails.action.resendSelected":"ส่งที่เลือกใหม่",
+    "admin.emails.resendSelected.none":"เลือกอีเมลอย่างน้อย 1 ฉบับ",
+    "admin.emails.resendSelected.done":"จัดคิวส่งใหม่ {n} ฉบับ จะส่งภายใน 5 นาที",
+    "admin.emails.empty":"ยังไม่มีอีเมลในคิว",
+    "admin.emails.empty.filtered":"ไม่มีอีเมลที่ตรงกับตัวกรอง",
+    "admin.emails.status.sent":"ส่งแล้ว",
+    "admin.emails.status.failed":"ล้มเหลว",
+    "admin.emails.status.pending":"รอดำเนินการ",
+    "admin.emails.status.cancelled":"ยกเลิก",
+    "admin.emails.action.cancel":"ยกเลิก",
+    "admin.emails.toast.resendQueued":"จัดคิวส่งใหม่แล้ว จะส่งภายใน 5 นาที",
     // Admin · languages
     "admin.langs.title-html":'จัดการ<span class="grad">ภาษา</span>',
     "admin.langs.add":"เพิ่มภาษา",
@@ -2689,9 +2741,35 @@ const FULL_TRANSLATIONS = {
     "admin.emails.status.supportOnly.title":"ontheline 이메일 — 지원팀 받은편지함으로만 전송됨; 고객에게는 전송되지 않음",
     "admin.emails.status.supportOnly.note":"이 이메일은 ontheline 이메일입니다. 지원팀 받은편지함으로만 전송되었으며 고객은 받지 않았습니다(ontheline이 고객 커뮤니케이션을 직접 처리함).",
     "admin.emails.action.resend":"재전송",
-    "admin.emails.kind.invoice":"인보이스",
-    "admin.emails.kind.receipt":"영수증",
-    "admin.emails.kind.credentials":"자격 증명",
+    "admin.emails.kind.invoice":"주문 확인서",
+    "admin.emails.kind.receipt":"결제 완료 영수증",
+    "admin.emails.kind.credentials":"로그인 정보",
+    "admin.emails.kind.dmchamp_access":"AI 워크스페이스 안내",
+    "admin.emails.kind.dmchamp_linked":"AI 워크스페이스 연결",
+    "admin.emails.kind.refund_cancel":"환불·취소",
+    "admin.emails.kind.partial_refund":"부분 환불",
+    "admin.emails.kind.all":"전체 종류",
+    "admin.emails.crumb":"Console / Email Queue",
+    "admin.emails.search.placeholder":"수신자 또는 제목",
+    "admin.emails.col.delivered":"전송 유무",
+    "admin.emails.delivered.yes":"전송",
+    "admin.emails.delivered.support":"지원팀 전송",
+    "admin.emails.delivered.no":"미전송",
+    "admin.emails.col.resend":"재전송",
+    "admin.emails.col.select":"선택",
+    "admin.emails.resend.none":"—",
+    "admin.emails.resend.line":"재전송 {n}회 · {when}",
+    "admin.emails.action.resendSelected":"선택 재전송",
+    "admin.emails.resendSelected.none":"메일을 하나 이상 선택하세요.",
+    "admin.emails.resendSelected.done":"{n}건을 재전송 대기열에 넣었습니다. 5분 안에 발송됩니다.",
+    "admin.emails.empty":"대기 중인 메일이 없습니다.",
+    "admin.emails.empty.filtered":"이 조건에 맞는 메일이 없습니다.",
+    "admin.emails.status.sent":"전송됨",
+    "admin.emails.status.failed":"실패",
+    "admin.emails.status.pending":"대기",
+    "admin.emails.status.cancelled":"취소",
+    "admin.emails.action.cancel":"취소",
+    "admin.emails.toast.resendQueued":"재전송 대기열에 넣었습니다. 5분 안에 발송됩니다.",
     // Admin · languages
     "admin.langs.title-html":'언어 <span class="grad">관리</span>',
     "admin.langs.add":"언어 추가",
@@ -3534,6 +3612,32 @@ const FULL_TRANSLATIONS = {
     "admin.emails.kind.invoice":"請求書",
     "admin.emails.kind.receipt":"領収書",
     "admin.emails.kind.credentials":"認証情報",
+    "admin.emails.kind.dmchamp_access":"AIワークスペース案内",
+    "admin.emails.kind.dmchamp_linked":"AIワークスペース連携",
+    "admin.emails.kind.refund_cancel":"返金・取消",
+    "admin.emails.kind.partial_refund":"一部返金",
+    "admin.emails.kind.all":"すべての種類",
+    "admin.emails.crumb":"Console / Email Queue",
+    "admin.emails.search.placeholder":"宛先または件名",
+    "admin.emails.col.delivered":"送信有無",
+    "admin.emails.delivered.yes":"送信済",
+    "admin.emails.delivered.support":"サポートへ送信",
+    "admin.emails.delivered.no":"未送信",
+    "admin.emails.col.resend":"再送信",
+    "admin.emails.col.select":"選択",
+    "admin.emails.resend.none":"—",
+    "admin.emails.resend.line":"再送信 {n}回 · {when}",
+    "admin.emails.action.resendSelected":"選択を再送信",
+    "admin.emails.resendSelected.none":"メールを1件以上選択してください。",
+    "admin.emails.resendSelected.done":"{n}件を再送信キューに入れました。5分以内に送信されます。",
+    "admin.emails.empty":"キューにメールはありません。",
+    "admin.emails.empty.filtered":"この条件に合うメールはありません。",
+    "admin.emails.status.sent":"送信済",
+    "admin.emails.status.failed":"失敗",
+    "admin.emails.status.pending":"保留",
+    "admin.emails.status.cancelled":"取消",
+    "admin.emails.action.cancel":"取消",
+    "admin.emails.toast.resendQueued":"再送信キューに入れました。5分以内に送信されます。",
     // Admin · languages
     "admin.langs.title-html":'言語 <span class="grad">管理</span>',
     "admin.langs.add":"言語追加",
@@ -4346,6 +4450,47 @@ const FULL_TRANSLATIONS = {
     "admin.packages.duration.none":"长期有效",
     "admin.packages.duration.days":"{n} 天",
     // Passwords and common notifications
+    "admin.emails.title-html":'邮件<span class="grad">队列</span>',
+    "admin.emails.sub":"待发送的订单确认、收据和登录信息。在发送任务处理前保持待发送状态。",
+    "admin.emails.col.time":"入队时间",
+    "admin.emails.col.to":"收件人",
+    "admin.emails.col.subject":"主题",
+    "admin.emails.col.kind":"种类",
+    "admin.emails.col.status":"状态",
+    "admin.emails.action.view":"查看",
+    "admin.emails.status.supportOnly":"仅支持邮箱",
+    "admin.emails.status.supportOnly.title":"ontheline 邮件 — 只发到支持邮箱，客户未收到",
+    "admin.emails.status.supportOnly.note":"这是 ontheline 邮件。只发送到支持邮箱，客户没有收到（由 ontheline 直接与客户沟通）。",
+    "admin.emails.action.resend":"重发",
+    "admin.emails.kind.invoice":"订单确认",
+    "admin.emails.kind.receipt":"付款收据",
+    "admin.emails.kind.credentials":"登录信息",
+    "admin.emails.kind.dmchamp_access":"AI 工作区开通",
+    "admin.emails.kind.dmchamp_linked":"AI 工作区关联",
+    "admin.emails.kind.refund_cancel":"退款/取消",
+    "admin.emails.kind.partial_refund":"部分退款",
+    "admin.emails.kind.all":"全部种类",
+    "admin.emails.crumb":"Console / Email Queue",
+    "admin.emails.search.placeholder":"收件人或主题",
+    "admin.emails.col.delivered":"是否发送",
+    "admin.emails.delivered.yes":"已发送",
+    "admin.emails.delivered.support":"已发给支持邮箱",
+    "admin.emails.delivered.no":"未发送",
+    "admin.emails.col.resend":"重发记录",
+    "admin.emails.col.select":"选择",
+    "admin.emails.resend.none":"—",
+    "admin.emails.resend.line":"重发 {n} 次 · {when}",
+    "admin.emails.action.resendSelected":"重发所选",
+    "admin.emails.resendSelected.none":"请至少选择一封邮件。",
+    "admin.emails.resendSelected.done":"已将 {n} 封加入重发队列，将在 5 分钟内发送。",
+    "admin.emails.empty":"队列中还没有邮件。",
+    "admin.emails.empty.filtered":"没有符合此条件的邮件。",
+    "admin.emails.status.sent":"已发送",
+    "admin.emails.status.failed":"失败",
+    "admin.emails.status.pending":"待发送",
+    "admin.emails.status.cancelled":"已取消",
+    "admin.emails.action.cancel":"取消",
+    "admin.emails.toast.resendQueued":"已加入重发队列，将在 5 分钟内发送。",
     "admin.password.title-html":'修改<span class="grad">密码</span>',
     "admin.password.current":"当前密码",
     "admin.password.new":"新密码",
@@ -4571,6 +4716,11 @@ const State = {
   orders: [],
   users: [],
   emails: [],
+  emailKindFilter: "all",
+  emailDateFilter: "today",
+  emailFilter: null,
+  emailQuery: "",
+  emailSelected: {},
   webhookEvents: [],
   webhookConfig: { secret: null, updatedAt: null, updatedBy: null },  // from Firestore config/webhook
   chillpayEvents: [],             // merged payment_events + chillpay_events (admin only)
@@ -5423,8 +5573,8 @@ function subscribeCollections(){
     }
   }, onErr("users")));
 
-  // Email queue
-  const emQ = query(collection(db,"email_queue"), orderBy("createdAt","desc"), limit(50));
+  // Email queue — enough history for month / last-month filters
+  const emQ = query(collection(db,"email_queue"), orderBy("createdAt","desc"), limit(1000));
   State.unsubs.push(onSnapshot(emQ, snap => {
     State.emails = snap.docs.map(d => ({ id:d.id, ...d.data() }));
     if(document.getElementById("page-admin").classList.contains("show")) renderAdminEmails();
@@ -10710,86 +10860,209 @@ function renderAdminChillPay(){
   `;
 }
 
+function computeEmailDateRange(){
+  const now = new Date();
+  const mode = State.emailDateFilter || "today";
+  let rangeStart, rangeEnd;
+  if(mode === "today"){
+    rangeStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0);
+    rangeEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23,59,59,999);
+  }else if(mode === "yesterday"){
+    rangeStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()-1, 0,0,0,0);
+    rangeEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate()-1, 23,59,59,999);
+  }else if(mode === "month"){
+    rangeStart = new Date(now.getFullYear(), now.getMonth(), 1, 0,0,0,0);
+    rangeEnd = new Date(now.getFullYear(), now.getMonth()+1, 0, 23,59,59,999);
+  }else if(mode === "lastMonth"){
+    rangeStart = new Date(now.getFullYear(), now.getMonth()-1, 1, 0,0,0,0);
+    rangeEnd = new Date(now.getFullYear(), now.getMonth(), 0, 23,59,59,999);
+  }else{
+    const filter = State.emailFilter || { from: "", to: "" };
+    rangeStart = filter.from ? new Date(filter.from + "T00:00:00") : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0,0,0,0);
+    rangeEnd = filter.to ? new Date(filter.to + "T23:59:59") : new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23,59,59,999);
+  }
+  return { rangeStart, rangeEnd, from: ymdLocal(rangeStart), to: ymdLocal(rangeEnd) };
+}
+
+function ensureEmailFilter(){
+  if(!State.emailFilter) State.emailFilter = { from: "", to: "" };
+  if(!State.emailDateFilter) State.emailDateFilter = "today";
+  if(!State.emailKindFilter) State.emailKindFilter = "all";
+  if(State.emailQuery == null) State.emailQuery = "";
+  if(!State.emailSelected) State.emailSelected = {};
+  if(!State.emailFilter.from || !State.emailFilter.to){
+    const d = computeEmailDateRange();
+    if(!State.emailFilter.from) State.emailFilter.from = d.from;
+    if(!State.emailFilter.to) State.emailFilter.to = d.to;
+  }
+  return State.emailFilter;
+}
+
+const EMAIL_KIND_OPTIONS = ["invoice","receipt","credentials","dmchamp_access","dmchamp_linked","refund_cancel","partial_refund"];
+
+function emailKindLabel(kind){
+  const key = "admin.emails.kind." + (kind || "");
+  const label = I.t(key);
+  return label === key ? (kind || "—") : label;
+}
+
 function renderAdminEmails(){
   const el = document.getElementById("adm-emails");
+  if(!el) return;
+  ensureEmailFilter();
+  const mode = State.emailDateFilter || "today";
+  const range = computeEmailDateRange();
+  if(mode !== "period"){
+    State.emailFilter.from = range.from;
+    State.emailFilter.to = range.to;
+  }else{
+    if(!State.emailFilter.from) State.emailFilter.from = range.from;
+    if(!State.emailFilter.to) State.emailFilter.to = range.to;
+  }
+  const from = State.emailFilter.from || range.from;
+  const to = State.emailFilter.to || range.to;
+  const q = String(State.emailQuery || "").trim().toLowerCase();
+  const kindFilter = State.emailKindFilter || "all";
 
-  // Derive a display subject if the doc doesn't have one (new emails store kind+orderRef,
-  // server renders the actual subject at send time)
   const subjectFor = (e) => {
     if(e.subject) return e.subject;
     const o = e.payload || {};
     const refStr = o.ref || e.orderRef || "";
-    if(e.kind === "invoice")     return `Invoice ${refStr}`;
-    if(e.kind === "receipt")     return `Receipt ${refStr}`;
-    if(e.kind === "credentials") return `Welcome — credentials for ${e.to}`;
-    return `${e.kind} ${refStr}`;
+    return `${emailKindLabel(e.kind)}${refStr ? " " + refStr : ""}`;
+  };
+  const emailDate = (e) => {
+    const ts = e.createdAt;
+    const d = ts && ts.toDate ? ts.toDate() : new Date(ts);
+    return d && !isNaN(d.getTime()) ? d : null;
   };
 
-  // Stats by status
-  const counts = State.emails.reduce((a,e) => { a[e.status]=(a[e.status]||0)+1; return a; }, {});
+  const filtered = (State.emails || []).filter(e => {
+    const d = emailDate(e);
+    if(!d || d < range.rangeStart || d > range.rangeEnd) return false;
+    if(kindFilter !== "all" && e.kind !== kindFilter) return false;
+    if(!q) return true;
+    const hay = [e.to, subjectFor(e), e.orderRef, e.payload && e.payload.ref, emailKindLabel(e.kind), e.kind].join(" ").toLowerCase();
+    return hay.includes(q);
+  });
+
+  const counts = (State.emails || []).reduce((a,e) => { a[e.status]=(a[e.status]||0)+1; return a; }, {});
   const pendingCount = counts.pending || 0;
-  const processedCount = (counts.sent||0) + (counts.failed||0) + (counts.cancelled||0);
+  const processedCount = (counts.sent||0) + (counts.failed||0) + (counts.cancelled||0) + (counts.sent_support_only||0);
+  const selectedCount = Object.keys(State.emailSelected || {}).length;
+  const visibleIds = filtered.map(e => e.id);
+  const allChecked = visibleIds.length > 0 && visibleIds.every(id => State.emailSelected[id]);
 
-  const rows = State.emails.map(e => {
-    const attemptInfo = e.sendAttempts && e.status === "pending"
-      ? ` <span style="color:var(--muted);font-size:11px">· retry ${e.sendAttempts}</span>`
-      : "";
-    // Status badge — handle cancelled as a separate look
-    const statusTag = e.status === "sent"      ? `<span class="status-tag sent"><span class="d"></span>sent</span>`
-                    : e.status === "sent_support_only" ? `<span class="status-tag" style="background:rgba(11,182,196,.12);color:var(--teal-deep)" title="${escapeHtml(I.t('admin.emails.status.supportOnly.title'))}"><span class="d" style="background:var(--teal-deep)"></span>${I.t('admin.emails.status.supportOnly')}</span>`
-                    : e.status === "failed"    ? `<span class="status-tag failed"><span class="d"></span>failed</span>`
-                    : e.status === "cancelled" ? `<span class="status-tag" style="background:rgba(120,120,120,.12);color:#787878"><span class="d" style="background:#787878"></span>cancelled</span>`
-                    : `<span class="status-tag pending"><span class="d"></span>pending</span>`;
-    // Actions vary by status: pending can be cancelled; everything else can be resent
+  const deliveredLabel = (e) => {
+    if(e.status === "sent") return I.t("admin.emails.delivered.yes");
+    if(e.status === "sent_support_only") return I.t("admin.emails.delivered.support");
+    return I.t("admin.emails.delivered.no");
+  };
+  const resendLabel = (e) => {
+    const n = Number(e.resendCount) || (e.resendRequestedAt ? 1 : 0);
+    if(!n && !e.resendRequestedAt) return escapeHtml(I.t("admin.emails.resend.none"));
+    const when = e.resendRequestedAt ? fmtDate(e.resendRequestedAt) : "—";
+    return escapeHtml(I.t("admin.emails.resend.line", { n: String(n || 1), when }));
+  };
+
+  const rows = filtered.map(e => {
+    const statusTag = e.status === "sent" ? `<span class="status-tag sent"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.sent"))}</span>`
+      : e.status === "sent_support_only" ? `<span class="status-tag" style="background:rgba(11,182,196,.12);color:var(--teal-deep)" title="${escapeHtml(I.t("admin.emails.status.supportOnly.title"))}"><span class="d" style="background:var(--teal-deep)"></span>${escapeHtml(I.t("admin.emails.status.supportOnly"))}</span>`
+      : e.status === "failed" ? `<span class="status-tag failed"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.failed"))}</span>`
+      : e.status === "cancelled" ? `<span class="status-tag" style="background:rgba(120,120,120,.12);color:#787878"><span class="d" style="background:#787878"></span>${escapeHtml(I.t("admin.emails.status.cancelled"))}</span>`
+      : `<span class="status-tag pending"><span class="d"></span>${escapeHtml(I.t("admin.emails.status.pending"))}</span>`;
     const actions = e.status === "pending"
-      ? `<button onclick="AdminActions.viewEmail('${e.id}')">${I.t("admin.emails.action.view")}</button>
-         <button class="danger" onclick="AdminActions.cancelEmail('${e.id}')">Cancel</button>`
-      : `<button onclick="AdminActions.viewEmail('${e.id}')">${I.t("admin.emails.action.view")}</button>
-         <button onclick="AdminActions.resendEmail('${e.id}')">${I.t("admin.emails.action.resend")}</button>`;
-
+      ? `<button onclick="AdminActions.viewEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.view"))}</button>
+         <button class="danger" onclick="AdminActions.cancelEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.cancel"))}</button>`
+      : `<button onclick="AdminActions.viewEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.view"))}</button>
+         <button onclick="AdminActions.resendEmail('${e.id}')">${escapeHtml(I.t("admin.emails.action.resend"))}</button>`;
     return `
       <tr>
-        <td style="font-family:var(--mono);font-size:12px">${fmtDate(e.createdAt)}</td>
-        <td style="font-family:var(--mono);font-size:12px">${escapeHtml(e.to)}</td>
-        <td>${escapeHtml(subjectFor(e))}${attemptInfo}</td>
-        <td><span class="src-tag direct">${I.t('admin.emails.kind.'+e.kind)}</span></td>
+        <td><input type="checkbox" ${State.emailSelected[e.id] ? "checked" : ""} onchange="AdminActions.toggleEmailRow('${e.id}', this.checked)" aria-label="${escapeHtml(I.t("admin.emails.col.select"))}"></td>
+        <td>${escapeHtml(fmtDate(e.createdAt))}</td>
+        <td>${escapeHtml(e.to)}</td>
+        <td>${escapeHtml(subjectFor(e))}</td>
+        <td><span class="src-tag direct">${escapeHtml(emailKindLabel(e.kind))}</span></td>
         <td>${statusTag}</td>
-        <td>
-          <div class="row-actions">${actions}</div>
-        </td>
+        <td>${escapeHtml(deliveredLabel(e))}</td>
+        <td>${resendLabel(e)}</td>
+        <td><div class="row-actions">${actions}</div></td>
       </tr>
     `;
   }).join("");
 
+  const kindOptions = [`<option value="all"${kindFilter==="all"?" selected":""}>${escapeHtml(I.t("admin.emails.kind.all"))}</option>`]
+    .concat(EMAIL_KIND_OPTIONS.map(k => `<option value="${k}"${kindFilter===k?" selected":""}>${escapeHtml(emailKindLabel(k))}</option>`))
+    .join("");
+  const dateBtnClass = (m) => "filter-pill" + ((State.emailDateFilter || "today") === m ? " on" : "");
+  const presetOn = (State.emailDateFilter || "today") !== "period";
+  const emptyText = (State.emails || []).length === 0
+    ? I.t("admin.emails.empty")
+    : I.t("admin.emails.empty.filtered");
+
+  const focusSearch = document.activeElement && document.activeElement.id === "em-q";
+  const caret = focusSearch ? document.activeElement.selectionStart : null;
+
   el.innerHTML = `
     <div class="admin-head">
       <div>
-        <div class="crumbs">Console / Email Queue</div>
-        <h1>${I.t("admin.emails.title-html")}</h1>
+        <div class="crumbs">${escapeHtml(I.t("admin.emails.crumb"))}</div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <h1>${I.t("admin.emails.title-html")}</h1>
+          <input id="em-q" class="orders-dropdown-filter" type="search" value="${escapeHtml(State.emailQuery || "")}" placeholder="${escapeHtml(I.t("admin.emails.search.placeholder"))}" oninput="AdminActions.setEmailQuery(this.value)" style="min-width:180px" />
+          <select class="orders-dropdown-filter" onchange="AdminActions.setEmailKind(this.value)" aria-label="${escapeHtml(I.t("admin.emails.col.kind"))}">${kindOptions}</select>
+        </div>
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn-primary" type="button" onclick="AdminActions.resendSelectedEmails()"><span>${escapeHtml(I.t("admin.emails.action.resendSelected"))}${selectedCount ? " ("+selectedCount+")" : ""}</span></button>
         ${pendingCount > 0 ? `<button class="btn-ghost" onclick="AdminActions.cancelAllPending()" style="border-color:var(--amber);color:var(--amber)">Cancel All Pending (${pendingCount})</button>` : ""}
         ${processedCount > 0 ? `<button class="btn-ghost" onclick="AdminActions.clearProcessedEmails()">Clear Processed (${processedCount})</button>` : ""}
       </div>
     </div>
-    <p style="color:var(--muted);font-size:13px;margin-bottom:20px;max-width:680px;line-height:1.55">${I.t("admin.emails.sub")}</p>
+    <p class="adm-sub">${escapeHtml(I.t("admin.emails.sub"))}</p>
+    <div class="filters invoice-date-row" style="margin:0 0 14px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+      <label class="inv-field">
+        ${escapeHtml(I.t("admin.invoices.from"))}
+        <input type="date" id="em-from" class="orders-dropdown-filter" value="${escapeHtml(from)}" onchange="AdminActions.setEmailCustomDate('from', this.value)" style="min-width:140px" />
+      </label>
+      <label class="inv-field">
+        ${escapeHtml(I.t("admin.invoices.to"))}
+        <input type="date" id="em-to" class="orders-dropdown-filter" value="${escapeHtml(to)}" onchange="AdminActions.setEmailCustomDate('to', this.value)" style="min-width:140px" />
+      </label>
+      <button class="btn-primary" type="button" onclick="AdminActions.applyEmailDateSearch()" style="padding:10px 16px"><span>${escapeHtml(I.t("admin.invoices.search"))}</span><span class="arr">→</span></button>
+      <span style="width:8px" aria-hidden="true"></span>
+      <button class="${presetOn ? dateBtnClass("today") : "filter-pill"}" onclick="AdminActions.setEmailDateFilter('today')">${escapeHtml(I.t("admin.orders.date.today"))}</button>
+      <button class="${presetOn ? dateBtnClass("yesterday") : "filter-pill"}" onclick="AdminActions.setEmailDateFilter('yesterday')">${escapeHtml(I.t("admin.orders.date.yesterday"))}</button>
+      <button class="${presetOn ? dateBtnClass("month") : "filter-pill"}" onclick="AdminActions.setEmailDateFilter('month')">${escapeHtml(I.t("admin.orders.date.month"))}</button>
+      <button class="${presetOn ? dateBtnClass("lastMonth") : "filter-pill"}" onclick="AdminActions.setEmailDateFilter('lastMonth')">${escapeHtml(I.t("admin.orders.date.lastMonth"))}</button>
+    </div>
     <div class="panel">
       <div class="table-wrap">
-        ${State.emails.length === 0 ? `<div class="empty-state">No emails queued yet.</div>` :
+        ${filtered.length === 0 ? `<div class="empty-state">${escapeHtml(emptyText)}</div>` :
         `<table>
           <thead><tr>
-            <th>${I.t("admin.emails.col.time")}</th>
-            <th>${I.t("admin.emails.col.to")}</th>
-            <th>${I.t("admin.emails.col.subject")}</th>
-            <th>${I.t("admin.emails.col.kind")}</th>
-            <th>${I.t("admin.emails.col.status")}</th>
-            <th>${I.t("admin.orders.col.actions")}</th>
+            <th><input type="checkbox" ${allChecked ? "checked" : ""} onchange="AdminActions.toggleEmailVisible(this.checked)" aria-label="${escapeHtml(I.t("admin.emails.col.select"))}"></th>
+            <th>${escapeHtml(I.t("admin.emails.col.time"))}</th>
+            <th>${escapeHtml(I.t("admin.emails.col.to"))}</th>
+            <th>${escapeHtml(I.t("admin.emails.col.subject"))}</th>
+            <th>${escapeHtml(I.t("admin.emails.col.kind"))}</th>
+            <th>${escapeHtml(I.t("admin.emails.col.status"))}</th>
+            <th>${escapeHtml(I.t("admin.emails.col.delivered"))}</th>
+            <th>${escapeHtml(I.t("admin.emails.col.resend"))}</th>
+            <th>${escapeHtml(I.t("admin.orders.col.actions"))}</th>
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>`}
       </div>
     </div>
   `;
+  if(focusSearch){
+    const box = document.getElementById("em-q");
+    if(box){
+      box.focus();
+      const pos = caret == null ? box.value.length : caret;
+      try{ box.setSelectionRange(pos, pos); }catch(_){}
+    }
+  }
 }
 
 function renderAdminSmtp(){
@@ -12832,9 +13105,102 @@ const AdminActions = {
       status: "pending",
       sendAttempts: 0,
       lastError: deleteField(),
-      resendRequestedAt: serverTimestamp()
+      resendRequestedAt: serverTimestamp(),
+      resendCount: increment(1)
     });
-    Toast.show("Queued for resend — will be sent within 5 minutes","ok");
+    Toast.show(I.t("admin.emails.toast.resendQueued"),"ok");
+  },
+
+  toggleEmailRow(id, on){
+    if(!State.emailSelected) State.emailSelected = {};
+    if(on) State.emailSelected[id] = true;
+    else delete State.emailSelected[id];
+    renderAdminEmails();
+  },
+
+  toggleEmailVisible(on){
+    if(!State.emailSelected) State.emailSelected = {};
+    ensureEmailFilter();
+    const range = computeEmailDateRange();
+    const q = String(State.emailQuery || "").trim().toLowerCase();
+    const kindFilter = State.emailKindFilter || "all";
+    (State.emails || []).forEach(e => {
+      const ts = e.createdAt;
+      const d = ts && ts.toDate ? ts.toDate() : new Date(ts);
+      if(!d || isNaN(d.getTime()) || d < range.rangeStart || d > range.rangeEnd) return;
+      if(kindFilter !== "all" && e.kind !== kindFilter) return;
+      if(q){
+        const ref = (e.payload && e.payload.ref) || e.orderRef || "";
+        const hay = [e.to, e.subject, ref, e.kind].join(" ").toLowerCase();
+        if(!hay.includes(q)) return;
+      }
+      if(on) State.emailSelected[e.id] = true;
+      else delete State.emailSelected[e.id];
+    });
+    renderAdminEmails();
+  },
+
+  setEmailQuery(value){
+    State.emailQuery = value || "";
+    renderAdminEmails();
+  },
+
+  setEmailKind(kind){
+    State.emailKindFilter = EMAIL_KIND_OPTIONS.includes(kind) ? kind : "all";
+    renderAdminEmails();
+  },
+
+  setEmailDateFilter(mode){
+    const allowed = new Set(["today","yesterday","month","lastMonth"]);
+    State.emailDateFilter = allowed.has(mode) ? mode : "today";
+    const range = computeEmailDateRange();
+    ensureEmailFilter();
+    State.emailFilter.from = range.from;
+    State.emailFilter.to = range.to;
+    renderAdminEmails();
+  },
+
+  setEmailCustomDate(which, value){
+    ensureEmailFilter();
+    if(which === "from") State.emailFilter.from = value || "";
+    if(which === "to") State.emailFilter.to = value || "";
+    State.emailDateFilter = "period";
+    renderAdminEmails();
+  },
+
+  applyEmailDateSearch(){
+    ensureEmailFilter();
+    const fromEl = document.getElementById("em-from");
+    const toEl = document.getElementById("em-to");
+    if(fromEl) State.emailFilter.from = fromEl.value || State.emailFilter.from;
+    if(toEl) State.emailFilter.to = toEl.value || State.emailFilter.to;
+    State.emailDateFilter = "period";
+    renderAdminEmails();
+  },
+
+  async resendSelectedEmails(){
+    const ids = Object.keys(State.emailSelected || {});
+    if(!ids.length){
+      Toast.show(I.t("admin.emails.resendSelected.none"),"warn");
+      return;
+    }
+    let n = 0;
+    for(const id of ids){
+      try{
+        await updateDoc(doc(db,"email_queue",id), {
+          status: "pending",
+          sendAttempts: 0,
+          lastError: deleteField(),
+          resendRequestedAt: serverTimestamp(),
+          resendCount: increment(1)
+        });
+        n++;
+      }catch(err){
+        console.warn("resend failed", id, err);
+      }
+    }
+    State.emailSelected = {};
+    Toast.show(I.t("admin.emails.resendSelected.done", { n: String(n) }), n ? "ok" : "err");
   },
 
   // Cancel a pending email so the scheduled function stops trying.
