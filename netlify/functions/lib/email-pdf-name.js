@@ -53,4 +53,4 @@ function buildEmailPdfName({ kind, when, ref, to }) {
   return `${kindLabel(kind)}_${stamp.date}_${stamp.time}_${content}.pdf`;
 }
 
-module.exports = { KIND_LABEL, kindLabel, buildEmailPdfName, safePart };
+module.exports = { KIND_LABEL, kindLabel, buildEmailPdfName, safePart, seoulStamp };

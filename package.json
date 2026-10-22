@@ -14,8 +14,9 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.2",
     "firebase-admin": "^12.0.0",
-    "node-cron": "^3.0.3",
     "google-auth-library": "^9.15.0",
+    "jszip": "^3.10.2",
+    "node-cron": "^3.0.3",
     "nodemailer": "^6.9.16",
     "puppeteer": "^24.15.0",
     "speakeasy": "^2.0.0"

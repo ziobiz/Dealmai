@@ -822,8 +822,14 @@ const DEFAULT_STRINGS = {
   "admin.emails.action.selectAll":"Select all",
   "admin.emails.action.clearAll":"Clear all",
   "admin.emails.action.resendSelected":"Resend selected",
+  "admin.emails.action.downloadZip":"Download zip",
   "admin.emails.resendSelected.none":"Select at least one email.",
   "admin.emails.resendSelected.done":"Queued {n} for resend. They send within 5 minutes.",
+  "admin.emails.zip.tooMany":"One zip can include up to {n} emails.",
+  "admin.emails.zip.working":"Packing {n} PDFs…",
+  "admin.emails.zip.done":"Downloaded {n} PDFs in one zip.",
+  "admin.emails.zip.partial":"Zipped {ok} PDFs. {fail} could not be created.",
+  "admin.emails.zip.failed":"Could not create the zip.",
   "admin.emails.empty":"No emails queued yet.",
   "admin.emails.empty.filtered":"No emails match this filter.",
   "admin.emails.status.sent":"Sent",
@@ -1848,8 +1854,14 @@ const FULL_TRANSLATIONS = {
     "admin.emails.action.selectAll":"เลือกทั้งหมด",
     "admin.emails.action.clearAll":"ยกเลิกทั้งหมด",
     "admin.emails.action.resendSelected":"ส่งที่เลือกใหม่",
+    "admin.emails.action.downloadZip":"ดาวน์โหลด ZIP",
     "admin.emails.resendSelected.none":"เลือกอีเมลอย่างน้อย 1 ฉบับ",
     "admin.emails.resendSelected.done":"จัดคิวส่งใหม่ {n} ฉบับ จะส่งภายใน 5 นาที",
+    "admin.emails.zip.tooMany":"ZIP หนึ่งไฟล์ใส่ได้สูงสุด {n} ฉบับ",
+    "admin.emails.zip.working":"กำลังบีบอัด PDF {n} ฉบับ…",
+    "admin.emails.zip.done":"ดาวน์โหลด PDF {n} ฉบับใน ZIP แล้ว",
+    "admin.emails.zip.partial":"บีบอัดได้ {ok} ฉบับ สร้างไม่สำเร็จ {fail} ฉบับ",
+    "admin.emails.zip.failed":"สร้างไฟล์ ZIP ไม่สำเร็จ",
     "admin.emails.empty":"ยังไม่มีอีเมลในคิว",
     "admin.emails.empty.filtered":"ไม่มีอีเมลที่ตรงกับตัวกรอง",
     "admin.emails.status.sent":"ส่งแล้ว",
@@ -2817,8 +2829,14 @@ const FULL_TRANSLATIONS = {
     "admin.emails.action.selectAll":"모두선택",
     "admin.emails.action.clearAll":"모두해제",
     "admin.emails.action.resendSelected":"선택 재전송",
+    "admin.emails.action.downloadZip":"압축 다운로드",
     "admin.emails.resendSelected.none":"메일을 하나 이상 선택하세요.",
     "admin.emails.resendSelected.done":"{n}건을 재전송 대기열에 넣었습니다. 5분 안에 발송됩니다.",
+    "admin.emails.zip.tooMany":"한 번에 {n}건까지 압축할 수 있습니다.",
+    "admin.emails.zip.working":"{n}건의 PDF를 압축하는 중입니다.",
+    "admin.emails.zip.done":"{n}건을 압축해 내려받았습니다.",
+    "admin.emails.zip.partial":"{ok}건을 압축했습니다. {fail}건은 만들지 못했습니다.",
+    "admin.emails.zip.failed":"압축 파일을 만들지 못했습니다.",
     "admin.emails.empty":"대기 중인 메일이 없습니다.",
     "admin.emails.empty.filtered":"이 조건에 맞는 메일이 없습니다.",
     "admin.emails.status.sent":"전송됨",
@@ -3693,8 +3711,14 @@ const FULL_TRANSLATIONS = {
     "admin.emails.action.selectAll":"すべて選択",
     "admin.emails.action.clearAll":"すべて解除",
     "admin.emails.action.resendSelected":"選択を再送信",
+    "admin.emails.action.downloadZip":"ZIPダウンロード",
     "admin.emails.resendSelected.none":"メールを1件以上選択してください。",
     "admin.emails.resendSelected.done":"{n}件を再送信キューに入れました。5分以内に送信されます。",
+    "admin.emails.zip.tooMany":"1つのZIPには最大{n}件まで入れられます。",
+    "admin.emails.zip.working":"{n}件のPDFを圧縮しています…",
+    "admin.emails.zip.done":"{n}件のPDFをZIPでダウンロードしました。",
+    "admin.emails.zip.partial":"{ok}件を圧縮しました。{fail}件は作成できませんでした。",
+    "admin.emails.zip.failed":"ZIPを作成できませんでした。",
     "admin.emails.empty":"キューにメールはありません。",
     "admin.emails.empty.filtered":"この条件に合うメールはありません。",
     "admin.emails.status.sent":"送信済",
@@ -4565,8 +4589,14 @@ const FULL_TRANSLATIONS = {
     "admin.emails.action.selectAll":"全选",
     "admin.emails.action.clearAll":"全部取消",
     "admin.emails.action.resendSelected":"重发所选",
+    "admin.emails.action.downloadZip":"下载压缩包",
     "admin.emails.resendSelected.none":"请至少选择一封邮件。",
     "admin.emails.resendSelected.done":"已将 {n} 封加入重发队列，将在 5 分钟内发送。",
+    "admin.emails.zip.tooMany":"每个压缩包最多包含 {n} 封邮件。",
+    "admin.emails.zip.working":"正在压缩 {n} 份 PDF…",
+    "admin.emails.zip.done":"已下载包含 {n} 份 PDF 的压缩包。",
+    "admin.emails.zip.partial":"已压缩 {ok} 份。{fail} 份未能生成。",
+    "admin.emails.zip.failed":"无法创建压缩包。",
     "admin.emails.empty":"队列中还没有邮件。",
     "admin.emails.empty.filtered":"没有符合此条件的邮件。",
     "admin.emails.status.sent":"已发送",
@@ -11140,6 +11170,7 @@ function renderAdminEmails(){
         <button class="btn-ghost" type="button" onclick="AdminActions.selectAllEmails()">${escapeHtml(I.t("admin.emails.action.selectAll"))}</button>
         <button class="btn-ghost" type="button" onclick="AdminActions.clearAllEmails()">${escapeHtml(I.t("admin.emails.action.clearAll"))}</button>
         <button class="btn-primary" type="button" onclick="AdminActions.resendSelectedEmails()"><span>${escapeHtml(I.t("admin.emails.action.resendSelected"))}${selectedCount ? " ("+selectedCount+")" : ""}</span></button>
+        <button class="btn-ghost" type="button" onclick="AdminActions.downloadSelectedEmailZip()">${escapeHtml(I.t("admin.emails.action.downloadZip"))}${selectedCount ? " ("+selectedCount+")" : ""}</button>
         ${pendingCount > 0 ? `<button class="btn-ghost" onclick="AdminActions.cancelAllPending()" style="border-color:var(--amber);color:var(--amber)">Cancel All Pending (${pendingCount})</button>` : ""}
         ${processedCount > 0 ? `<button class="btn-ghost" onclick="AdminActions.clearProcessedEmails()">Clear Processed (${processedCount})</button>` : ""}
       </div>
@@ -13472,6 +13503,68 @@ const AdminActions = {
     }
     State.emailSelected = {};
     Toast.show(I.t("admin.emails.resendSelected.done", { n: String(n) }), n ? "ok" : "err");
+  },
+
+  async _postEmailZip(body){
+    const paths = ["/api/admin-email-zip", "/.netlify/functions/admin-email-zip"];
+    let res = null;
+    for(const path of paths){
+      const send = async (force) => {
+        const idToken = await this._adminIdToken(force);
+        return fetch(path, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", Authorization: "Bearer " + idToken },
+          body: JSON.stringify(body)
+        });
+      };
+      res = await send(false);
+      if(res.status === 401) res = await send(true);
+      if(res.status !== 404) break;
+    }
+    return res;
+  },
+
+  async downloadSelectedEmailZip(){
+    if(this._emailZipBusy) return;
+    const ids = Object.keys(State.emailSelected || {});
+    const cap = 50;
+    if(!ids.length){
+      Toast.show(I.t("admin.emails.resendSelected.none"), "warn");
+      return;
+    }
+    if(ids.length > cap){
+      Toast.show(I.t("admin.emails.zip.tooMany", { n: String(cap) }), "warn");
+      return;
+    }
+    this._emailZipBusy = true;
+    Toast.show(I.t("admin.emails.zip.working", { n: String(ids.length) }));
+    try{
+      const res = await this._postEmailZip({ ids });
+      if(!res.ok){
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "zip");
+      }
+      const blob = await res.blob();
+      const cd = res.headers.get("Content-Disposition") || "";
+      const named = cd.match(/filename="([^"]+)"/);
+      const ok = Number(res.headers.get("X-Zip-Ok") || ids.length);
+      const fail = Number(res.headers.get("X-Zip-Failed") || 0);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = (named && named[1]) || "emails.zip";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+      if(fail) Toast.show(I.t("admin.emails.zip.partial", { ok: String(ok), fail: String(fail) }), "warn");
+      else Toast.show(I.t("admin.emails.zip.done", { n: String(ok) }), "ok");
+    }catch(err){
+      console.warn("email zip failed", err);
+      Toast.show(I.t("admin.emails.zip.failed"), "err");
+    }finally{
+      this._emailZipBusy = false;
+    }
   },
 
   // Cancel a pending email so the scheduled function stops trying.
