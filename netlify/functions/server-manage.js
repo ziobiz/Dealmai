@@ -16,6 +16,7 @@ const {
   parseServerManageBody,
   parseDomainBody
 } = require('./lib/server-manage');
+const { fetchFirestoreQuota } = require('./lib/firestore-quota');
 
 const corsHeaders = {
   'Content-Type': 'application/json',
@@ -76,6 +77,10 @@ exports.handler = async (event) => {
       const view = String(
         (event.queryStringParameters && event.queryStringParameters.view) || 'summary'
       ).toLowerCase();
+      if (view === 'quota') {
+        const quota = await fetchFirestoreQuota();
+        return jsonResp(quota.ok === false && quota.code === 'config' ? 503 : 200, quota);
+      }
       const serverCfg = await loadServerCfg();
       if (view === 'domain') {
         const domainCfg = await loadDomainCfg();

@@ -957,6 +957,15 @@ const DEFAULT_STRINGS = {
   "admin.server.status.warn":"Warn",
   "admin.server.status.danger":"Danger",
   "admin.server.json":"Raw JSON (debug)",
+  "admin.server.quota.title":"Firestore free quota",
+  "admin.server.quota.hint":"Each ring is today's allowance. The arc is how much of that allowance has been used since yesterday 16:00 Korea time.",
+  "admin.server.quota.reads":"Reads",
+  "admin.server.quota.writes":"Writes",
+  "admin.server.quota.deletes":"Deletes",
+  "admin.server.quota.window":"{start} – {end} (Korea time)",
+  "admin.server.quota.loading":"Loading usage…",
+  "admin.server.quota.unavailable":"Usage could not be loaded: {error}",
+  "admin.server.quota.permission":"The server account needs the Monitoring Viewer role before these graphs can load.",
   "toast.domain.saved":"Domain settings saved",
   "toast.server.saved":"Server settings saved",
   "toast.server.loadFail":"Could not load server status: {error}",
@@ -2054,6 +2063,15 @@ const FULL_TRANSLATIONS = {
     "admin.domain.missing":"ไม่อยู่ในใบรับรอง:",
     "admin.domain.yes":"ใช่",
     "admin.domain.no":"ไม่",
+    "admin.server.quota.title":"โควต้าฟรีของ Firestore",
+    "admin.server.quota.hint":"วงกลมหนึ่งวงคือเพดานของวันนี้ ส่วนที่ทึบคือปริมาณที่ใช้ไปตั้งแต่ 16:00 ของเมื่อวานตามเวลาเกาหลี",
+    "admin.server.quota.reads":"การอ่าน",
+    "admin.server.quota.writes":"การเขียน",
+    "admin.server.quota.deletes":"การลบ",
+    "admin.server.quota.window":"{start} – {end} (เวลาเกาหลี)",
+    "admin.server.quota.loading":"กำลังโหลดปริมาณที่ใช้…",
+    "admin.server.quota.unavailable":"โหลดปริมาณที่ใช้ไม่ได้: {error}",
+    "admin.server.quota.permission":"บัญชีเซิร์ฟเวอร์ต้องมีสิทธิ์ Monitoring Viewer ก่อนจึงจะแสดงกราฟนี้ได้",
     // Misc
     "footer.tag":"AI ตัวแทนขายที่ปิดการขายให้คุณ 24/7"
   },
@@ -2497,6 +2515,15 @@ const FULL_TRANSLATIONS = {
     "admin.server.status.warn":"주의",
     "admin.server.status.danger":"위험",
     "admin.server.json":"원본 JSON (디버그)",
+    "admin.server.quota.title":"Firestore 무료 한도",
+    "admin.server.quota.hint":"원 하나가 하루 허용치입니다. 칠해진 호는 어제 오후 4시부터 지금까지 그 허용치 중 사용한 양입니다.",
+    "admin.server.quota.reads":"읽기",
+    "admin.server.quota.writes":"쓰기",
+    "admin.server.quota.deletes":"삭제",
+    "admin.server.quota.window":"{start} – {end} (한국 시간)",
+    "admin.server.quota.loading":"사용량을 불러오는 중입니다…",
+    "admin.server.quota.unavailable":"사용량을 불러오지 못했습니다: {error}",
+    "admin.server.quota.permission":"이 그래프를 보려면 서버 계정에 Monitoring Viewer 권한이 필요합니다.",
     "toast.domain.saved":"도메인 설정을 저장했습니다",
     "toast.server.saved":"서버 설정을 저장했습니다",
     "toast.server.loadFail":"서버 상태를 불러오지 못했습니다: {error}",
@@ -3991,6 +4018,15 @@ const FULL_TRANSLATIONS = {
     "admin.domain.missing":"証明書に未登録のホスト:",
     "admin.domain.yes":"はい",
     "admin.domain.no":"いいえ",
+    "admin.server.quota.title":"Firestore の無料枠",
+    "admin.server.quota.hint":"円1つが1日の上限です。塗られた部分は、昨日16:00（韓国時間）から今までに使った量です。",
+    "admin.server.quota.reads":"読み取り",
+    "admin.server.quota.writes":"書き込み",
+    "admin.server.quota.deletes":"削除",
+    "admin.server.quota.window":"{start} – {end}（韓国時間）",
+    "admin.server.quota.loading":"使用量を読み込んでいます…",
+    "admin.server.quota.unavailable":"使用量を読み込めませんでした: {error}",
+    "admin.server.quota.permission":"このグラフを表示するには、サーバーアカウントに Monitoring Viewer 権限が必要です。",
     // Misc
     "footer.tag":"24/7取引を成立させるAI営業エージェント。"
   },
@@ -4111,6 +4147,15 @@ const FULL_TRANSLATIONS = {
     "login.password":"密码",
     "login.cta":"登录",
     "login.working":"正在验证登录…",
+    "admin.server.quota.title":"Firestore 免费额度",
+    "admin.server.quota.hint":"每个圆是当天的上限。填色部分是从昨天16:00（韩国时间）到现在已经用掉的量。",
+    "admin.server.quota.reads":"读取",
+    "admin.server.quota.writes":"写入",
+    "admin.server.quota.deletes":"删除",
+    "admin.server.quota.window":"{start} – {end}（韩国时间）",
+    "admin.server.quota.loading":"正在加载用量…",
+    "admin.server.quota.unavailable":"无法加载用量：{error}",
+    "admin.server.quota.permission":"服务器账号需要 Monitoring Viewer 权限后才能显示这些图。",
     "footer.tag":"全天候成交的 AI 销售代理。",
     "admin.side.console":"概览",
     "admin.side.orders":"订单",
@@ -11682,6 +11727,54 @@ const ServerManageUI = {
       table += `<p style="font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5">${escapeHtml(linkage.linkageHint)}</p>`;
     }
     box.innerHTML = sslMeta + table;
+  },
+
+  quotaDonut(key, used, limit){
+    const amount = Math.max(0, Number(used) || 0);
+    const cap = Math.max(1, Number(limit) || 1);
+    const ratio = amount / cap;
+    const shown = Math.min(ratio, 1);
+    const r = 46;
+    const circ = 2 * Math.PI * r;
+    const dash = circ * shown;
+    const color = ratio >= 1 ? "#c8463d" : ratio >= 0.8 ? "#c4843d" : "#0e8f86";
+    const pct = Math.round(ratio * 100);
+    const fmt = (n) => Math.round(n).toLocaleString("en-US");
+    return `<div class="quota-donut">
+      <svg viewBox="0 0 120 120" width="148" height="148" role="img" aria-label="${escapeHtml(I.t("admin.server.quota." + key))}">
+        <circle cx="60" cy="60" r="${r}" fill="none" stroke="rgba(196,192,184,.55)" stroke-width="12"></circle>
+        <circle cx="60" cy="60" r="${r}" fill="none" stroke="${color}" stroke-width="12" stroke-linecap="round"
+          stroke-dasharray="${dash.toFixed(2)} ${circ.toFixed(2)}" transform="rotate(-90 60 60)"></circle>
+        <text x="60" y="58" text-anchor="middle" font-size="18" font-weight="600" fill="currentColor">${pct}%</text>
+      </svg>
+      <div class="quota-donut-label">${escapeHtml(I.t("admin.server.quota." + key))}</div>
+      <div class="quota-donut-count">${fmt(amount)} / ${fmt(cap)}</div>
+    </div>`;
+  },
+
+  renderQuota(data){
+    const box = document.getElementById("srv-quota");
+    const win = document.getElementById("srv-quota-window");
+    if(!box) return;
+    if(win){
+      win.textContent = data && data.windowStartKst
+        ? I.t("admin.server.quota.window", { start: data.windowStartKst, end: data.windowEndKst || "" })
+        : "";
+    }
+    if(!data || data.ok === false){
+      const msg = data && data.code === "permission"
+        ? I.t("admin.server.quota.permission")
+        : I.t("admin.server.quota.unavailable", { error: (data && data.error) || "—" });
+      box.innerHTML = `<p style="color:var(--red);margin:0">${escapeHtml(msg)}</p>`;
+      return;
+    }
+    const used = data.used || {};
+    const limits = data.limits || {};
+    box.innerHTML = `<div class="quota-rings">
+      ${this.quotaDonut("reads", used.reads, limits.reads)}
+      ${this.quotaDonut("writes", used.writes, limits.writes)}
+      ${this.quotaDonut("deletes", used.deletes, limits.deletes)}
+    </div>`;
   }
 };
 
@@ -11743,6 +11836,13 @@ function renderAdminServer(){
       </div>
     </div>
 
+    <div class="wh-card" style="margin-bottom:18px" id="srv-quota-card">
+      <h3>${I.t("admin.server.quota.title")}</h3>
+      <p class="sub">${I.t("admin.server.quota.hint")}</p>
+      <p id="srv-quota-window" class="sub" style="margin-top:-8px">—</p>
+      <div id="srv-quota">${I.t("admin.server.quota.loading")}</div>
+    </div>
+
     <div class="wh-card" style="margin-bottom:18px">
       <h3>${I.t("admin.server.ssl.title")}</h3>
       <p class="sub">${I.t("admin.server.ssl.hint")}</p>
@@ -11798,6 +11898,7 @@ function renderAdminServer(){
     ServerManageUI.scheduleAutoRefresh(ServerManageUI._data);
   }
   loadAdminServerSummary(false);
+  loadAdminServerQuota();
 }
 
 async function loadAdminDomain(force){
@@ -11818,6 +11919,20 @@ async function loadAdminDomain(force){
     Toast.show(I.t("toast.domain.loadFail",{error:String(e.message||e)}),"err");
     const box = document.getElementById("domain-ssl-linkage");
     if(box) box.innerHTML = `<p style="color:var(--red)">${escapeHtml(String(e.message||e))}</p>`;
+  }
+}
+
+async function loadAdminServerQuota(){
+  const box = document.getElementById("srv-quota");
+  if(box) box.textContent = I.t("admin.server.quota.loading");
+  try{
+    const headers = await ServerManageUI.authHeaders();
+    const res = await fetch(ServerManageUI.apiUrl("?view=quota"), { headers, cache: "no-store" });
+    const data = await res.json().catch(() => ({}));
+    if(!res.ok && !data.code) throw new Error(data.error || res.statusText);
+    ServerManageUI.renderQuota(data.ok === false ? data : data);
+  }catch(e){
+    ServerManageUI.renderQuota({ ok:false, error: String(e.message || e) });
   }
 }
 

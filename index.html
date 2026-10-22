@@ -676,6 +676,11 @@
   .settings-grid thead th{background:rgba(236,232,224,.65)}
   .settings-grid tbody tr:hover td{background:rgba(236,232,224,.35)}
   .settings-grid .row-actions{justify-content:center}
+  .quota-rings{display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start}
+  .quota-donut{width:168px;text-align:center;color:var(--text)}
+  .quota-donut svg{display:block;margin:0 auto}
+  .quota-donut-label{margin-top:8px;font-size:13px;font-weight:500}
+  .quota-donut-count{margin-top:2px;font-size:12px;color:var(--muted)}
 
   /* Drive automation card: kind names stay on one line */
   .drive-auto-card .sub{margin:0 0 16px;max-width:none}
@@ -1795,7 +1800,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261022login1"></script>
+<script type="module" src="/app.js?v=20261022quota1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
