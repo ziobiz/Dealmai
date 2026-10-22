@@ -459,6 +459,8 @@ const DEFAULT_STRINGS = {
   "login.otp.totpHint":"Enter the 6-digit code from your authenticator app.",
   "login.otp.enrollTitle":"OTP Enrollment — Email verification",
   "login.otp.emailHint":"Enter the 6-digit code sent to {email}.",
+  "login.otp.sending":"Sending the verification code…",
+  "login.noProfile":"This account has no profile, so sign-in cannot finish.",
   "login.otp.googleTitle":"Google Authenticator setup",
   "login.otp.scanHint":"Scan the QR with Google Authenticator, then enter the 6-digit code.",
   "login.otp.code":"OTP Code",
@@ -1018,6 +1020,7 @@ const DEFAULT_STRINGS = {
   "login.email":"Email",
   "login.password":"Password",
   "login.cta":"Sign In",
+  "login.working":"Checking your sign-in…",
 
   // Toast messages
   "toast.login.ok":"Welcome back, {name}.",
@@ -1483,6 +1486,8 @@ const FULL_TRANSLATIONS = {
     "login.otp.totpHint":"กรอกรหัส 6 หลักจากแอป Authenticator",
     "login.otp.enrollTitle":"ลงทะเบียน OTP — ยืนยันอีเมล",
     "login.otp.emailHint":"กรอกรหัส 6 หลักที่ส่งไปยัง {email}",
+    "login.otp.sending":"กำลังส่งรหัสยืนยัน…",
+    "login.noProfile":"บัญชีนี้ยังไม่มีโปรไฟล์ จึงเข้าสู่ระบบต่อไม่ได้",
     "login.otp.googleTitle":"ตั้งค่า Google Authenticator",
     "login.otp.scanHint":"สแกน QR ด้วย Google Authenticator แล้วกรอกรหัส 6 หลัก",
     "login.otp.code":"รหัส OTP",
@@ -1919,6 +1924,7 @@ const FULL_TRANSLATIONS = {
     "login.email":"อีเมล",
     "login.password":"รหัสผ่าน",
     "login.cta":"เข้าสู่ระบบ",
+    "login.working":"กำลังตรวจสอบการเข้าสู่ระบบ…",
     // Toast messages
     "toast.login.ok":"ยินดีต้อนรับกลับมา {name}",
     "toast.login.fail":"อีเมลหรือรหัสผ่านไม่ถูกต้อง",
@@ -2364,6 +2370,8 @@ const FULL_TRANSLATIONS = {
     "login.otp.totpHint":"인증 앱에 표시된 6자리 코드를 입력하세요.",
     "login.otp.enrollTitle":"OTP 등록 · 이메일 확인",
     "login.otp.emailHint":"{email}로 보낸 6자리 코드를 입력하세요.",
+    "login.otp.sending":"인증 코드를 보내는 중입니다…",
+    "login.noProfile":"이 계정에는 프로필이 없어 로그인을 마칠 수 없습니다.",
     "login.otp.googleTitle":"Google Authenticator 설정",
     "login.otp.scanHint":"Google Authenticator로 QR을 스캔한 뒤, 앱에 표시된 6자리 코드를 입력하세요.",
     "login.otp.code":"인증 코드",
@@ -2894,6 +2902,7 @@ const FULL_TRANSLATIONS = {
     "login.email":"이메일",
     "login.password":"비밀번호",
     "login.cta":"로그인",
+    "login.working":"로그인을 확인하는 중입니다…",
     // Toast messages
     "toast.login.ok":"다시 오신 것을 환영합니다, {name}님.",
     "toast.login.fail":"이메일 또는 비밀번호가 잘못되었습니다.",
@@ -3349,6 +3358,8 @@ const FULL_TRANSLATIONS = {
     "login.otp.totpHint":"認証アプリの6桁コードを入力してください。",
     "login.otp.enrollTitle":"OTP登録 — メール認証",
     "login.otp.emailHint":"{email} に送信された6桁コードを入力してください。",
+    "login.otp.sending":"確認コードを送信しています…",
+    "login.noProfile":"このアカウントにはプロフィールがないため、ログインを完了できません。",
     "login.otp.googleTitle":"Google Authenticator 設定",
     "login.otp.scanHint":"Google AuthenticatorでQRをスキャンし、6桁コードを入力してください。",
     "login.otp.code":"OTPコード",
@@ -3776,6 +3787,7 @@ const FULL_TRANSLATIONS = {
     "login.email":"メール",
     "login.password":"パスワード",
     "login.cta":"サインイン",
+    "login.working":"ログインを確認しています…",
     // Toast messages
     "toast.login.ok":"おかえりなさい、{name}様。",
     "toast.login.fail":"メールまたはパスワードが無効です。",
@@ -4098,6 +4110,7 @@ const FULL_TRANSLATIONS = {
     "login.email":"邮箱",
     "login.password":"密码",
     "login.cta":"登录",
+    "login.working":"正在验证登录…",
     "footer.tag":"全天候成交的 AI 销售代理。",
     "admin.side.console":"概览",
     "admin.side.orders":"订单",
@@ -4226,6 +4239,8 @@ const FULL_TRANSLATIONS = {
     "login.otp.totpHint":"请输入认证应用中的6位验证码。",
     "login.otp.enrollTitle":"OTP注册 — 邮箱验证",
     "login.otp.emailHint":"请输入发送至 {email} 的6位验证码。",
+    "login.otp.sending":"正在发送验证码…",
+    "login.noProfile":"此账户还没有资料，无法完成登录。",
     "login.otp.googleTitle":"Google Authenticator 注册",
     "login.otp.scanHint":"使用 Google Authenticator 扫描二维码，然后输入6位代码。",
     "login.otp.code":"验证码",
@@ -7306,10 +7321,24 @@ const App = {
     this.showLoginStep("credentials");
   },
 
+  setLoginStatus(msg){
+    const el = document.getElementById("login-status");
+    if(!el) return;
+    const text = msg ? String(msg) : "";
+    el.textContent = text;
+    el.hidden = !text;
+  },
+
   async doLogin(){
+    if(this._loginBusy) return;
     const email = document.getElementById("li-email").value.trim().toLowerCase();
     const pass = document.getElementById("li-pass").value;
     if(!email || !pass) return Toast.show(I.t("toast.login.fail"),"err");
+    this._loginBusy = true;
+    this.setLoginStatus(I.t("login.working"));
+    const btn = document.querySelector("#login-step-credentials .btn-primary");
+    if(btn) btn.classList.add("is-busy");
+    try{
 
     // SETUP MODE: if no admin profile yet, the first login attempt creates the admin.
     // If the email is already registered in Auth (from a previous attempt), fall through
@@ -7399,6 +7428,11 @@ const App = {
         msg = "Login error: " + (code || e.message);
       }
       Toast.show(msg,"err");
+    }
+    }finally{
+      this._loginBusy = false;
+      if(btn) btn.classList.remove("is-busy");
+      if(!auth.currentUser) this.setLoginStatus("");
     }
   },
 
@@ -8742,18 +8776,22 @@ const App = {
     State.adminOtpPending = profile;
     State.user = null;
     document.getElementById("login-modal")?.classList.add("show");
+    this.setLoginStatus(I.t("login.working"));
     try{
       const st = await this.adminOtpFetch("status");
       if(st.mustSetupOtp || !st.totpEnabled){
-        await this.adminOtpFetch("enroll-send");
-        const hint = document.getElementById("login-enroll-email-hint");
-        if(hint) hint.textContent = I.t("login.otp.emailHint",{ email: st.maskedEmail || profile.email });
         this.showLoginStep("enroll-email");
+        this.setLoginStatus("");
+        const hint = document.getElementById("login-enroll-email-hint");
+        if(hint) hint.textContent = I.t("login.otp.sending");
+        const sent = await this.adminOtpFetch("enroll-send");
+        if(hint) hint.textContent = I.t("login.otp.emailHint",{ email: sent.maskedEmail || st.maskedEmail || profile.email });
         const emailInput = document.getElementById("li-enroll-email-code");
         if(emailInput){ emailInput.value = ""; emailInput.focus(); }
-        Toast.show(I.t("toast.otp.sent") + (st.hint ? " ("+st.hint+")" : ""),"ok");
+        Toast.show(I.t("toast.otp.sent") + (sent.hint ? " ("+sent.hint+")" : ""),"ok");
       }else{
         this.showLoginStep("otp");
+        this.setLoginStatus("");
         const otpInput = document.getElementById("li-otp-code");
         if(otpInput){ otpInput.value = ""; otpInput.focus(); }
         Toast.show(I.t("login.otp.required"),"warn");
@@ -8762,6 +8800,7 @@ const App = {
       console.error(e);
       this._otpGateStarted = false;
       this._otpGateUid = null;
+      this.setLoginStatus("");
       Toast.show(e.message || I.t("toast.otp.invalid"),"err");
       await signOut(auth);
       State.adminOtpPending = null;
@@ -15654,9 +15693,9 @@ async function boot(){
         }
       }else{
         // Auth account exists but no Firestore profile, even after retry.
-        // Don't sign out — the caller (setup flow) is responsible for writing the profile.
-        // Just wait silently; another auth state change will re-trigger this.
         console.warn("Auth user has no Firestore profile yet (uid=" + fbUser.uid + ")");
+        App.setLoginStatus("");
+        Toast.show(I.t("login.noProfile"), "err");
       }
     }else{
       // Signed out

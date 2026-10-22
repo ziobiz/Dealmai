@@ -91,16 +91,24 @@ async function sendEnrollEmail(toEmail, code, name) {
     host: cfg.host,
     port: Number(cfg.port || 587),
     secure: !!cfg.secure,
-    auth: { user: cfg.user, pass: cfg.pass || cfg.password }
+    auth: { user: cfg.user, pass: cfg.pass || cfg.password },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 20000
   });
 
-  await transport.sendMail({
-    from: cfg.from || cfg.user,
-    to: toEmail,
-    subject,
-    text
-  });
-  return { sent: true };
+  try{
+    await transport.sendMail({
+      from: cfg.from || cfg.user,
+      to: toEmail,
+      subject,
+      text
+    });
+    return { sent: true };
+  }catch(err){
+    console.warn('[admin-otp] enroll mail failed', toEmail, err.message || err);
+    return { sent: false };
+  }
 }
 
 exports.handler = async (event) => {
