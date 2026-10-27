@@ -33,9 +33,11 @@
 // ============================================================
 
 const chillpayAdapter = require('./chillpay');
+const icopayAdapter = require('./icopay');
 
 const ADAPTERS = {
-  chillpay: chillpayAdapter
+  chillpay: chillpayAdapter,
+  icopay: icopayAdapter
 };
 
 // Used when config/payment is missing (e.g. before an admin ever saved it).
