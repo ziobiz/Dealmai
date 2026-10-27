@@ -178,12 +178,17 @@ exports.handler = async (event) => {
       paymentMethod:  gw.id,             // kept for backwards compatibility
       paymentChannel: channel || 'select-on-page',
       customer: {
-        name:    customer.name,
+        name:    customer.name
+          || [customer.firstName, customer.lastName].filter(Boolean).join(' ').trim()
+          || '',
+        firstName: customer.firstName || '',
+        lastName:  customer.lastName  || '',
         email:   customer.email,
         country: customer.country || '',
         company: customer.company || '',
         taxId:   customer.taxId   || '',
-        phone:   customer.phone   || ''
+        phone:   customer.phone   || '',
+        phoneCountryCode: customer.phoneCountryCode || ''
       },
       items,
       subtotal: Number(subtotalUsd) || 0,

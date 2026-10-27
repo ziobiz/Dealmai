@@ -227,7 +227,11 @@ module.exports = {
       buyer: {
         email: String(customer.email || '').replace(/\+[^@]*(?=@)/, ''),
         phone: localPhone(customer),
-        countryIso2: countryIso2(customer)
+        countryIso2: countryIso2(customer),
+        firstName: String(customer.firstName || '').trim().slice(0, 80)
+          || String(customer.name || '').trim().split(/\s+/)[0] || '',
+        lastName: String(customer.lastName || '').trim().slice(0, 80)
+          || String(customer.name || '').trim().split(/\s+/).slice(1).join(' ') || ''
       }
     };
     const redactedRequest = {

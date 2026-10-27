@@ -160,22 +160,34 @@ const DEFAULT_STRINGS = {
   "checkout.section.payment":"Payment Method",
   "checkout.section.delivery":"Receipt Delivery",
   "checkout.field.name":"Full Name",
+  "checkout.field.firstName":"First name",
+  "checkout.field.lastName":"Last name",
   "checkout.field.email":"Email",
+  "checkout.field.phoneCode":"Country code",
+  "checkout.field.phone":"Phone",
   "checkout.field.company":"Company",
   "checkout.field.country":"Country",
   "checkout.field.taxid":"Tax ID",
   "checkout.field.optional":"optional",
   "checkout.field.taxid.hint":"For a full tax invoice (ใบกำกับภาษีเต็มรูปแบบ). Thai companies: 13-digit Tax ID.",
   "checkout.ph.name":"e.g. Soraya Kanchanaporn",
+  "checkout.ph.firstName":"e.g. Soraya",
+  "checkout.ph.lastName":"e.g. Kanchanaporn",
   "checkout.ph.email":"e.g. soraya@studiokanchana.com",
+  "checkout.ph.phone":"e.g. 812345678",
   "checkout.ph.company":"e.g. Studio Kanchana",
   "checkout.ph.taxid":"e.g. 0105564016423",
+  "toast.checkout.needFirstName":"Please enter your first name",
+  "toast.checkout.needLastName":"Please enter your last name",
+  "toast.checkout.needPhoneCode":"Please select a country calling code",
+  "toast.checkout.needPhone":"Please enter your phone number",
   "checkout.terms.intro-html":"Before you pay, please review our <a class=\"terms-link\" onclick=\"App.openTermsModal()\">Terms of Service and Privacy Policy</a>.",
   "checkout.terms.consent":"I confirm that I am purchasing for business use, and I have read and agree to the Terms of Service and Privacy Policy. I understand that credit top-ups automatically expire 24 hours after purchase and are strictly non-refundable.",
   "toast.checkout.needName":"Please enter your full name",
   "toast.checkout.needEmail":"Please enter your email address",
   "toast.checkout.badEmail":"Please enter a valid email address",
   "toast.checkout.needTerms":"Please read and accept the Terms of Service before paying",
+
   "about.eyebrow":"About ONTHELINE & DealMai",
   "about.heading-html":"Every inquiry becomes a <em>growth opportunity</em>.",
   "about.teaser-html":"At <strong>ONTHELINE</strong>, we recognized that traditional chatbots and delayed responses cause businesses to lose valuable leads every day. We created <strong>DealMai</strong> to bridge this gap through 24/7 AI-driven engagement. Operating across major messaging channels like WhatsApp, Instagram, and LINE, DealMai delivers human-like conversations that qualify prospects, book appointments, and reactivate contacts in your brand\'s exact voice. As part of the global ONTHELINE network (Thailand, Japan, Singapore, South Korea), we help businesses turn every inquiry into a growth opportunity, nonstop.",
@@ -1207,19 +1219,30 @@ const FULL_TRANSLATIONS = {
     "checkout.section.payment":"วิธีชำระเงิน",
     "checkout.section.delivery":"การจัดส่งใบเสร็จ",
     "checkout.field.name":"ชื่อ-นามสกุล",
+    "checkout.field.firstName":"ชื่อ",
+    "checkout.field.lastName":"นามสกุล",
     "checkout.field.email":"อีเมล",
+    "checkout.field.phoneCode":"รหัสประเทศ",
+    "checkout.field.phone":"เบอร์โทรศัพท์",
     "checkout.field.company":"บริษัท",
     "checkout.field.country":"ประเทศ",
     "checkout.field.taxid":"เลขประจำตัวผู้เสียภาษี",
     "checkout.field.optional":"ไม่บังคับ",
     "checkout.field.taxid.hint":"สำหรับขอใบกำกับภาษีเต็มรูปแบบ · นิติบุคคลไทย: เลขประจำตัวผู้เสียภาษี 13 หลัก",
     "checkout.ph.name":"ตัวอย่าง: สรญา กาญจนาพร",
+    "checkout.ph.firstName":"ตัวอย่าง: สรญา",
+    "checkout.ph.lastName":"ตัวอย่าง: กาญจนาพร",
     "checkout.ph.email":"ตัวอย่าง: soraya@studiokanchana.com",
+    "checkout.ph.phone":"ตัวอย่าง: 812345678",
     "checkout.ph.company":"ตัวอย่าง: สตูดิโอ กาญจนา",
     "checkout.ph.taxid":"ตัวอย่าง: 0105564016423",
     "checkout.terms.intro-html":"ก่อนชำระเงิน กรุณาอ่าน <a class=\"terms-link\" onclick=\"App.openTermsModal()\">ข้อกำหนดในการให้บริการและนโยบายความเป็นส่วนตัว</a>",
     "checkout.terms.consent":"ข้าพเจ้ายืนยันว่าซื้อเพื่อใช้ในทางธุรกิจ และได้อ่านและยอมรับข้อกำหนดในการให้บริการและนโยบายความเป็นส่วนตัวแล้ว ข้าพเจ้าเข้าใจว่าเครดิตที่เติมจะหมดอายุอัตโนมัติภายใน 24 ชั่วโมงหลังการซื้อ และไม่สามารถขอคืนเงินได้ทุกกรณี",
     "toast.checkout.needName":"กรุณากรอกชื่อ-นามสกุล",
+    "toast.checkout.needFirstName":"กรุณากรอกชื่อ",
+    "toast.checkout.needLastName":"กรุณากรอกนามสกุล",
+    "toast.checkout.needPhoneCode":"กรุณาเลือกรหัสประเทศ",
+    "toast.checkout.needPhone":"กรุณากรอกเบอร์โทรศัพท์",
     "toast.checkout.needEmail":"กรุณากรอกอีเมล",
     "toast.checkout.badEmail":"กรุณากรอกอีเมลให้ถูกต้อง",
     "toast.checkout.needTerms":"กรุณาอ่านและยอมรับข้อกำหนดในการให้บริการก่อนชำระเงิน",
@@ -2181,19 +2204,30 @@ const FULL_TRANSLATIONS = {
     "checkout.section.payment":"결제 방법",
     "checkout.section.delivery":"영수증 배송",
     "checkout.field.name":"성명",
+    "checkout.field.firstName":"이름",
+    "checkout.field.lastName":"성",
     "checkout.field.email":"이메일",
+    "checkout.field.phoneCode":"국가번호",
+    "checkout.field.phone":"전화번호",
     "checkout.field.company":"회사",
     "checkout.field.country":"국가",
     "checkout.field.taxid":"사업자등록번호",
     "checkout.field.optional":"선택",
     "checkout.field.taxid.hint":"세금계산서 발행용 · 태국 법인: 13자리 납세자번호",
     "checkout.ph.name":"예: Soraya Kanchanaporn",
+    "checkout.ph.firstName":"예: Soraya",
+    "checkout.ph.lastName":"예: Kanchanaporn",
     "checkout.ph.email":"예: soraya@studiokanchana.com",
+    "checkout.ph.phone":"예: 1012345678",
     "checkout.ph.company":"예: Studio Kanchana",
     "checkout.ph.taxid":"예: 0105564016423",
     "checkout.terms.intro-html":"결제 전 <a class=\"terms-link\" onclick=\"App.openTermsModal()\">서비스 약관 및 개인정보 처리방침</a>을 확인해 주세요.",
     "checkout.terms.consent":"본인은 비즈니스 용도로 구매하며, 서비스 약관 및 개인정보 처리방침을 읽고 동의합니다. 충전한 크레딧은 구매 후 24시간이 지나면 자동으로 만료되며 환불이 불가함을 이해합니다.",
     "toast.checkout.needName":"이름을 입력해 주세요",
+    "toast.checkout.needFirstName":"이름을 입력해 주세요",
+    "toast.checkout.needLastName":"성을 입력해 주세요",
+    "toast.checkout.needPhoneCode":"국가번호를 선택해 주세요",
+    "toast.checkout.needPhone":"전화번호를 입력해 주세요",
     "toast.checkout.needEmail":"이메일을 입력해 주세요",
     "toast.checkout.badEmail":"올바른 이메일 주소를 입력해 주세요",
     "toast.checkout.needTerms":"결제 전 서비스 약관을 읽고 동의해 주세요",
@@ -3160,19 +3194,30 @@ const FULL_TRANSLATIONS = {
     "checkout.section.payment":"お支払い方法",
     "checkout.section.delivery":"領収書の配信",
     "checkout.field.name":"氏名",
+    "checkout.field.firstName":"名",
+    "checkout.field.lastName":"姓",
     "checkout.field.email":"メール",
+    "checkout.field.phoneCode":"国番号",
+    "checkout.field.phone":"電話番号",
     "checkout.field.company":"会社",
     "checkout.field.country":"国",
     "checkout.field.taxid":"納税者番号",
     "checkout.field.optional":"任意",
     "checkout.field.taxid.hint":"適格請求書の発行用 · タイ法人: 13桁の納税者番号",
     "checkout.ph.name":"例: Soraya Kanchanaporn",
+    "checkout.ph.firstName":"例: Soraya",
+    "checkout.ph.lastName":"例: Kanchanaporn",
     "checkout.ph.email":"例: soraya@studiokanchana.com",
+    "checkout.ph.phone":"例: 9012345678",
     "checkout.ph.company":"例: Studio Kanchana",
     "checkout.ph.taxid":"例: 0105564016423",
     "checkout.terms.intro-html":"お支払いの前に<a class=\"terms-link\" onclick=\"App.openTermsModal()\">利用規約およびプライバシーポリシー</a>をご確認ください。",
     "checkout.terms.consent":"事業目的での購入であることを確認し、利用規約およびプライバシーポリシーを読み、同意します。チャージしたクレジットは購入後24時間で自動的に失効し、返金は一切できないことを理解しています。",
     "toast.checkout.needName":"お名前を入力してください",
+    "toast.checkout.needFirstName":"名を入力してください",
+    "toast.checkout.needLastName":"姓を入力してください",
+    "toast.checkout.needPhoneCode":"国番号を選択してください",
+    "toast.checkout.needPhone":"電話番号を入力してください",
     "toast.checkout.needEmail":"メールアドレスを入力してください",
     "toast.checkout.badEmail":"有効なメールアドレスを入力してください",
     "toast.checkout.needTerms":"お支払いの前に利用規約をお読みのうえ同意してください",
@@ -4127,9 +4172,20 @@ const FULL_TRANSLATIONS = {
     "checkout.section.payment":"支付方式",
     "checkout.section.delivery":"收据送达",
     "checkout.field.name":"全名",
+    "checkout.field.firstName":"名",
+    "checkout.field.lastName":"姓",
     "checkout.field.email":"邮箱",
+    "checkout.field.phoneCode":"国家区号",
+    "checkout.field.phone":"电话号码",
     "checkout.field.company":"公司",
     "checkout.field.country":"国家/地区",
+    "checkout.ph.firstName":"例如：Soraya",
+    "checkout.ph.lastName":"例如：Kanchanaporn",
+    "checkout.ph.phone":"例如：13800138000",
+    "toast.checkout.needFirstName":"请输入名",
+    "toast.checkout.needLastName":"请输入姓",
+    "toast.checkout.needPhoneCode":"请选择国家区号",
+    "toast.checkout.needPhone":"请输入电话号码",
     "checkout.field.via":"收据发送方式",
     "checkout.field.lang":"收据语言",
     "checkout.summary.title":"订单摘要",
@@ -4348,6 +4404,10 @@ const FULL_TRANSLATIONS = {
     "checkout.terms.intro-html":"付款前，请阅读我们的<a class=\"terms-link\" onclick=\"App.openTermsModal()\">服务条款与隐私政策</a>。",
     "checkout.terms.consent":"我确认本次购买用于商业用途，并已阅读并同意服务条款与隐私政策。我了解充值积分将在购买后 24 小时自动到期，且不予退款。",
     "toast.checkout.needName":"请输入姓名",
+    "toast.checkout.needFirstName":"请输入名",
+    "toast.checkout.needLastName":"请输入姓",
+    "toast.checkout.needPhoneCode":"请选择国家区号",
+    "toast.checkout.needPhone":"请输入电话号码",
     "toast.checkout.needEmail":"请输入邮箱地址",
     "toast.checkout.badEmail":"请输入有效的邮箱地址",
     "toast.checkout.needTerms":"付款前请阅读并同意服务条款",
@@ -7978,29 +8038,48 @@ const App = {
     //  • Signed out → show sample values as PLACEHOLDERS only (grey, not real
     //    input), so nothing bogus is ever submitted. submitCheckout() validates
     //    that the required fields were actually filled in.
-    const nameEl = document.getElementById("co-name");
+    const firstEl = document.getElementById("co-first-name");
+    const lastEl = document.getElementById("co-last-name");
     const mailEl = document.getElementById("co-email");
+    const phoneCodeEl = document.getElementById("co-phone-code");
+    const phoneEl = document.getElementById("co-phone");
     const compEl = document.getElementById("co-company");
     const taxEl  = document.getElementById("co-taxid");
     const countryEl = document.getElementById("co-country");
+    if(phoneCodeEl && !phoneCodeEl.options.length){
+      phoneCodeEl.innerHTML = this.profilePhoneCodes().map(o =>
+        `<option value="${escapeHtml(o.v)}">${escapeHtml(o.t)}</option>`
+      ).join("");
+    }
+    const splitStoredName = (full) => {
+      const parts = String(full || "").trim().split(/\s+/).filter(Boolean);
+      if(!parts.length) return { first: "", last: "" };
+      if(parts.length === 1) return { first: parts[0], last: "" };
+      return { first: parts[0], last: parts.slice(1).join(" ") };
+    };
     const u = State.user;
     if(u && (u.role === "customer" || u.role === "admin")){
-      if(nameEl && !nameEl.value) nameEl.value = (u.name && u.name !== "Customer") ? u.name : "";
+      const split = splitStoredName(u.name && u.name !== "Customer" ? u.name : "");
+      if(firstEl && !firstEl.value) firstEl.value = split.first;
+      if(lastEl && !lastEl.value) lastEl.value = split.last;
       if(mailEl){
         mailEl.value = u.email || "";
         if(u.role === "customer") mailEl.readOnly = true;
       }
       if(countryEl && u.nationality) countryEl.value = u.nationality;
-      // Company / Tax ID aren't part of the auth profile — leave them for the
-      // customer to fill, but hint with the sample format.
+      if(phoneCodeEl && u.phoneCountryCode) phoneCodeEl.value = u.phoneCountryCode;
+      if(phoneEl && !phoneEl.value && u.phone) phoneEl.value = String(u.phone).replace(/[^\d]/g, "");
       if(compEl) compEl.placeholder = I.t("checkout.ph.company");
       if(taxEl) taxEl.placeholder  = I.t("checkout.ph.taxid");
     }else{
-      if(nameEl) nameEl.placeholder = I.t("checkout.ph.name");
+      if(firstEl) firstEl.placeholder = I.t("checkout.ph.firstName");
+      if(lastEl) lastEl.placeholder = I.t("checkout.ph.lastName");
       if(mailEl){ mailEl.placeholder = I.t("checkout.ph.email"); mailEl.readOnly = false; }
+      if(phoneEl) phoneEl.placeholder = I.t("checkout.ph.phone");
       if(compEl) compEl.placeholder = I.t("checkout.ph.company");
       if(taxEl) taxEl.placeholder  = I.t("checkout.ph.taxid");
     }
+    if(phoneEl) phoneEl.placeholder = phoneEl.placeholder || I.t("checkout.ph.phone");
     // Re-rendering rebuilds the summary, so the consent checkbox resets — make
     // sure the pay button starts disabled in sync with it.
     this.onTermsToggle();
@@ -8051,17 +8130,21 @@ const App = {
     if(!(await this.ensureReadyForPurchase())) return;
     const p = State.selectedPackage;
     if(!p) return;
-    const nameEl = document.getElementById("co-name");
+    const firstEl = document.getElementById("co-first-name");
+    const lastEl = document.getElementById("co-last-name");
     const mailEl = document.getElementById("co-email");
-    const name = nameEl.value.trim();
-    const email = mailEl.value.trim();
-    const company = document.getElementById("co-company").value.trim();
+    const phoneCodeEl = document.getElementById("co-phone-code");
+    const phoneEl = document.getElementById("co-phone");
+    const firstName = (firstEl?.value || "").trim();
+    const lastName = (lastEl?.value || "").trim();
+    const name = [firstName, lastName].filter(Boolean).join(" ");
+    const email = (mailEl?.value || "").trim();
+    const phoneCountryCode = (phoneCodeEl?.value || "").trim();
+    const phoneLocal = (phoneEl?.value || "").replace(/[^\d]/g, "");
+    const company = (document.getElementById("co-company")?.value || "").trim();
     const taxId = (document.getElementById("co-taxid")?.value || "").trim();
-    const country = document.getElementById("co-country").value;
-    const recvLang = document.getElementById("co-lang").value || "en";
-    const phone = State.user?.phone
-      ? `${State.user.phoneCountryCode || ""} ${State.user.phone}`.trim()
-      : "";
+    const country = document.getElementById("co-country")?.value || "";
+    const recvLang = document.getElementById("co-lang")?.value || "en";
 
     // --- Validation: required customer details -------------------------------
     // Placeholders are only hints, so an untouched form arrives here empty.
@@ -8072,10 +8155,12 @@ const App = {
       el.focus();
       setTimeout(() => { el.style.borderColor = ""; }, 2600);
     };
-    if(!name){ flag(nameEl); return Toast.show(I.t("toast.checkout.needName"),"err"); }
+    if(!firstName){ flag(firstEl); return Toast.show(I.t("toast.checkout.needFirstName"),"err"); }
+    if(!lastName){ flag(lastEl); return Toast.show(I.t("toast.checkout.needLastName"),"err"); }
     if(!email){ flag(mailEl); return Toast.show(I.t("toast.checkout.needEmail"),"err"); }
-    // Quick client-side email format check
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ flag(mailEl); return Toast.show(I.t("toast.checkout.badEmail"),"err"); }
+    if(!phoneCountryCode){ flag(phoneCodeEl); return Toast.show(I.t("toast.checkout.needPhoneCode"),"err"); }
+    if(phoneLocal.length < 6){ flag(phoneEl); return Toast.show(I.t("toast.checkout.needPhone"),"err"); }
 
     // --- Validation: terms consent -------------------------------------------
     const termsCb = document.getElementById("co-terms");
@@ -8105,7 +8190,17 @@ const App = {
     // active (config/payment.activeGateway) and returns a paymentUrl, so the
     // frontend never needs to know which provider is in use.
     const payload = {
-      customer: { name, email, country, company, taxId, phone },
+      customer: {
+        name,
+        firstName,
+        lastName,
+        email,
+        country,
+        company,
+        taxId,
+        phone: phoneLocal,
+        phoneCountryCode
+      },
       termsAcceptedAt: new Date().toISOString(),
       items: [ { id:p.id, bucket:p.bucket, title:p.title, price:p.price, manual:!!p.manual } ],
       subtotalUsd: p.price,

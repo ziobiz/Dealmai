@@ -1554,20 +1554,24 @@
       <div class="form-section">
         <div class="form-section-title"><span class="step">01</span><span data-i18n="checkout.section.customer">Customer Details</span></div>
         <div class="form-row">
-          <div class="field"><label data-i18n="checkout.field.name">Full Name</label><input id="co-name" /></div>
-          <div class="field"><label data-i18n="checkout.field.email">Email</label><input id="co-email" type="email" /></div>
+          <div class="field"><label data-i18n="checkout.field.firstName">First name</label><input id="co-first-name" autocomplete="given-name" required /></div>
+          <div class="field"><label data-i18n="checkout.field.lastName">Last name</label><input id="co-last-name" autocomplete="family-name" required /></div>
         </div>
         <div class="form-row">
-          <div class="field"><label data-i18n="checkout.field.company">Company</label><input id="co-company" /></div>
+          <div class="field"><label data-i18n="checkout.field.email">Email</label><input id="co-email" type="email" autocomplete="email" required /></div>
           <div class="field"><label data-i18n="checkout.field.country">Country</label><select id="co-country"><option value="TH">Thailand</option><option value="JP">Japan</option><option value="KR">South Korea</option><option value="US">United States</option><option value="SG">Singapore</option><option value="OTHER">Other</option></select></div>
         </div>
         <div class="form-row">
+          <div class="field"><label data-i18n="checkout.field.phoneCode">Country code</label><select id="co-phone-code" required></select></div>
+          <div class="field"><label data-i18n="checkout.field.phone">Phone</label><input id="co-phone" inputmode="tel" autocomplete="tel-national" required /></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label><span data-i18n="checkout.field.company">Company</span> <span class="opt-tag" data-i18n="checkout.field.optional">optional</span></label><input id="co-company" /></div>
           <div class="field">
             <label><span data-i18n="checkout.field.taxid">Tax ID</span> <span class="opt-tag" data-i18n="checkout.field.optional">optional</span></label>
             <input id="co-taxid" />
             <div class="field-hint" data-i18n="checkout.field.taxid.hint">For a full tax invoice (ใบกำกับภาษีเต็มรูปแบบ). Thai companies: 13-digit Tax ID.</div>
           </div>
-          <div class="field"></div>
         </div>
       </div>
 
@@ -1800,7 +1804,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261027icopay1"></script>
+<script type="module" src="/app.js?v=20261027checkout1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
