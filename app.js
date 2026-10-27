@@ -181,6 +181,7 @@ const DEFAULT_STRINGS = {
   "toast.checkout.needLastName":"Please enter your last name",
   "toast.checkout.needPhoneCode":"Please select a country calling code",
   "toast.checkout.needPhone":"Please enter your phone number",
+  "toast.checkout.needCountry":"Please select your country",
   "checkout.terms.intro-html":"Before you pay, please review our <a class=\"terms-link\" onclick=\"App.openTermsModal()\">Terms of Service and Privacy Policy</a>.",
   "checkout.terms.consent":"I confirm that I am purchasing for business use, and I have read and agree to the Terms of Service and Privacy Policy. I understand that credit top-ups automatically expire 24 hours after purchase and are strictly non-refundable.",
   "toast.checkout.needName":"Please enter your full name",
@@ -1243,6 +1244,7 @@ const FULL_TRANSLATIONS = {
     "toast.checkout.needLastName":"กรุณากรอกนามสกุล",
     "toast.checkout.needPhoneCode":"กรุณาเลือกรหัสประเทศ",
     "toast.checkout.needPhone":"กรุณากรอกเบอร์โทรศัพท์",
+    "toast.checkout.needCountry":"กรุณาเลือกประเทศ",
     "toast.checkout.needEmail":"กรุณากรอกอีเมล",
     "toast.checkout.badEmail":"กรุณากรอกอีเมลให้ถูกต้อง",
     "toast.checkout.needTerms":"กรุณาอ่านและยอมรับข้อกำหนดในการให้บริการก่อนชำระเงิน",
@@ -2228,6 +2230,7 @@ const FULL_TRANSLATIONS = {
     "toast.checkout.needLastName":"성을 입력해 주세요",
     "toast.checkout.needPhoneCode":"국가번호를 선택해 주세요",
     "toast.checkout.needPhone":"전화번호를 입력해 주세요",
+    "toast.checkout.needCountry":"국가를 선택해 주세요",
     "toast.checkout.needEmail":"이메일을 입력해 주세요",
     "toast.checkout.badEmail":"올바른 이메일 주소를 입력해 주세요",
     "toast.checkout.needTerms":"결제 전 서비스 약관을 읽고 동의해 주세요",
@@ -3218,6 +3221,7 @@ const FULL_TRANSLATIONS = {
     "toast.checkout.needLastName":"姓を入力してください",
     "toast.checkout.needPhoneCode":"国番号を選択してください",
     "toast.checkout.needPhone":"電話番号を入力してください",
+    "toast.checkout.needCountry":"国を選択してください",
     "toast.checkout.needEmail":"メールアドレスを入力してください",
     "toast.checkout.badEmail":"有効なメールアドレスを入力してください",
     "toast.checkout.needTerms":"お支払いの前に利用規約をお読みのうえ同意してください",
@@ -4186,6 +4190,7 @@ const FULL_TRANSLATIONS = {
     "toast.checkout.needLastName":"请输入姓",
     "toast.checkout.needPhoneCode":"请选择国家区号",
     "toast.checkout.needPhone":"请输入电话号码",
+    "toast.checkout.needCountry":"请选择国家/地区",
     "checkout.field.via":"收据发送方式",
     "checkout.field.lang":"收据语言",
     "checkout.summary.title":"订单摘要",
@@ -4408,6 +4413,7 @@ const FULL_TRANSLATIONS = {
     "toast.checkout.needLastName":"请输入姓",
     "toast.checkout.needPhoneCode":"请选择国家区号",
     "toast.checkout.needPhone":"请输入电话号码",
+    "toast.checkout.needCountry":"请选择国家/地区",
     "toast.checkout.needEmail":"请输入邮箱地址",
     "toast.checkout.badEmail":"请输入有效的邮箱地址",
     "toast.checkout.needTerms":"付款前请阅读并同意服务条款",
@@ -8051,6 +8057,7 @@ const App = {
         `<option value="${escapeHtml(o.v)}">${escapeHtml(o.t)}</option>`
       ).join("");
     }
+    this.bindCheckoutCountryPhoneSync();
     const splitStoredName = (full) => {
       const parts = String(full || "").trim().split(/\s+/).filter(Boolean);
       if(!parts.length) return { first: "", last: "" };
@@ -8066,8 +8073,23 @@ const App = {
         mailEl.value = u.email || "";
         if(u.role === "customer") mailEl.readOnly = true;
       }
-      if(countryEl && u.nationality) countryEl.value = u.nationality;
-      if(phoneCodeEl && u.phoneCountryCode) phoneCodeEl.value = u.phoneCountryCode;
+      if(countryEl && u.nationality && /^[A-Za-z]{2}$/.test(u.nationality)){
+        countryEl.value = u.nationality.toUpperCase();
+      }
+      if(phoneCodeEl){
+        if(u.phoneCountryCode) phoneCodeEl.value = u.phoneCountryCode;
+        else if(countryEl?.value){
+          const dial = this.countryToPhoneCode(countryEl.value);
+          if(dial) phoneCodeEl.value = dial;
+        }
+      }
+      // Keep country aligned with dial code when nationality was OTHER/missing.
+      if(countryEl && phoneCodeEl?.value){
+        const fromPhone = this.phoneCodeToCountry(phoneCodeEl.value);
+        if(fromPhone && (!countryEl.value || countryEl.value === "OTHER")){
+          countryEl.value = fromPhone;
+        }
+      }
       if(phoneEl && !phoneEl.value && u.phone) phoneEl.value = String(u.phone).replace(/[^\d]/g, "");
       if(compEl) compEl.placeholder = I.t("checkout.ph.company");
       if(taxEl) taxEl.placeholder  = I.t("checkout.ph.taxid");
@@ -8143,7 +8165,8 @@ const App = {
     const phoneLocal = (phoneEl?.value || "").replace(/[^\d]/g, "");
     const company = (document.getElementById("co-company")?.value || "").trim();
     const taxId = (document.getElementById("co-taxid")?.value || "").trim();
-    const country = document.getElementById("co-country")?.value || "";
+    const countryEl = document.getElementById("co-country");
+    let country = (countryEl?.value || "").trim().toUpperCase();
     const recvLang = document.getElementById("co-lang")?.value || "en";
 
     // --- Validation: required customer details -------------------------------
@@ -8161,6 +8184,17 @@ const App = {
     if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ flag(mailEl); return Toast.show(I.t("toast.checkout.badEmail"),"err"); }
     if(!phoneCountryCode){ flag(phoneCodeEl); return Toast.show(I.t("toast.checkout.needPhoneCode"),"err"); }
     if(phoneLocal.length < 6){ flag(phoneEl); return Toast.show(I.t("toast.checkout.needPhone"),"err"); }
+    // Country must be a real ISO2 for ICOPay — never OTHER/empty.
+    if(!country || country === "OTHER" || !/^[A-Z]{2}$/.test(country)){
+      const fromPhone = this.phoneCodeToCountry(phoneCountryCode);
+      if(fromPhone){
+        country = fromPhone;
+        if(countryEl) countryEl.value = fromPhone;
+      } else {
+        flag(countryEl);
+        return Toast.show(I.t("toast.checkout.needCountry"),"err");
+      }
+    }
 
     // --- Validation: terms consent -------------------------------------------
     const termsCb = document.getElementById("co-terms");
@@ -8788,6 +8822,43 @@ const App = {
       { v:"+1", t:"+1 US" },
       { v:"+65", t:"+65 SG" }
     ];
+  },
+
+  /** ISO2 → dial code for checkout sync (OTHER has no dial). */
+  countryToPhoneCode(iso2){
+    return ({
+      KR:"+82", TH:"+66", JP:"+81", CN:"+86", US:"+1", SG:"+65"
+    })[String(iso2 || "").toUpperCase()] || "";
+  },
+
+  /** Dial code → ISO2 for checkout sync. */
+  phoneCodeToCountry(dial){
+    const code = String(dial || "").trim().startsWith("+")
+      ? String(dial).trim()
+      : (String(dial || "").replace(/\D/g, "") ? `+${String(dial).replace(/\D/g, "")}` : "");
+    return ({
+      "+82":"KR", "+66":"TH", "+81":"JP", "+86":"CN", "+1":"US", "+65":"SG"
+    })[code] || "";
+  },
+
+  bindCheckoutCountryPhoneSync(){
+    const countryEl = document.getElementById("co-country");
+    const phoneCodeEl = document.getElementById("co-phone-code");
+    if(!countryEl || !phoneCodeEl) return;
+    if(countryEl.dataset.syncBound === "1") return;
+    countryEl.dataset.syncBound = "1";
+    phoneCodeEl.dataset.syncBound = "1";
+    countryEl.addEventListener("change", () => {
+      const dial = this.countryToPhoneCode(countryEl.value);
+      if(dial) phoneCodeEl.value = dial;
+    });
+    phoneCodeEl.addEventListener("change", () => {
+      const iso = this.phoneCodeToCountry(phoneCodeEl.value);
+      if(iso){
+        const opt = Array.from(countryEl.options).find(o => o.value === iso);
+        if(opt) countryEl.value = iso;
+      }
+    });
   },
 
   openCompleteProfileModal(){

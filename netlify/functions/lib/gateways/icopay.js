@@ -62,22 +62,60 @@ function generateOrderNo() {
   return `DMICO${yy}${mm}${dd}${hh}${mi}${rand}`.substring(0, 32);
 }
 
+const PHONE_TO_ISO2 = {
+  '+82': 'KR',
+  '+66': 'TH',
+  '+81': 'JP',
+  '+86': 'CN',
+  '+1': 'US',
+  '+65': 'SG',
+  '+84': 'VN',
+  '+62': 'ID',
+  '+60': 'MY',
+  '+44': 'GB'
+};
+
+const NAME_TO_ISO2 = {
+  THAILAND: 'TH',
+  KOREA: 'KR',
+  'SOUTH KOREA': 'KR',
+  JAPAN: 'JP',
+  CHINA: 'CN',
+  SINGAPORE: 'SG',
+  USA: 'US',
+  'UNITED STATES': 'US'
+};
+
+function normalizeDialCode(raw) {
+  const digits = String(raw || '').replace(/\D/g, '');
+  return digits ? `+${digits}` : '';
+}
+
+function phoneCountryToIso2(phoneCountryCode) {
+  const code = normalizeDialCode(phoneCountryCode);
+  return PHONE_TO_ISO2[code] || '';
+}
+
+function parseCountryToken(raw) {
+  const token = String(raw || '').trim().toUpperCase();
+  if (!token || token === 'OTHER') return '';
+  if (/^[A-Z]{2}$/.test(token)) return token;
+  return NAME_TO_ISO2[token] || '';
+}
+
+/**
+ * Resolve buyer ISO2 for ICOPay.
+ * Prefer explicit form country, then phone dial code (Crypto path), then nationality.
+ * Never invent US; fall back to TH only when nothing valid is present.
+ */
 function countryIso2(customer) {
-  const raw = String(customer && (customer.country || customer.nationality) || 'TH')
-    .trim()
-    .toUpperCase();
-  if (/^[A-Z]{2}$/.test(raw)) return raw;
-  const map = {
-    THAILAND: 'TH',
-    KOREA: 'KR',
-    'SOUTH KOREA': 'KR',
-    JAPAN: 'JP',
-    CHINA: 'CN',
-    SINGAPORE: 'SG',
-    USA: 'US',
-    'UNITED STATES': 'US'
-  };
-  return map[raw] || 'TH';
+  const c = customer || {};
+  return (
+    parseCountryToken(c.country) ||
+    phoneCountryToIso2(c.phoneCountryCode) ||
+    parseCountryToken(c.nationality) ||
+    'TH'
+  );
 }
 
 /** Local national number only — strip +country / leading zeros carefully. */

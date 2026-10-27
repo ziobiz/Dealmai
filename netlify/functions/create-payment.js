@@ -40,6 +40,23 @@ function generateRef(prefix) {
   return `DP-${prefix || 'PG'}-${r}`;
 }
 
+const PHONE_TO_ISO2 = {
+  '+82': 'KR', '+66': 'TH', '+81': 'JP', '+86': 'CN',
+  '+1': 'US', '+65': 'SG', '+84': 'VN', '+62': 'ID', '+60': 'MY', '+44': 'GB'
+};
+
+/** Resolve ISO2 for order + PG — never persist OTHER; fall back TH only last. */
+function resolveCustomerCountryIso2(customer = {}) {
+  const asIso = (raw) => {
+    const t = String(raw || '').trim().toUpperCase();
+    if (!t || t === 'OTHER') return '';
+    return /^[A-Z]{2}$/.test(t) ? t : '';
+  };
+  const dial = String(customer.phoneCountryCode || '').replace(/\D/g, '');
+  const fromPhone = dial ? (PHONE_TO_ISO2[`+${dial}`] || '') : '';
+  return asIso(customer.country) || fromPhone || asIso(customer.nationality) || 'TH';
+}
+
 // ------------------------------------------------------------
 // Diagnostic (GET) — shows the active gateway and the config state of every
 // registered one, without leaking any secret values.
@@ -152,10 +169,12 @@ exports.handler = async (event) => {
 
     const ref = generateRef(gw.refPrefix);
     const now = admin.firestore.FieldValue.serverTimestamp();
+    const resolvedCountry = resolveCustomerCountryIso2(customer);
+    const customerForGw = { ...customer, country: resolvedCountry };
 
     // ---- Ask the gateway to create the payment ----
     const result = await gw.createPayment({
-      customer,
+      customer: customerForGw,
       items,
       amount:   fx.amount,
       currency: gw.currency,
@@ -170,6 +189,9 @@ exports.handler = async (event) => {
     //
     // `gateway` is what payment-callback.js uses to pick the right adapter —
     // it must never be re-derived from the currently active gateway.
+    //
+    // DP (display vs settlement): catalog/checkout is USD; PG charges gw.currency
+    // (typically THB). Explicit display*/settlement* fields match ontheline DP.
     const orderDoc = {
       ref,
       source:  'direct',                 // direct web sale (vs 'ontheline')
@@ -184,7 +206,7 @@ exports.handler = async (event) => {
         firstName: customer.firstName || '',
         lastName:  customer.lastName  || '',
         email:   customer.email,
-        country: customer.country || '',
+        country: resolvedCountry,
         company: customer.company || '',
         taxId:   customer.taxId   || '',
         phone:   customer.phone   || '',
@@ -195,7 +217,12 @@ exports.handler = async (event) => {
       vat:      Number(vatUsd) || 0,
       total:    Number(totalUsd),
       currency: 'USD',
-      // Gateway-neutral settlement fields
+      // DP split — display (shopper) vs settlement (charge)
+      displayCurrency:    'USD',
+      displayAmount:      Number(totalUsd),
+      settlementCurrency: gw.currency,
+      settlementAmount:   fx.amount,
+      // Gateway-neutral settlement fields (legacy aliases)
       gatewayOrderNo:  result.gatewayOrderNo || null,
       gatewayAmount:   fx.amount,
       gatewayCurrency: gw.currency,
