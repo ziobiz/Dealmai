@@ -216,6 +216,17 @@ exports.handler = async (event) => {
       gatewayRawCallback: params
     };
 
+    // ICOPay USD-DP: prepare was USD; webhook may carry acquirer settlement (e.g. THB).
+    const cbCur = info.currency ? String(info.currency).trim().toUpperCase() : '';
+    const displayCur = String(
+      order.displayCurrency || order.currency || 'USD'
+    ).trim().toUpperCase();
+    if (cbCur && cbCur !== displayCur) {
+      updateData.settlementCurrency = cbCur;
+      const cbAmt = Number(info.fields && info.fields.amount);
+      if (Number.isFinite(cbAmt)) updateData.settlementAmount = cbAmt;
+    }
+
     // Legacy mirror so existing admin views keep rendering during the
     // transition. Safe to delete once nothing reads chillpay* names.
     if (gw.id === 'chillpay') {

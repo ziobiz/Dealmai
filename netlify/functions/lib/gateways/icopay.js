@@ -12,7 +12,9 @@
 //   ICOPAY_BROKER_SECRET         live X-Icopay-Merchant-Broker-Secret
 //   ICOPAY_BROKER_SECRET_SANDBOX sandbox secret (used when MODE=sandbox)
 //   ICOPAY_MODE                  sandbox | production (default sandbox)
-//   ICOPAY_CURRENCY              settlement currency (default THB)
+//   ICOPAY_CURRENCY              prepare/charge currency sent to ICOPay (default USD).
+//                                HQ USD-DP bindings convert/settle to THB on the PG side —
+//                                DealMai must NOT DIY USD→THB before prepare.
 //   ICOPAY_NOTIFY_SIGN_SECRET    optional HMAC for X-Icopay-Signature
 // ============================================================
 
@@ -41,8 +43,9 @@ function brokerSecret() {
   return String(process.env.ICOPAY_BROKER_SECRET || '').trim();
 }
 
+/** Currency DealMai puts on ICOPay prepare (USD for HQ DP). Not DIY FX. */
 function settlementCurrency() {
-  return String(process.env.ICOPAY_CURRENCY || 'THB').trim().toUpperCase() || 'THB';
+  return String(process.env.ICOPAY_CURRENCY || 'USD').trim().toUpperCase() || 'USD';
 }
 
 function publicSiteUrl() {
@@ -233,24 +236,27 @@ module.exports = {
 
   async convertAmount(totalUsd) {
     const currency = settlementCurrency();
+    const amountUsd = Math.round(Number(totalUsd) * 100) / 100;
+    // Default / DP path: send USD as-is. HQ USD-DP binding handles THB settlement.
     if (currency === 'USD') {
-      const amount = Math.round(Number(totalUsd) * 100) / 100;
-      return { amount, rate: 1, source: 'usd' };
+      return { amount: amountUsd, rate: 1, source: 'usd-identity' };
     }
+    // Legacy escape only — do not use when ICOPay USD DP is active.
     if (currency === 'THB') {
       const fx = await convertUsdToThb(totalUsd);
       return { amount: fx.amount, rate: fx.rate, source: fx.source };
     }
-    // Other currencies: convert via THB intermediate is not available —
-    // require FX_RATE_USD_<CUR> or fall back to USD amount labeled wrong.
     const envKey = `FX_RATE_USD_${currency}`;
     const envRate = parseFloat(process.env[envKey]);
     if (Number.isFinite(envRate) && envRate > 0) {
       const amount = Math.round(Number(totalUsd) * envRate * 100) / 100;
       return { amount, rate: envRate, source: `env:${envKey}` };
     }
-    const fx = await convertUsdToThb(totalUsd);
-    return { amount: fx.amount, rate: fx.rate, source: `${fx.source}+fallbackTHB` };
+    // Unknown currency without FX: keep USD amount (never invent THB).
+    console.warn(
+      `[gateway:icopay] no FX for ${currency}; sending USD amount unchanged`
+    );
+    return { amount: amountUsd, rate: 1, source: `usd-passthrough:${currency}` };
   },
 
   async createPayment({ customer, items, amount, headers, ref }) {

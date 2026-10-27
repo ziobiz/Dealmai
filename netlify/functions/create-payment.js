@@ -217,7 +217,8 @@ exports.handler = async (event) => {
       vat:      Number(vatUsd) || 0,
       total:    Number(totalUsd),
       currency: 'USD',
-      // DP split — display (shopper) vs settlement (charge)
+      // DP split — DealMai catalog is USD. For ICOPay USD-DP, prepare also sends
+      // USD; HQ/PG may later report THB settlement on the webhook (see callback).
       displayCurrency:    'USD',
       displayAmount:      Number(totalUsd),
       settlementCurrency: gw.currency,
