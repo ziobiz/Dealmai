@@ -17,6 +17,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { admin, db, ensureApp, firebaseUnavailableResponse } = require('./lib/firebase-admin-app');
 const { loadSmtpSettings } = require('./lib/smtp-settings');
+const { expireDemoPgIfNeeded } = require('./lib/demo-pg-account');
 
 const corsHeaders = {
   'Content-Type': 'application/json',
@@ -110,13 +111,22 @@ async function requireCustomer(event) {
   const ref = db.collection('users').doc(decoded.uid);
   const snap = await ref.get();
   if (!snap.exists) return { error: jsonResp(403, { error: 'Profile not found' }) };
-  const profile = snap.data() || {};
+  let profile = snap.data() || {};
+  const email = decoded.email || profile.email;
+
+  const expired = await expireDemoPgIfNeeded(admin, db, decoded.uid, profile, email);
+  if (expired.expired) {
+    return { error: jsonResp(403, { error: 'Demo account expired', demoExpired: true }) };
+  }
+  const fresh = await ref.get();
+  profile = fresh.data() || profile;
+
   if (profile.role !== 'customer') {
     return { error: jsonResp(403, { error: 'Customer accounts only' }) };
   }
   if (profile.disabled) return { error: jsonResp(403, { error: 'Account disabled' }) };
 
-  return { uid: decoded.uid, email: decoded.email || profile.email, profile, ref };
+  return { uid: decoded.uid, email, profile, ref };
 }
 
 function isComplete(profile) {
@@ -304,6 +314,26 @@ exports.handler = async (event) => {
         phoneCountryCode: profile.phoneCountryCode || '',
         phone: profile.phone || ''
       });
+    }
+
+    // Demo PG customer self-expire (also safe if role was wrongly set to admin before).
+    if (action === 'expire-demo-self') {
+      const authHeader = event.headers.authorization || event.headers.Authorization || '';
+      const m = authHeader.match(/^Bearer\s+(.+)$/i);
+      if (!m) return jsonResp(401, { error: 'Missing Authorization header' });
+      let decoded;
+      try {
+        decoded = await admin.auth().verifyIdToken(m[1]);
+      } catch {
+        return jsonResp(401, { error: 'Invalid or expired ID token' });
+      }
+      const ref = db.collection('users').doc(decoded.uid);
+      const snap = await ref.get();
+      if (!snap.exists) return jsonResp(404, { error: 'Profile not found' });
+      const profile = snap.data() || {};
+      const email = decoded.email || profile.email;
+      const result = await expireDemoPgIfNeeded(admin, db, decoded.uid, profile, email);
+      return jsonResp(200, { ok: true, expired: !!result.expired });
     }
 
     return jsonResp(400, { error: 'Unknown action' });

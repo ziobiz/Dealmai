@@ -1,16 +1,17 @@
 'use strict';
 
 /**
- * One-shot: create / refresh the PG demo admin (demo@vipdemo.com).
+ * One-shot: create / refresh the PG demo **customer** (demo@vipdemo.com).
  * Loads Firebase creds from env (same as /etc/dealmai/env on VPS).
  *
  *   node scripts/provision-demo-pg.js
+ *
+ * Customer login only — no admin OTP / no admin console.
  */
 
 const path = require('path');
 const fs = require('fs');
 
-// Optional local .env (never commit secrets). VPS uses process env from systemd.
 try {
   const envPath = path.join(__dirname, '..', '.env');
   if (fs.existsSync(envPath)) {
@@ -24,7 +25,6 @@ try {
 
 const {
   DEMO_PG_EMAIL,
-  DEMO_PG_OTP,
   DEMO_PG_TTL_MS
 } = require('../netlify/functions/lib/demo-pg-account');
 const { admin, db, ensureApp } = require('../netlify/functions/lib/firebase-admin-app');
@@ -61,21 +61,32 @@ async function main() {
     console.log('Created Auth user', user.uid);
   }
 
+  const del = admin.firestore.FieldValue.delete();
   await db.collection('users').doc(user.uid).set(
     {
       email: DEMO_PG_EMAIL,
       name: NAME,
-      role: 'admin',
+      role: 'customer',
       mustChangePassword: false,
       disabled: false,
+      // Ready to browse / checkout without profile gate
+      profileComplete: true,
+      nationality: 'KR',
+      phoneCountryCode: '+82',
+      phone: '1012345678',
       demoPgAccount: true,
-      demoFixedOtp: true,
-      totpEnabled: true, // skip enroll; verify-login uses fixed OTP
-      totpSecret: null,
       demoExpiresAt: expiresAt,
       demoProvisionedAt: admin.firestore.FieldValue.serverTimestamp(),
-      demoDisableReason: admin.firestore.FieldValue.delete(),
-      demoDisabledAt: admin.firestore.FieldValue.delete()
+      demoDisableReason: del,
+      demoDisabledAt: del,
+      // Strip any prior admin / OTP flags from the mistaken admin provision
+      demoFixedOtp: del,
+      totpEnabled: del,
+      totpSecret: del,
+      totpActivatedAt: del,
+      totpLastVerifiedAt: del,
+      otpEnrollHash: del,
+      otpEnrollExpires: del
     },
     { merge: true }
   );
@@ -85,7 +96,7 @@ async function main() {
     uid: user.uid,
     email: DEMO_PG_EMAIL,
     name: NAME,
-    otp: DEMO_PG_OTP,
+    role: 'customer',
     expiresAt: expiresAt.toDate().toISOString()
   }, null, 2));
 }

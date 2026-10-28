@@ -1,12 +1,12 @@
 'use strict';
 
 /**
- * PG reviewer demo admin — fixed OTP, 14-day auto-disable.
- * ONLY the allowlisted email may use the fixed OTP. All other admins
- * keep normal Google Authenticator TOTP.
+ * PG reviewer demo **customer** — 14-day auto-disable.
+ * Allowlisted email only. Not an admin; no fixed OTP path in normal use.
  */
 
 const DEMO_PG_EMAIL = 'demo@vipdemo.com';
+/** @deprecated kept for any leftover admin-OTP path; demo user is a customer. */
 const DEMO_PG_OTP = '012340';
 const DEMO_PG_TTL_MS = 14 * 24 * 60 * 60 * 1000;
 

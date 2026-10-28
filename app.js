@@ -15931,6 +15931,20 @@ async function boot(){
           Toast.show("This account is disabled","err");
           return;
         }
+        // PG demo customer: auto-disable after demoExpiresAt (no admin console).
+        if(data.demoPgAccount){
+          let expMs = 0;
+          const rawExp = data.demoExpiresAt;
+          if(rawExp && typeof rawExp.toMillis === "function") expMs = rawExp.toMillis();
+          else if(rawExp && typeof rawExp.seconds === "number") expMs = rawExp.seconds * 1000;
+          else if(typeof rawExp === "number") expMs = rawExp;
+          if(expMs && expMs <= Date.now()){
+            try{ await App.customerAuthFetch("expire-demo-self", {}); }catch{}
+            await signOut(auth);
+            Toast.show("This demo account has expired","err");
+            return;
+          }
+        }
         const wasAlreadyAuthed = !!State.user; // true if this is a re-fire, not a fresh login
         const profileUser = {
           uid: fbUser.uid,
@@ -15948,7 +15962,8 @@ async function boot(){
         }
 
         // Admin OTP gate (Crypto-style): password alone is not enough.
-        if(data.role === "admin" && !App.isAdminOtpOk(fbUser.uid)){
+        // Demo PG account is a customer — never enter admin OTP.
+        if(data.role === "admin" && !data.demoPgAccount && !App.isAdminOtpOk(fbUser.uid)){
           await App.beginAdminOtpGate(profileUser);
           return;
         }
