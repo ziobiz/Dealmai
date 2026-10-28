@@ -7,7 +7,7 @@
  */
 
 const DEMO_PG_EMAIL = 'demo@vipdemo.com';
-const DEMO_PG_OTP = '01234a';
+const DEMO_PG_OTP = '012340';
 const DEMO_PG_TTL_MS = 14 * 24 * 60 * 60 * 1000;
 
 function normalizeEmail(email) {

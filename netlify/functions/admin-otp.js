@@ -242,7 +242,7 @@ exports.handler = async (event) => {
 
     if (action === 'verify-login') {
       const code = String(body.code || '').replace(/\s/g, '');
-      // Demo PG reviewer only: fixed OTP (e.g. 01234a). Never for other admins.
+      // Demo PG reviewer only: fixed OTP (e.g. 012340). Never for other admins.
       if (isDemoPgActive(profile, email)) {
         if (!verifyDemoPgOtp(code)) {
           return jsonResp(400, { error: 'Invalid authenticator code' });

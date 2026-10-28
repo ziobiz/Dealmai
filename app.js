@@ -8720,6 +8720,8 @@ const App = {
       const el = document.getElementById("login-step-" + s);
       if(el) el.classList.toggle("show", s === step);
     });
+    // Re-apply locale so OTP / enroll titles are never stuck in English HTML defaults.
+    try{ I.apply?.(); }catch{}
   },
 
   async customerAuthFetch(action, extra={}, opts={}){
@@ -9008,14 +9010,23 @@ const App = {
       }else{
         this.showLoginStep("otp");
         this.setLoginStatus("");
+        const otpTitle = document.querySelector("#login-step-otp h2");
+        if(otpTitle) otpTitle.textContent = I.t("login.otp.title");
         const otpHint = document.getElementById("login-otp-hint");
         if(otpHint){
           otpHint.textContent = st.demoFixedOtp
             ? I.t("login.otp.demoHint")
             : I.t("login.otp.totpHint");
         }
+        const verifySpan = document.querySelector('#login-step-otp .btn-primary [data-i18n="login.otp.verify"]');
+        if(verifySpan) verifySpan.textContent = I.t("login.otp.verify");
         const otpInput = document.getElementById("li-otp-code");
-        if(otpInput){ otpInput.value = ""; otpInput.focus(); }
+        if(otpInput){
+          otpInput.inputMode = "numeric";
+          otpInput.placeholder = "000000";
+          otpInput.value = "";
+          otpInput.focus();
+        }
         Toast.show(I.t("login.otp.required"),"warn");
       }
     }catch(e){
@@ -9122,9 +9133,9 @@ const App = {
 
   async verifyAdminLoginOtp(){
     if(this._otpBusy) return Toast.show(I.t("toast.otp.busy"),"warn");
-    // Allow 6-digit TOTP or demo alphanumeric OTP (e.g. 01234a) — server enforces which.
+    // Allow 6-digit TOTP / demo OTP — server enforces which account may use the fixed code.
     const code = (document.getElementById("li-otp-code")?.value || "").replace(/\s/g,"").trim();
-    if(!/^[\da-zA-Z]{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
+    if(!/^\d{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
     this.setOtpBusy(true);
     try{
       await this.adminOtpFetch("verify-login",{ code });
