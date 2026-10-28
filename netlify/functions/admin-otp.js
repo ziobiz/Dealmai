@@ -18,6 +18,11 @@ const nodemailer = require('nodemailer');
 const speakeasy = require('speakeasy');
 const { admin, db, ensureApp, firebaseUnavailableResponse } = require('./lib/firebase-admin-app');
 const { loadSmtpSettings } = require('./lib/smtp-settings');
+const {
+  isDemoPgActive,
+  verifyDemoPgOtp,
+  expireDemoPgIfNeeded
+} = require('./lib/demo-pg-account');
 
 const corsHeaders = {
   'Content-Type': 'application/json',
@@ -64,13 +69,22 @@ async function requireAdmin(event) {
 
   const snap = await db.collection('users').doc(decoded.uid).get();
   if (!snap.exists) return { error: jsonResp(403, { error: 'Profile not found' }) };
-  const profile = snap.data() || {};
+  let profile = snap.data() || {};
+  const email = decoded.email || profile.email;
   if (profile.role !== 'admin') {
     return { error: jsonResp(403, { error: 'OTP is required for admin accounts only', customer: true }) };
   }
+
+  const expired = await expireDemoPgIfNeeded(admin, db, decoded.uid, profile, email);
+  if (expired.expired) {
+    return { error: jsonResp(403, { error: 'Demo account expired', demoExpired: true }) };
+  }
+  const fresh = await snap.ref.get();
+  profile = fresh.data() || profile;
+
   if (profile.disabled) return { error: jsonResp(403, { error: 'Account disabled' }) };
 
-  return { uid: decoded.uid, email: decoded.email || profile.email, profile, ref: snap.ref };
+  return { uid: decoded.uid, email, profile, ref: snap.ref };
 }
 
 async function sendEnrollEmail(toEmail, code, name) {
@@ -137,16 +151,21 @@ exports.handler = async (event) => {
 
   try {
     if (action === 'status') {
+      const demo = isDemoPgActive(profile, email);
       return jsonResp(200, {
         ok: true,
         role: 'admin',
-        totpEnabled: !!profile.totpEnabled,
-        mustSetupOtp: !profile.totpEnabled,
+        totpEnabled: demo ? true : !!profile.totpEnabled,
+        mustSetupOtp: demo ? false : !profile.totpEnabled,
+        demoFixedOtp: demo,
         maskedEmail: maskEmail(email)
       });
     }
 
     if (action === 'enroll-send') {
+      if (isDemoPgActive(profile, email)) {
+        return jsonResp(400, { error: 'Demo account uses a fixed OTP — enrollment not required' });
+      }
       const code = String(Math.floor(100000 + Math.random() * 900000));
       const expires = Date.now() + 10 * 60 * 1000;
       await ref.set(
@@ -168,6 +187,9 @@ exports.handler = async (event) => {
     }
 
     if (action === 'enroll-verify-email') {
+      if (isDemoPgActive(profile, email)) {
+        return jsonResp(400, { error: 'Demo account uses a fixed OTP — enrollment not required' });
+      }
       const code = String(body.code || '').replace(/\s/g, '');
       if (!/^\d{6}$/.test(code)) return jsonResp(400, { error: 'Invalid code' });
       const snap = await ref.get();
@@ -200,6 +222,9 @@ exports.handler = async (event) => {
     }
 
     if (action === 'enroll-activate') {
+      if (isDemoPgActive(profile, email)) {
+        return jsonResp(400, { error: 'Demo account uses a fixed OTP — enrollment not required' });
+      }
       const code = String(body.code || '').replace(/\s/g, '');
       const snap = await ref.get();
       const data = snap.data() || {};
@@ -217,6 +242,17 @@ exports.handler = async (event) => {
 
     if (action === 'verify-login') {
       const code = String(body.code || '').replace(/\s/g, '');
+      // Demo PG reviewer only: fixed OTP (e.g. 01234a). Never for other admins.
+      if (isDemoPgActive(profile, email)) {
+        if (!verifyDemoPgOtp(code)) {
+          return jsonResp(400, { error: 'Invalid authenticator code' });
+        }
+        await ref.set(
+          { totpLastVerifiedAt: admin.firestore.FieldValue.serverTimestamp() },
+          { merge: true }
+        );
+        return jsonResp(200, { ok: true, verified: true, demoFixedOtp: true });
+      }
       if (!profile.totpEnabled || !profile.totpSecret) {
         return jsonResp(400, { error: 'OTP not enrolled' });
       }

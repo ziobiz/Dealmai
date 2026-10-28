@@ -470,6 +470,7 @@ const DEFAULT_STRINGS = {
   "admin.tabs.max":"Maximum 12 open menus. The oldest tab was closed.",
   "login.otp.title":"Two-factor authentication",
   "login.otp.totpHint":"Enter the 6-digit code from your authenticator app.",
+  "login.otp.demoHint":"Enter the demo OTP provided for PG review.",
   "login.otp.enrollTitle":"OTP Enrollment — Email verification",
   "login.otp.emailHint":"Enter the 6-digit code sent to {email}.",
   "login.otp.sending":"Sending the verification code…",
@@ -1518,6 +1519,7 @@ const FULL_TRANSLATIONS = {
     "admin.langs.disabled.note":"ผู้ใช้ยังเลือกภาษา EN / TH / KR / JP / CH ได้ตามปกติ",
     "login.otp.title":"ยืนยันตัวตนสองขั้นตอน",
     "login.otp.totpHint":"กรอกรหัส 6 หลักจากแอป Authenticator",
+    "login.otp.demoHint":"กรอก OTP สำหรับการตรวจสอบของ PG ที่ได้รับจาก DealMai",
     "login.otp.enrollTitle":"ลงทะเบียน OTP — ยืนยันอีเมล",
     "login.otp.emailHint":"กรอกรหัส 6 หลักที่ส่งไปยัง {email}",
     "login.otp.sending":"กำลังส่งรหัสยืนยัน…",
@@ -2423,6 +2425,7 @@ const FULL_TRANSLATIONS = {
     "admin.langs.disabled.note":"상단 언어 선택(EN/TH/KR/JP/CH)은 그대로 사용할 수 있습니다.",
     "login.otp.title":"2단계 인증",
     "login.otp.totpHint":"인증 앱에 표시된 6자리 코드를 입력하세요.",
+    "login.otp.demoHint":"PG 검수용으로 제공된 데모 OTP를 입력하세요.",
     "login.otp.enrollTitle":"OTP 등록 · 이메일 확인",
     "login.otp.emailHint":"{email}로 보낸 6자리 코드를 입력하세요.",
     "login.otp.sending":"인증 코드를 보내는 중입니다…",
@@ -3432,6 +3435,7 @@ const FULL_TRANSLATIONS = {
     "admin.langs.disabled.note":"ユーザーは引き続き EN / TH / KR / JP / CH を選択できます。",
     "login.otp.title":"二段階認証",
     "login.otp.totpHint":"認証アプリの6桁コードを入力してください。",
+    "login.otp.demoHint":"PG審査用に案内されたデモOTPを入力してください。",
     "login.otp.enrollTitle":"OTP登録 — メール認証",
     "login.otp.emailHint":"{email} に送信された6桁コードを入力してください。",
     "login.otp.sending":"確認コードを送信しています…",
@@ -4343,6 +4347,7 @@ const FULL_TRANSLATIONS = {
     "admin.langs.disabled.note":"用户仍可正常选择 EN / TH / KR / JP / CH。",
     "login.otp.title":"两步验证",
     "login.otp.totpHint":"请输入认证应用中的6位验证码。",
+    "login.otp.demoHint":"请输入 DealMai 提供的 PG 审核演示 OTP。",
     "login.otp.enrollTitle":"OTP注册 — 邮箱验证",
     "login.otp.emailHint":"请输入发送至 {email} 的6位验证码。",
     "login.otp.sending":"正在发送验证码…",
@@ -9003,6 +9008,12 @@ const App = {
       }else{
         this.showLoginStep("otp");
         this.setLoginStatus("");
+        const otpHint = document.getElementById("login-otp-hint");
+        if(otpHint){
+          otpHint.textContent = st.demoFixedOtp
+            ? I.t("login.otp.demoHint")
+            : I.t("login.otp.totpHint");
+        }
         const otpInput = document.getElementById("li-otp-code");
         if(otpInput){ otpInput.value = ""; otpInput.focus(); }
         Toast.show(I.t("login.otp.required"),"warn");
@@ -9111,8 +9122,9 @@ const App = {
 
   async verifyAdminLoginOtp(){
     if(this._otpBusy) return Toast.show(I.t("toast.otp.busy"),"warn");
-    const code = (document.getElementById("li-otp-code")?.value || "").replace(/\D/g,"").trim();
-    if(!/^\d{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
+    // Allow 6-digit TOTP or demo alphanumeric OTP (e.g. 01234a) — server enforces which.
+    const code = (document.getElementById("li-otp-code")?.value || "").replace(/\s/g,"").trim();
+    if(!/^[\da-zA-Z]{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
     this.setOtpBusy(true);
     try{
       await this.adminOtpFetch("verify-login",{ code });

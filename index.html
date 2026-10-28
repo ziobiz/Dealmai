@@ -1771,8 +1771,8 @@
 
     <div id="login-step-otp">
       <h2 data-i18n="login.otp.title">Two-factor authentication</h2>
-      <div class="sub" data-i18n="login.otp.totpHint">Enter the 6-digit code from your authenticator app.</div>
-      <div class="field"><label data-i18n="login.otp.code">OTP Code</label><input id="li-otp-code" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" /></div>
+      <div class="sub" id="login-otp-hint" data-i18n="login.otp.totpHint">Enter the 6-digit code from your authenticator app.</div>
+      <div class="field"><label data-i18n="login.otp.code">OTP Code</label><input id="li-otp-code" inputmode="text" maxlength="6" placeholder="000000" autocomplete="one-time-code" /></div>
       <button class="btn-primary" onclick="App.verifyAdminLoginOtp()"><span data-i18n="login.otp.verify">Verify</span><span class="arr">→</span></button>
       <button onclick="App.cancelAdminOtp()" style="margin-top:10px;background:transparent;color:var(--muted);font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;padding:6px;text-align:center;width:100%;cursor:pointer" data-i18n="login.otp.back">Back to login</button>
     </div>
@@ -1804,7 +1804,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261027usd1"></script>
+<script type="module" src="/app.js?v=20261029demopg1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)
