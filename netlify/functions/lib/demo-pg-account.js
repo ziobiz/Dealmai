@@ -1,13 +1,14 @@
 'use strict';
 
 /**
- * PG reviewer demo accounts — allowlisted emails only, 14-day auto-disable.
+ * PG reviewer demo account — allowlisted email only, 14-day auto-disable.
  *
- * Customer: demo@vipdemo.com  — password + fixed OTP 334455 (no Google Authenticator)
- * Admin:    admin@vipdemo.com — password + fixed OTP 001122 (no Google Authenticator)
+ * Customer (DealMai only): demo@vipdemo.com — password + fixed OTP 334455
+ *   (no Google Authenticator). sessionStorage clears so a new browser session
+ *   asks for OTP again.
  *
- * Same on dealmai.com / app.dealmai.com. OTP gate uses sessionStorage so a new
- * browser session asks for the fixed OTP again.
+ * Admin demo (admin@vipdemo.com) and app.dealmai.com (DM Champ) demos are
+ * retired — constants remain only for cleanup / allowlist checks.
  */
 
 const DEMO_PG_CUSTOMER_EMAIL = 'demo@vipdemo.com';

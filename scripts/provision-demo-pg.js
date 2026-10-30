@@ -1,14 +1,14 @@
 'use strict';
 
 /**
- * One-shot: create / refresh PG demo accounts.
+ * One-shot: create / refresh PG demo **customer** only (demo@vipdemo.com).
  * Loads Firebase creds from env (same as /etc/dealmai/env on VPS).
  *
  *   node scripts/provision-demo-pg.js
  *
- * Customer: demo@vipdemo.com  — password + fixed OTP 334455 (no Google Authenticator)
- * Admin:    admin@vipdemo.com — password + fixed OTP 001122 (no Google Authenticator)
- * Both auto-disable after 14 days. Same on dealmai.com / app.dealmai.com.
+ * Customer: demo@vipdemo.com — password + fixed OTP 334455 (no Google Authenticator)
+ * Admin demo (admin@vipdemo.com) is intentionally NOT provisioned; leftover Auth
+ * users are deleted if still present.
  */
 
 const path = require('path');
@@ -31,8 +31,6 @@ const {
   DEMO_PG_TTL_MS,
   DEMO_PG_PASSWORD,
   DEMO_PG_CUSTOMER_NAME,
-  DEMO_PG_ADMIN_NAME,
-  DEMO_PG_ADMIN_OTP,
   DEMO_PG_CUSTOMER_OTP
 } = require('../netlify/functions/lib/demo-pg-account');
 const { admin, db, ensureApp } = require('../netlify/functions/lib/firebase-admin-app');
@@ -62,20 +60,32 @@ async function upsertAuthUser(email, displayName) {
   return user;
 }
 
-async function writeProfile(uid, { email, name, role, expiresAt }) {
+async function deleteAuthUserIfExists(email) {
+  try {
+    const user = await admin.auth().getUserByEmail(email);
+    await db.collection('users').doc(user.uid).delete().catch(() => {});
+    await admin.auth().deleteUser(user.uid);
+    console.log('Deleted leftover Auth user', email, user.uid);
+    return user.uid;
+  } catch (e) {
+    if (e.code === 'auth/user-not-found') return null;
+    throw e;
+  }
+}
+
+async function writeCustomerProfile(uid, expiresAt) {
   const del = admin.firestore.FieldValue.delete();
-  const isAdmin = role === 'admin';
   await db.collection('users').doc(uid).set(
     {
-      email,
-      name,
-      role,
+      email: DEMO_PG_CUSTOMER_EMAIL,
+      name: DEMO_PG_CUSTOMER_NAME,
+      role: 'customer',
       mustChangePassword: false,
       disabled: false,
       profileComplete: true,
       nationality: 'KR',
       phoneCountryCode: '+82',
-      phone: isAdmin ? '1098765432' : '1012345678',
+      phone: '1012345678',
       demoPgAccount: true,
       demoExpiresAt: expiresAt,
       demoProvisionedAt: admin.firestore.FieldValue.serverTimestamp(),
@@ -99,27 +109,18 @@ async function main() {
     process.exit(1);
   }
 
+  const deletedAdminUid = await deleteAuthUserIfExists(DEMO_PG_ADMIN_EMAIL);
   const expiresAt = admin.firestore.Timestamp.fromMillis(Date.now() + DEMO_PG_TTL_MS);
 
   const customer = await upsertAuthUser(DEMO_PG_CUSTOMER_EMAIL, DEMO_PG_CUSTOMER_NAME);
-  await writeProfile(customer.uid, {
-    email: DEMO_PG_CUSTOMER_EMAIL,
-    name: DEMO_PG_CUSTOMER_NAME,
-    role: 'customer',
-    expiresAt
-  });
-
-  const adminUser = await upsertAuthUser(DEMO_PG_ADMIN_EMAIL, DEMO_PG_ADMIN_NAME);
-  await writeProfile(adminUser.uid, {
-    email: DEMO_PG_ADMIN_EMAIL,
-    name: DEMO_PG_ADMIN_NAME,
-    role: 'admin',
-    expiresAt
-  });
+  await writeCustomerProfile(customer.uid, expiresAt);
 
   console.log(JSON.stringify({
     ok: true,
     expiresAt: expiresAt.toDate().toISOString(),
+    deletedAdmin: deletedAdminUid
+      ? { email: DEMO_PG_ADMIN_EMAIL, uid: deletedAdminUid }
+      : null,
     accounts: [
       {
         role: 'customer',
@@ -128,14 +129,6 @@ async function main() {
         otp: DEMO_PG_CUSTOMER_OTP,
         otpMode: 'fixed (no Google Authenticator)',
         uid: customer.uid
-      },
-      {
-        role: 'admin',
-        email: DEMO_PG_ADMIN_EMAIL,
-        password: DEMO_PG_PASSWORD,
-        otp: DEMO_PG_ADMIN_OTP,
-        otpMode: 'fixed (no Google Authenticator)',
-        uid: adminUser.uid
       }
     ]
   }, null, 2));

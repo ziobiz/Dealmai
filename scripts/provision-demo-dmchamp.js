@@ -1,12 +1,10 @@
 'use strict';
 
 /**
- * Provision PG demo accounts on app.dealmai.com (DM Champ white-label).
+ * PG demo accounts on app.dealmai.com (DM Champ) are disabled.
+ * This script only deletes leftover sub-accounts — it does not create new ones.
  *
  *   node scripts/provision-demo-dmchamp.js
- *
- * Deletes existing sub-accounts if present, recreates them, prints temporary_password.
- * DM Champ does not allow choosing the password via API.
  */
 
 const path = require('path');
@@ -25,9 +23,7 @@ try {
 
 const {
   DEMO_PG_CUSTOMER_EMAIL,
-  DEMO_PG_ADMIN_EMAIL,
-  DEMO_PG_CUSTOMER_NAME,
-  DEMO_PG_ADMIN_NAME
+  DEMO_PG_ADMIN_EMAIL
 } = require('../netlify/functions/lib/demo-pg-account');
 const { db, ensureApp } = require('../netlify/functions/lib/firebase-admin-app');
 const dmchamp = require('../netlify/functions/lib/dmchamp');
@@ -46,16 +42,7 @@ async function deleteSub(cfg, email) {
   } catch {
     body = text;
   }
-  return { status: resp.status, body };
-}
-
-async function waitGone(cfg, email, tries = 20) {
-  for (let i = 0; i < tries; i++) {
-    const f = await dmchamp.findSubAccount(cfg, email);
-    if (!(f.ok && f.found)) return true;
-    await new Promise((r) => setTimeout(r, 2000));
-  }
-  return false;
+  return { email, status: resp.status, body };
 }
 
 async function main() {
@@ -69,36 +56,17 @@ async function main() {
     process.exit(1);
   }
 
-  const accounts = [
-    { email: DEMO_PG_CUSTOMER_EMAIL, fullName: DEMO_PG_CUSTOMER_NAME || 'Demo Customer' },
-    { email: DEMO_PG_ADMIN_EMAIL, fullName: DEMO_PG_ADMIN_NAME || 'Demo Admin' }
+  const results = [
+    await deleteSub(cfg, DEMO_PG_CUSTOMER_EMAIL),
+    await deleteSub(cfg, DEMO_PG_ADMIN_EMAIL)
   ];
 
-  const results = [];
-  for (const a of accounts) {
-    await deleteSub(cfg, a.email);
-    await waitGone(cfg, a.email);
-    const created = await dmchamp.createSubAccount(cfg, {
-      email: a.email,
-      fullName: a.fullName,
-      country: 'KR',
-      language: 'en',
-      monthly_credits: 1000,
-      description: 'PG demo for app.dealmai.com'
-    });
-    results.push({
-      email: a.email,
-      ok: created.ok,
-      status: created.status,
-      error: created.error || null,
-      password: (created.data && created.data.temporary_password) || null,
-      uid: (created.data && created.data.uid) || null,
-      portal: cfg.portalUrl || 'https://app.dealmai.com'
-    });
-  }
-
-  console.log(JSON.stringify({ ok: results.every((r) => r.ok), accounts: results }, null, 2));
-  if (!results.every((r) => r.ok)) process.exit(1);
+  console.log(JSON.stringify({
+    ok: true,
+    action: 'delete-only (no create)',
+    portal: cfg.portalUrl || 'https://app.dealmai.com',
+    deleted: results
+  }, null, 2));
 }
 
 main().catch((e) => {
