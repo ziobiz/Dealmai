@@ -43,6 +43,9 @@ const ADAPTERS = {
 // Used when config/payment is missing (e.g. before an admin ever saved it).
 const DEFAULT_GATEWAY_ID = 'chillpay';
 
+/** Default selectable checkout channels when config has none saved. */
+const DEFAULT_ENABLED_CHANNELS = ['creditcard'];
+
 /**
  * Look up an adapter by id. Returns null for unknown ids so callers can
  * produce a clear error rather than crashing.
@@ -79,16 +82,51 @@ function describeAll() {
  * Kept as a function (rather than a constant) so switching providers in the
  * admin UI takes effect without a redeploy.
  */
-async function getActiveGatewayId(db) {
+async function getPaymentConfig(db) {
   try {
     const snap = await db.collection('config').doc('payment').get();
-    const id = snap.exists ? snap.data().activeGateway : null;
-    if (id && ADAPTERS[String(id).toLowerCase()]) return String(id).toLowerCase();
-    if (id) console.warn(`[gateways] config/payment.activeGateway="${id}" is not registered — falling back to ${DEFAULT_GATEWAY_ID}`);
+    return snap.exists ? snap.data() || {} : {};
   } catch (e) {
     console.warn('[gateways] could not read config/payment:', e.message || e);
+    return {};
+  }
+}
+
+async function getActiveGatewayId(db) {
+  const data = await getPaymentConfig(db);
+  const id = data.activeGateway || null;
+  if (id && ADAPTERS[String(id).toLowerCase()]) return String(id).toLowerCase();
+  if (id) {
+    console.warn(
+      `[gateways] config/payment.activeGateway="${id}" is not registered — falling back to ${DEFAULT_GATEWAY_ID}`
+    );
   }
   return DEFAULT_GATEWAY_ID;
+}
+
+/**
+ * Channels shoppers may select on checkout.
+ * Intersection of admin-enabled codes and the active gateway catalog.
+ * Always returns at least one code when the gateway has channels (falls back
+ * to creditcard / first catalog entry).
+ */
+async function getEnabledChannels(db, gatewayId) {
+  const gwId = gatewayId || (await getActiveGatewayId(db));
+  const adapter = getAdapter(gwId);
+  const catalog = (adapter && adapter.channels) || [];
+  const catalogCodes = catalog.map((c) => c.code);
+
+  const data = await getPaymentConfig(db);
+  let enabled = Array.isArray(data.enabledChannels)
+    ? data.enabledChannels.map((c) => String(c || '').trim()).filter(Boolean)
+    : DEFAULT_ENABLED_CHANNELS.slice();
+
+  enabled = enabled.filter((c) => catalogCodes.includes(c));
+  if (!enabled.length) {
+    if (catalogCodes.includes('creditcard')) enabled = ['creditcard'];
+    else if (catalogCodes.length) enabled = [catalogCodes[0]];
+  }
+  return enabled;
 }
 
 /**
@@ -116,9 +154,12 @@ function gatewayIdForOrder(order) {
 module.exports = {
   ADAPTERS,
   DEFAULT_GATEWAY_ID,
+  DEFAULT_ENABLED_CHANNELS,
   getAdapter,
   listGatewayIds,
   describeAll,
+  getPaymentConfig,
   getActiveGatewayId,
+  getEnabledChannels,
   gatewayIdForOrder
 };

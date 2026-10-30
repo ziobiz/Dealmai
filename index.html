@@ -405,6 +405,9 @@
   .pay-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--muted-2)}
   .pay-pill.on{border-color:var(--teal);background:rgba(11,182,196,.08);color:var(--teal-deep)}
   .pay-pill.on .dot{background:var(--teal);box-shadow:0 0 8px var(--teal)}
+  .pay-pill.is-unavailable{opacity:.55;cursor:not-allowed;background:rgba(0,0,0,.03);color:var(--muted)}
+  .pay-pill.is-unavailable .dot{background:var(--muted-2);box-shadow:none}
+  .pay-pill .unavail-tag{margin-left:4px;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);border:1px solid rgba(214,138,28,.35);padding:1px 6px;border-radius:999px}
 
   .summary{background:linear-gradient(180deg,rgba(214,41,155,.04),rgba(11,182,196,.04)),var(--surface);border:1px solid rgba(214,41,155,.22);border-radius:16px;padding:28px;position:sticky;top:90px;align-self:start;backdrop-filter:blur(14px);overflow:hidden}
   .summary::before{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--magenta),var(--teal),transparent)}
@@ -1804,7 +1807,7 @@
      script but the server responded with a MIME type of text/html."
   Absolute "/app.js" always resolves to the domain root regardless of route.
 -->
-<script type="module" src="/app.js?v=20261029demopg3"></script>
+<script type="module" src="/app.js?v=20261030paych1"></script>
 
 <!--
   AI Chat Widget (dmchamp.com)

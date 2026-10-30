@@ -192,8 +192,13 @@ module.exports = {
   },
   minAmount: 1,
   refPrefix: 'IC',
+  // Checkout catalog. Which ones shoppers may select is gated by
+  // config/payment.enabledChannels (default: creditcard only).
   channels: [
-    { code: 'icopay', labelKey: 'checkout.channel.any' }
+    { code: 'creditcard', labelKey: 'checkout.channel.card' },
+    { code: 'bank_qrcode', labelKey: 'checkout.channel.qr' },
+    { code: 'mobilebank_kplus', labelKey: 'checkout.channel.mobile' },
+    { code: 'truemoney_wallet', labelKey: 'checkout.channel.ewallet' }
   ],
 
   validateConfig() {

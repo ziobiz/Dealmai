@@ -226,12 +226,13 @@ const DEFAULT_STRINGS = {
   "checkout.field.cvc":"CVC",
   "checkout.field.via":"Send Receipt Via",
   "checkout.field.lang":"Receipt Language",
-  "checkout.payment.intro":"You'll be redirected to Payment Gateway's secure payment page to complete the payment.",
+  "checkout.payment.intro":"Select an available payment method, accept the terms, then tap Confirm & Pay to open the secure payment page.",
   "checkout.channel.any":"Choose at next step",
   "checkout.channel.card":"Credit / Debit Card",
   "checkout.channel.qr":"QR PromptPay",
   "checkout.channel.mobile":"Mobile Banking",
   "checkout.channel.ewallet":"E-Wallet",
+  "checkout.channel.unavailable":"Unavailable",
   "checkout.summary.title":"Order Summary",
   "checkout.summary.package":"Package",
   "checkout.summary.activation":"Activation",
@@ -439,6 +440,11 @@ const DEFAULT_STRINGS = {
   "admin.paymentgw.btn.needenv":"Set this gateway\'s environment variables in Netlify first",
   "admin.paymentgw.btn.copy":"Copy",
   "admin.paymentgw.lbl.channels":"Payment channels",
+  "admin.paymentgw.lbl.enabledChannels":"Enabled on checkout",
+  "admin.paymentgw.hint.enabledChannels":"Only checked methods can be selected on checkout. Others still appear as Unavailable. At least one method is required.",
+  "admin.paymentgw.btn.saveChannels":"Save channels",
+  "toast.paymentgw.channelsSaved":"Checkout payment methods updated",
+  "toast.paymentgw.needChannel":"Enable at least one payment method",
   "admin.paymentgw.lbl.callback":"Callback URL — register this in the provider dashboard",
   "admin.paymentgw.hint.callback":"Server-to-server. This is the source of truth for payment status. Register it as the URL Background / webhook for every enabled channel.",
   "admin.paymentgw.lbl.returnurl":"Return URL (URL Result) — register this too",
@@ -1286,12 +1292,13 @@ const FULL_TRANSLATIONS = {
     "checkout.field.cvc":"CVC",
     "checkout.field.via":"ส่งใบเสร็จทาง",
     "checkout.field.lang":"ภาษาของใบเสร็จ",
-    "checkout.payment.intro":"ระบบจะนำคุณไปยังหน้าชำระเงินที่ปลอดภัยของ Payment Gateway เพื่อทำธุรกรรม",
+    "checkout.payment.intro":"เลือกวิธีชำระเงินที่ใช้ได้ ยอมรับเงื่อนไข แล้วกด Confirm & Pay เพื่อเปิดหน้าชำระเงินที่ปลอดภัย",
     "checkout.channel.any":"เลือกในขั้นตอนถัดไป",
     "checkout.channel.card":"บัตรเครดิต / เดบิต",
     "checkout.channel.qr":"QR PromptPay",
     "checkout.channel.mobile":"Mobile Banking",
     "checkout.channel.ewallet":"E-Wallet",
+    "checkout.channel.unavailable":"ยังไม่พร้อมใช้",
     "checkout.summary.title":"สรุปการสั่งซื้อ",
     "checkout.summary.package":"แพ็คเกจ",
     "checkout.summary.activation":"เปิดใช้งาน",
@@ -1486,6 +1493,11 @@ const FULL_TRANSLATIONS = {
     "admin.paymentgw.btn.needenv":"กรุณาตั้งค่า environment variables ของ gateway นี้ใน Netlify ก่อน",
     "admin.paymentgw.btn.copy":"คัดลอก",
     "admin.paymentgw.lbl.channels":"ช่องทางชำระเงิน",
+    "admin.paymentgw.lbl.enabledChannels":"เปิดใช้บนหน้าชำระเงิน",
+    "admin.paymentgw.hint.enabledChannels":"เฉพาะช่องทางที่ติ๊กไว้เท่านั้นที่เลือกได้บนหน้าชำระเงิน ช่องทางอื่นจะแสดงเป็นยังไม่พร้อมใช้ ต้องเปิดอย่างน้อย 1 ช่องทาง",
+    "admin.paymentgw.btn.saveChannels":"บันทึกช่องทาง",
+    "toast.paymentgw.channelsSaved":"อัปเดตวิธีชำระเงินบนหน้า checkout แล้ว",
+    "toast.paymentgw.needChannel":"กรุณาเปิดอย่างน้อย 1 วิธีชำระเงิน",
     "admin.paymentgw.lbl.callback":"Callback URL — นำไปลงทะเบียนในระบบของผู้ให้บริการ",
     "admin.paymentgw.hint.callback":"เป็นการเรียกแบบ server-to-server และเป็นแหล่งข้อมูลหลักของสถานะการชำระเงิน ให้ลงทะเบียนเป็น URL Background / webhook ของทุกช่องทางที่เปิดใช้งาน",
     "admin.paymentgw.lbl.returnurl":"Return URL (URL Result) — ต้องลงทะเบียนด้วย",
@@ -2273,12 +2285,13 @@ const FULL_TRANSLATIONS = {
     "checkout.field.cvc":"CVC",
     "checkout.field.via":"영수증 전송 방법",
     "checkout.field.lang":"영수증 언어",
-    "checkout.payment.intro":"Payment Gateway의 보안 결제 페이지로 이동됩니다.",
+    "checkout.payment.intro":"사용 가능한 결제 수단을 선택한 뒤 약관에 동의하고 Confirm & Pay를 누르면 보안 결제 페이지로 이동합니다.",
     "checkout.channel.any":"다음 단계에서 선택",
     "checkout.channel.card":"신용 / 직불 카드",
     "checkout.channel.qr":"QR PromptPay",
     "checkout.channel.mobile":"모바일 뱅킹",
     "checkout.channel.ewallet":"전자 지갑",
+    "checkout.channel.unavailable":"사용 불가",
     "checkout.summary.title":"주문 요약",
     "checkout.summary.package":"패키지",
     "checkout.summary.activation":"활성화",
@@ -2486,6 +2499,11 @@ const FULL_TRANSLATIONS = {
     "admin.paymentgw.btn.needenv":"먼저 Netlify에서 이 게이트웨이 환경 변수를 설정하세요",
     "admin.paymentgw.btn.copy":"복사",
     "admin.paymentgw.lbl.channels":"결제 채널",
+    "admin.paymentgw.lbl.enabledChannels":"체크아웃에서 활성화",
+    "admin.paymentgw.hint.enabledChannels":"체크한 수단만 체크아웃에서 선택할 수 있습니다. 나머지는 사용 불가로 표시됩니다. 최소 1개는 켜 두세요.",
+    "admin.paymentgw.btn.saveChannels":"결제 수단 저장",
+    "toast.paymentgw.channelsSaved":"체크아웃 결제 수단이 업데이트되었습니다",
+    "toast.paymentgw.needChannel":"결제 수단을 하나 이상 활성화하세요",
     "admin.paymentgw.lbl.callback":"콜백 URL — 제공업체 대시보드에 등록하세요",
     "admin.paymentgw.hint.callback":"서버 간 호출이며 결제 상태의 신뢰할 수 있는 정보 소스입니다. 활성화된 모든 채널의 URL Background / 웹훅으로 등록하세요.",
     "admin.paymentgw.lbl.returnurl":"반환 URL (URL Result) — 함께 등록하세요",
@@ -3265,12 +3283,13 @@ const FULL_TRANSLATIONS = {
     "checkout.field.cvc":"CVC",
     "checkout.field.via":"領収書の送信方法",
     "checkout.field.lang":"領収書の言語",
-    "checkout.payment.intro":"Payment Gatewayの安全な決済ページにリダイレクトされます。",
+    "checkout.payment.intro":"利用可能な決済方法を選び、規約に同意してから Confirm & Pay を押すと、安全な決済ページが開きます。",
     "checkout.channel.any":"次のステップで選択",
     "checkout.channel.card":"クレジット / デビットカード",
     "checkout.channel.qr":"QR PromptPay",
     "checkout.channel.mobile":"モバイルバンキング",
     "checkout.channel.ewallet":"電子ウォレット",
+    "checkout.channel.unavailable":"利用不可",
     "checkout.summary.title":"注文概要",
     "checkout.summary.package":"パッケージ",
     "checkout.summary.activation":"有効化",
@@ -3402,6 +3421,11 @@ const FULL_TRANSLATIONS = {
     "admin.paymentgw.btn.needenv":"先に Netlify でこのゲートウェイの環境変数を設定してください",
     "admin.paymentgw.btn.copy":"コピー",
     "admin.paymentgw.lbl.channels":"決済チャネル",
+    "admin.paymentgw.lbl.enabledChannels":"チェックアウトで有効",
+    "admin.paymentgw.hint.enabledChannels":"チェックした方法だけがチェックアウトで選べます。他は利用不可と表示されます。少なくとも1つ有効にしてください。",
+    "admin.paymentgw.btn.saveChannels":"チャネルを保存",
+    "toast.paymentgw.channelsSaved":"チェックアウトの決済方法を更新しました",
+    "toast.paymentgw.needChannel":"決済方法を1つ以上有効にしてください",
     "admin.paymentgw.lbl.callback":"コールバック URL — 事業者の管理画面に登録してください",
     "admin.paymentgw.hint.callback":"サーバー間の通信で、決済ステータスの正となる情報源です。有効なすべてのチャネルの URL Background / Webhook として登録してください。",
     "admin.paymentgw.lbl.returnurl":"リターン URL (URL Result) — こちらも登録してください",
@@ -4329,6 +4353,11 @@ const FULL_TRANSLATIONS = {
     "admin.paymentgw.btn.inuse":"使用中",
     "admin.paymentgw.btn.needenv":"请先在 Netlify 配置此网关的环境变量",
     "admin.paymentgw.btn.copy":"复制",
+    "admin.paymentgw.lbl.enabledChannels":"结账页启用",
+    "admin.paymentgw.hint.enabledChannels":"仅勾选的方式可在结账页选择，其余显示为暂不可用。请至少启用一种。",
+    "admin.paymentgw.btn.saveChannels":"保存支付方式",
+    "toast.paymentgw.channelsSaved":"结账支付方式已更新",
+    "toast.paymentgw.needChannel":"请至少启用一种支付方式",
     "admin.paymentgw.lbl.channels":"支付渠道",
     "admin.paymentgw.lbl.callback":"回调 URL — 请在服务商后台登记",
     "admin.paymentgw.hint.callback":"服务器间回调，是支付状态的最终依据。请为所有启用的渠道登记为 URL Background / Webhook。",
@@ -4425,12 +4454,13 @@ const FULL_TRANSLATIONS = {
     "checkout.field.card":"银行卡号",
     "checkout.field.expiry":"有效期",
     "checkout.field.cvc":"安全码",
-    "checkout.payment.intro":"即将跳转至支付服务商的安全页面完成付款。",
+    "checkout.payment.intro":"请选择可用的支付方式，勾选条款后点击 Confirm & Pay，将打开安全支付页面。",
     "checkout.channel.any":"下一步选择",
     "checkout.channel.card":"信用卡 / 借记卡",
     "checkout.channel.qr":"PromptPay 二维码",
     "checkout.channel.mobile":"手机银行",
     "checkout.channel.ewallet":"电子钱包",
+    "checkout.channel.unavailable":"暂不可用",
     "checkout.summary.redirecting":"正在跳转至支付页面…",
     "checkout.summary.powered":"由支付服务商提供 · 泰国支付服务",
     // About and legal
@@ -5525,9 +5555,9 @@ async function loadOrSeedTranslations(){
 
   // Load all into state (or fall back to defaults if collection still empty / unreadable)
   try{
-    const snap = await getDocs(langsCol);
-    State.strings = {};
-    snap.forEach(d => { State.strings[d.id] = (d.data().strings) || {}; });
+  const snap = await getDocs(langsCol);
+  State.strings = {};
+  snap.forEach(d => { State.strings[d.id] = (d.data().strings) || {}; });
     if(!State.strings.en || !Object.keys(State.strings.en).length){
       State.strings.en = { ...DEFAULT_STRINGS };
     }
@@ -7369,10 +7399,10 @@ const App = {
       sel.innerHTML = "";
       State.langs.forEach(l => {
         if(!this.isLangEnabled(l.code)) return;
-        const o = document.createElement("option");
-        o.value = l.code; o.textContent = l.native;
-        if(l.code === State.currentLang) o.selected = true;
-        sel.appendChild(o);
+          const o = document.createElement("option");
+          o.value = l.code; o.textContent = l.native;
+          if(l.code === State.currentLang) o.selected = true;
+          sel.appendChild(o);
       });
     }
   },
@@ -8112,21 +8142,24 @@ const App = {
     this.onTermsToggle();
 
     // ---- Payment channels ----
-    // Rebuild the pills from the ACTIVE gateway's channel list so switching
-    // provider changes the options automatically. The markup in index.html is
-    // only a placeholder shown while the config loads (and a fallback if the
-    // lookup fails), so checkout still works if the function is unreachable.
+    // Catalog from active gateway; selectable set from config/payment.enabledChannels.
+    // Unavailable methods stay visible but cannot be selected.
     const channelsWrap = document.getElementById("co-channels");
     const wireChannels = () => {
       if(!channelsWrap) return;
       channelsWrap.querySelectorAll(".pay-pill").forEach(pill => {
+        if(pill.classList.contains("is-unavailable")){
+          pill.onclick = (ev) => { ev.preventDefault(); };
+          return;
+        }
         pill.onclick = () => {
           const ch = pill.dataset.channel || "";
           State.selectedChannel = ch;
-          channelsWrap.querySelectorAll(".pay-pill").forEach(p2 => p2.classList.toggle("on", p2 === pill));
+          channelsWrap.querySelectorAll(".pay-pill").forEach(p2 => {
+            if(!p2.classList.contains("is-unavailable")) p2.classList.toggle("on", p2 === pill);
+          });
         };
-        // Restore previously selected channel
-        if((pill.dataset.channel || "") === (State.selectedChannel || "")){
+        if((pill.dataset.channel || "") === (State.selectedChannel || "") && !pill.classList.contains("is-unavailable")){
           channelsWrap.querySelectorAll(".pay-pill").forEach(p2 => p2.classList.remove("on"));
           pill.classList.add("on");
         }
@@ -8135,18 +8168,39 @@ const App = {
     wireChannels();
 
     if(channelsWrap){
-      loadActiveGatewayChannels().then(channels => {
-        if(!channels || !channels.length) return;                  // keep the fallback pills
-        // If the selected channel isn't offered by this gateway, reset it so we
-        // never send a code the provider would reject.
-        const codes = channels.map(c => c.code);
-        if(State.selectedChannel && !codes.includes(State.selectedChannel)) State.selectedChannel = "";
-        if(!State.selectedChannel) State.selectedChannel = codes[0] || "";
+      loadCheckoutPaymentOptions().then(opts => {
+        const channels = opts.channels || [];
+        const enabled = opts.enabledChannels || ["creditcard"];
+        if(!channels.length){
+          // Fallback HTML pills: mark non-creditcard unavailable.
+          channelsWrap.querySelectorAll(".pay-pill").forEach(pill => {
+            const code = pill.dataset.channel || "";
+            const ok = enabled.includes(code);
+            pill.classList.toggle("is-unavailable", !ok);
+            pill.classList.toggle("on", ok && code === (State.selectedChannel || "creditcard"));
+            if(!ok){
+              if(!pill.querySelector(".unavail-tag")){
+                const tag = document.createElement("span");
+                tag.className = "unavail-tag";
+                tag.textContent = I.t("checkout.channel.unavailable");
+                pill.appendChild(tag);
+              }
+            }
+          });
+          if(!enabled.includes(State.selectedChannel)) State.selectedChannel = enabled[0] || "creditcard";
+          wireChannels();
+          return;
+        }
+        if(!enabled.includes(State.selectedChannel)) State.selectedChannel = enabled[0] || "";
+        if(!State.selectedChannel) State.selectedChannel = enabled[0] || channels[0]?.code || "creditcard";
 
         channelsWrap.innerHTML = channels.map(c => {
           const label = I.t(c.labelKey) || c.label || c.code;
-          const on = (c.code === State.selectedChannel) ? " on" : "";
-          return `<div class="pay-pill${on}" data-channel="${escapeHtml(c.code)}"><span class="dot"></span><span>${escapeHtml(label)}</span></div>`;
+          const ok = enabled.includes(c.code);
+          const on = ok && c.code === State.selectedChannel ? " on" : "";
+          const dis = ok ? "" : " is-unavailable";
+          const tag = ok ? "" : `<span class="unavail-tag">${escapeHtml(I.t("checkout.channel.unavailable"))}</span>`;
+          return `<div class="pay-pill${on}${dis}" data-channel="${escapeHtml(c.code)}"${ok ? "" : ' aria-disabled="true"'}><span class="dot"></span><span>${escapeHtml(label)}</span>${tag}</div>`;
         }).join("");
         wireChannels();
       }).catch(() => { /* keep fallback pills */ });
@@ -10464,7 +10518,7 @@ function renderAdminOrders(){
       </div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
         <button class="btn-ghost" type="button" onclick="AdminActions.fixOrderCurrencies()" title="${escapeHtml(I.t("admin.orders.fixCurrency.hint"))}"><span>${I.t("admin.orders.fixCurrency")}</span></button>
-        <button class="btn-primary" onclick="AdminActions.exportOrdersCSV()"><span>${I.t("admin.orders.export")}</span><span class="arr">→</span></button>
+      <button class="btn-primary" onclick="AdminActions.exportOrdersCSV()"><span>${I.t("admin.orders.export")}</span><span class="arr">→</span></button>
       </div>
     </div>
     <div class="stats">
@@ -11434,7 +11488,7 @@ function renderAdminEmails(){
       <div>
         <div class="crumbs">${escapeHtml(I.t("admin.emails.crumb"))}</div>
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <h1>${I.t("admin.emails.title-html")}</h1>
+        <h1>${I.t("admin.emails.title-html")}</h1>
           <input id="em-q" class="orders-dropdown-filter" type="search" value="${escapeHtml(State.emailQuery || "")}" placeholder="${escapeHtml(I.t("admin.emails.search.placeholder"))}" oninput="AdminActions.setEmailQuery(this.value)" style="min-width:180px" />
           <select class="orders-dropdown-filter" onchange="AdminActions.setEmailKind(this.value)" aria-label="${escapeHtml(I.t("admin.emails.col.kind"))}">${kindOptions}</select>
         </div>
@@ -11601,10 +11655,10 @@ function renderAdminSmtp(){
                 <th>${I.t("admin.smtp.col.user")}</th>
                 <th>${I.t("admin.smtp.col.from")}</th>
                 <th>${I.t("admin.smtp.col.status")}</th>
-                <th>${I.t("admin.orders.col.actions")}</th>
-              </tr></thead>
-              <tbody>${rows}</tbody>
-            </table>`}
+            <th>${I.t("admin.orders.col.actions")}</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>`}
       </div>
     </div>
   `;
@@ -12224,7 +12278,7 @@ function renderAdminLanguages(){
         <div class="crumbs">${I.t("admin.group.settings")} / ${I.t("admin.side.languages")}</div>
         <h1>${I.t("admin.langs.disabled.title")}</h1>
       </div>
-    </div>
+      </div>
     <div class="panel" style="padding:22px 24px">
       <p style="margin:0;font-size:14px;line-height:1.65;color:var(--text-2);max-width:640px">${I.t("admin.langs.disabled.sub")}</p>
       <p style="margin:14px 0 0;font-size:12.5px;color:var(--muted)">${I.t("admin.langs.disabled.note")}</p>
@@ -12452,24 +12506,34 @@ async function loadDmChampConfig({ force = false } = {}){
   return State.dmchamp;
 }
 
-// Channels offered by the ACTIVE payment gateway, for the checkout pills.
-// Cached for the session: the answer only changes when an admin switches
-// provider, and checkout shouldn't pay a network round-trip on every render.
-// Resolves to [] on any failure so the caller keeps its fallback markup.
+// Channels + admin-enabled codes for the ACTIVE payment gateway.
+// Cached for the session (invalidated when admin saves gateway/channels).
 let _gwChannelsCache = null;
-async function loadActiveGatewayChannels(){
+async function loadCheckoutPaymentOptions(){
   if(_gwChannelsCache) return _gwChannelsCache;
   try{
     const res = await fetch("/.netlify/functions/create-payment");
-    if(!res.ok) return [];
+    if(!res.ok) return { channels: [], enabledChannels: ["creditcard"] };
     const diag = await res.json();
     const active = (diag.gateways || []).find(g => g.id === diag.activeGateway);
-    _gwChannelsCache = active?.channels || [];
+    const channels = active?.channels || [];
+    const catalog = channels.map(c => c.code);
+    let enabled = Array.isArray(diag.enabledChannels) ? diag.enabledChannels.slice() : ["creditcard"];
+    enabled = enabled.filter(c => catalog.includes(c));
+    if(!enabled.length){
+      enabled = catalog.includes("creditcard") ? ["creditcard"] : (catalog[0] ? [catalog[0]] : []);
+    }
+    _gwChannelsCache = { channels, enabledChannels: enabled };
     return _gwChannelsCache;
   }catch(e){
     console.warn("[checkout] could not load gateway channels:", e.message || e);
-    return [];
+    return { channels: [], enabledChannels: ["creditcard"] };
   }
+}
+/** @deprecated use loadCheckoutPaymentOptions */
+async function loadActiveGatewayChannels(){
+  const opts = await loadCheckoutPaymentOptions();
+  return opts.channels || [];
 }
 
 // ===========================================================
@@ -12484,11 +12548,16 @@ async function loadActiveGatewayChannels(){
 // reflects what the server can actually do rather than a hard-coded list.
 // ===========================================================
 async function loadPaymentGwConfig(){
-  // Which gateway is currently selected (Firestore)
+  // Which gateway + enabled channels (Firestore)
   let activeGateway = null;
+  let enabledChannels = null;
   try{
     const snap = await getDoc(doc(db,"config","payment"));
-    if(snap.exists()) activeGateway = snap.data().activeGateway || null;
+    if(snap.exists()){
+      const data = snap.data() || {};
+      activeGateway = data.activeGateway || null;
+      if(Array.isArray(data.enabledChannels)) enabledChannels = data.enabledChannels.slice();
+    }
   }catch(e){ console.warn("[paymentgw] config read failed:", e); }
 
   // What the backend supports + env status (server diagnostic)
@@ -12499,9 +12568,19 @@ async function loadPaymentGwConfig(){
     else diagError = `HTTP ${res.status}`;
   }catch(e){ diagError = String(e.message || e); }
 
+  const resolvedActive = activeGateway || diag?.activeGateway || null;
+  const activeGw = (diag?.gateways || []).find(g => g.id === resolvedActive);
+  const catalog = (activeGw?.channels || []).map(c => c.code);
+  let enabled = enabledChannels || diag?.enabledChannels || ["creditcard"];
+  enabled = enabled.filter(c => !catalog.length || catalog.includes(c));
+  if(!enabled.length){
+    enabled = catalog.includes("creditcard") ? ["creditcard"] : (catalog[0] ? [catalog[0]] : ["creditcard"]);
+  }
+
   State.paymentGw = {
     loaded: true,
-    activeGateway: activeGateway || diag?.activeGateway || null,
+    activeGateway: resolvedActive,
+    enabledChannels: enabled,
     savedInFirestore: !!activeGateway,
     gateways: diag?.gateways || [],
     diagError
@@ -12561,9 +12640,30 @@ async function renderAdminPaymentGw(){
          <span style="font-family:var(--mono);color:${/NOT SET/.test(String(v)) ? "var(--red)" : "var(--text)"}">${escapeHtml(String(v))}</span>
        </div>`).join("");
 
-    const chips = (g.channels||[]).map(c =>
-      `<span style="display:inline-block;padding:3px 9px;margin:0 5px 5px 0;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(I.t(c.labelKey) || c.code)}</span>`
-    ).join("");
+    const enabledSet = new Set(cfg.enabledChannels || ["creditcard"]);
+    const channelToggles = isActive
+      ? (g.channels||[]).map(c => {
+          const checked = enabledSet.has(c.code) ? "checked" : "";
+          const label = I.t(c.labelKey) || c.code;
+          return `<label style="display:flex;align-items:center;gap:8px;padding:7px 10px;margin:0 8px 8px 0;border:1px solid var(--line);border-radius:9px;background:var(--surface-2);font-size:12.5px;cursor:pointer">
+            <input type="checkbox" class="pgw-channel-cb" value="${escapeHtml(c.code)}" ${checked} />
+            <span>${escapeHtml(label)}</span>
+            <span style="font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(c.code)}</span>
+          </label>`;
+        }).join("")
+      : (g.channels||[]).map(c =>
+          `<span style="display:inline-block;padding:3px 9px;margin:0 5px 5px 0;border-radius:999px;background:var(--surface-2);border:1px solid var(--line);font-family:var(--mono);font-size:10px;color:var(--muted)">${escapeHtml(I.t(c.labelKey) || c.code)}</span>`
+        ).join("");
+
+    const channelsBlock = isActive
+      ? `<div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:7px">${I.t("admin.paymentgw.lbl.enabledChannels")}</div>
+         <div style="display:flex;flex-wrap:wrap;margin-bottom:8px">${channelToggles || `<span style="font-size:12px;color:var(--muted)">—</span>`}</div>
+         <div style="font-size:11.5px;color:var(--muted);margin-bottom:10px;line-height:1.55">${I.t("admin.paymentgw.hint.enabledChannels")}</div>
+         <button class="btn-primary" style="margin-bottom:14px" onclick="AdminActions.saveEnabledChannels()">
+           <span>${I.t("admin.paymentgw.btn.saveChannels")}</span><span class="arr">→</span>
+         </button>`
+      : `<div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:7px">${I.t("admin.paymentgw.lbl.channels")}</div>
+         <div style="margin-bottom:14px">${channelToggles || `<span style="font-size:12px;color:var(--muted)">—</span>`}</div>`;
 
     return `
       <div style="border:1.5px solid ${isActive ? "var(--teal)" : "var(--line)"};border-radius:14px;padding:18px 20px;margin-bottom:16px;background:${isActive ? "rgba(11,182,196,.04)" : "var(--surface)"}">
@@ -12592,8 +12692,7 @@ async function renderAdminPaymentGw(){
           <strong style="color:${statusColor}">●</strong> ${escapeHtml(statusText)}
         </div>
 
-        <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:7px">${I.t("admin.paymentgw.lbl.channels")}</div>
-        <div style="margin-bottom:14px">${chips || `<span style="font-size:12px;color:var(--muted)">—</span>`}</div>
+        ${channelsBlock}
 
         <div style="font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);margin-bottom:7px">${I.t("admin.paymentgw.lbl.callback")}</div>
         <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
@@ -13204,7 +13303,7 @@ const AdminActions = {
       const amountOriginal = (() => {
         const money = resolveOrderDisplayMoney(o);
         return Number.isFinite(money.amount) ? money.amount
-              : (Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal) : "");
+                            : (Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal) : "");
       })();
       const amountUsd = Number.isFinite(Number(o.amountUsd)) ? Number(o.amountUsd)
                        : (Number.isFinite(Number(o.subtotal)) ? Number(o.subtotal) : "");
@@ -15742,8 +15841,14 @@ const AdminActions = {
     if(!confirm(I.t("toast.paymentgw.confirm", { name: gw.displayName }))) return;
 
     try{
+      const catalog = (gw.channels || []).map(c => c.code);
+      let enabled = (State.paymentGw?.enabledChannels || ["creditcard"]).filter(c => catalog.includes(c));
+      if(!enabled.length){
+        enabled = catalog.includes("creditcard") ? ["creditcard"] : (catalog[0] ? [catalog[0]] : ["creditcard"]);
+      }
       await setDoc(doc(db,"config","payment"), {
         activeGateway: gatewayId,
+        enabledChannels: enabled,
         updatedAt: serverTimestamp(),
         updatedBy: State.user.email || State.user.uid || "admin"
       }, { merge:true });
@@ -15754,6 +15859,27 @@ const AdminActions = {
       await renderAdminPaymentGw();
     }catch(e){
       console.error("[paymentgw] save failed:", e);
+      Toast.show(I.t("toast.paymentgw.failed", { error: String(e.message || e) }),"err");
+    }
+  },
+
+  async saveEnabledChannels(){
+    if(!State.user) return Toast.show("Not signed in","err");
+    const boxes = Array.from(document.querySelectorAll(".pgw-channel-cb"));
+    const enabled = boxes.filter(b => b.checked).map(b => b.value).filter(Boolean);
+    if(!enabled.length) return Toast.show(I.t("toast.paymentgw.needChannel"),"err");
+    try{
+      await setDoc(doc(db,"config","payment"), {
+        enabledChannels: enabled,
+        updatedAt: serverTimestamp(),
+        updatedBy: State.user.email || State.user.uid || "admin"
+      }, { merge:true });
+      if(State.paymentGw) State.paymentGw.enabledChannels = enabled;
+      _gwChannelsCache = null;
+      Toast.show(I.t("toast.paymentgw.channelsSaved"),"ok");
+      await renderAdminPaymentGw();
+    }catch(e){
+      console.error("[paymentgw] channels save failed:", e);
       Toast.show(I.t("toast.paymentgw.failed", { error: String(e.message || e) }),"err");
     }
   },
@@ -16006,7 +16132,7 @@ async function boot(){
               App.closeLogin();
               App.resumePendingPurchase();
             }else{
-              App.go("account");
+            App.go("account");
             }
           }
         }

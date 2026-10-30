@@ -71,6 +71,7 @@ async function handleDiagnostic() {
   }
 
   const activeId = await gateways.getActiveGatewayId(db);
+  const enabledChannels = await gateways.getEnabledChannels(db, activeId);
 
   return {
     statusCode: 200,
@@ -79,6 +80,7 @@ async function handleDiagnostic() {
       diagnostic: true,
       message: 'Send POST with payment details to actually create a payment.',
       activeGateway: activeId,
+      enabledChannels,
       registeredGateways: gateways.listGatewayIds(),
       gateways: gateways.describeAll(),
       firebase: {
@@ -157,6 +159,22 @@ exports.handler = async (event) => {
       };
     }
 
+    // ---- Channel must be admin-enabled (default: creditcard only) ----
+    const enabledChannels = await gateways.getEnabledChannels(db, gatewayId);
+    const channelCode = String(channel || '').trim();
+    if (!channelCode || !enabledChannels.includes(channelCode)) {
+      return {
+        statusCode: 400,
+        headers: CORS,
+        body: JSON.stringify({
+          error: channelCode
+            ? `Payment channel "${channelCode}" is not enabled`
+            : 'Payment channel is required',
+          enabledChannels
+        })
+      };
+    }
+
     // ---- Convert USD → the gateway's settlement currency ----
     const fx = await gw.convertAmount(totalUsd);
     if (fx.amount < (gw.minAmount || 0)) {
@@ -198,7 +216,7 @@ exports.handler = async (event) => {
       gateway: gw.id,                    // ← settles this order, even after a switch
       status:  'pending',                // pending → paid | failed | cancelled
       paymentMethod:  gw.id,             // kept for backwards compatibility
-      paymentChannel: channel || 'select-on-page',
+      paymentChannel: channelCode,
       customer: {
         name:    customer.name
           || [customer.firstName, customer.lastName].filter(Boolean).join(' ').trim()
