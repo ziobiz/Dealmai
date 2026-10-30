@@ -1,12 +1,15 @@
 'use strict';
 
 /**
- * Admin-only Google OTP (TOTP) — Crypto-style flow for DealMai.
+ * Admin-only OTP — Crypto-style flow for DealMai.
  *
  * Customers never hit this path. Admins must:
  *   1) Sign in with email/password (Firebase Auth)
  *   2) If totpEnabled → verify 6-digit authenticator code
  *   3) If not enrolled → email code → scan QR → activate TOTP
+ *
+ * Exception: allowlisted PG demo admin (demo@vipdemo.com) uses a fixed OTP
+ * (no Google Authenticator enrollment). Same gate on dealmai.com / app.dealmai.com.
  *
  * POST /.netlify/functions/admin-otp
  * Body: { action, code?, ... }
@@ -20,6 +23,7 @@ const { admin, db, ensureApp, firebaseUnavailableResponse } = require('./lib/fir
 const { loadSmtpSettings } = require('./lib/smtp-settings');
 const {
   isDemoPgActive,
+  verifyDemoPgOtp,
   expireDemoPgIfNeeded
 } = require('./lib/demo-pg-account');
 
@@ -154,18 +158,18 @@ exports.handler = async (event) => {
       return jsonResp(200, {
         ok: true,
         role: 'admin',
-        // Demo PG admin is password-only — treat as enrolled so UI never starts enroll.
+        // Demo: fixed OTP only — treat as enrolled so Google Authenticator enroll never starts.
         totpEnabled: demo ? true : !!profile.totpEnabled,
         mustSetupOtp: demo ? false : !profile.totpEnabled,
-        demoSkipOtp: demo,
-        demoFixedOtp: false,
+        demoFixedOtp: demo,
+        demoSkipOtp: false,
         maskedEmail: maskEmail(email)
       });
     }
 
     if (action === 'enroll-send') {
       if (isDemoPgActive(profile, email)) {
-        return jsonResp(400, { error: 'Demo account skips OTP — enrollment not required' });
+        return jsonResp(400, { error: 'Demo account uses a fixed OTP — Google Authenticator not required' });
       }
       const code = String(Math.floor(100000 + Math.random() * 900000));
       const expires = Date.now() + 10 * 60 * 1000;
@@ -189,7 +193,7 @@ exports.handler = async (event) => {
 
     if (action === 'enroll-verify-email') {
       if (isDemoPgActive(profile, email)) {
-        return jsonResp(400, { error: 'Demo account skips OTP — enrollment not required' });
+        return jsonResp(400, { error: 'Demo account uses a fixed OTP — Google Authenticator not required' });
       }
       const code = String(body.code || '').replace(/\s/g, '');
       if (!/^\d{6}$/.test(code)) return jsonResp(400, { error: 'Invalid code' });
@@ -224,7 +228,7 @@ exports.handler = async (event) => {
 
     if (action === 'enroll-activate') {
       if (isDemoPgActive(profile, email)) {
-        return jsonResp(400, { error: 'Demo account skips OTP — enrollment not required' });
+        return jsonResp(400, { error: 'Demo account uses a fixed OTP — Google Authenticator not required' });
       }
       const code = String(body.code || '').replace(/\s/g, '');
       const snap = await ref.get();
@@ -243,13 +247,16 @@ exports.handler = async (event) => {
 
     if (action === 'verify-login') {
       const code = String(body.code || '').replace(/\s/g, '');
-      // Demo PG admin is OTP-free (frontend skips this step); accept if somehow called.
+      // Demo PG reviewer only: fixed OTP (001122). No Google Authenticator.
       if (isDemoPgActive(profile, email)) {
+        if (!verifyDemoPgOtp(code)) {
+          return jsonResp(400, { error: 'Invalid authenticator code' });
+        }
         await ref.set(
           { totpLastVerifiedAt: admin.firestore.FieldValue.serverTimestamp() },
           { merge: true }
         );
-        return jsonResp(200, { ok: true, verified: true, demoSkipOtp: true });
+        return jsonResp(200, { ok: true, verified: true, demoFixedOtp: true });
       }
       if (!profile.totpEnabled || !profile.totpSecret) {
         return jsonResp(400, { error: 'OTP not enrolled' });

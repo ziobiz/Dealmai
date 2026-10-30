@@ -6,8 +6,8 @@
  *
  *   node scripts/provision-demo-pg.js
  *
- * Member admin console login — password only (no OTP / TOTP).
- * Auto-disables after 14 days.
+ * Member admin console: password + fixed OTP 001122 (no Google Authenticator).
+ * Auto-disables after 14 days. Same on dealmai.com and app.dealmai.com.
  */
 
 const path = require('path');
@@ -28,7 +28,8 @@ const {
   DEMO_PG_EMAIL,
   DEMO_PG_TTL_MS,
   DEMO_PG_PASSWORD,
-  DEMO_PG_NAME
+  DEMO_PG_NAME,
+  DEMO_PG_OTP
 } = require('../netlify/functions/lib/demo-pg-account');
 const { admin, db, ensureApp } = require('../netlify/functions/lib/firebase-admin-app');
 
@@ -78,8 +79,8 @@ async function main() {
       demoProvisionedAt: admin.firestore.FieldValue.serverTimestamp(),
       demoDisableReason: del,
       demoDisabledAt: del,
-      // OTP-free demo: strip any prior TOTP / enroll / fixed-OTP flags
-      demoFixedOtp: del,
+      // Fixed OTP only — strip Google Authenticator / enroll state
+      demoFixedOtp: true,
       totpEnabled: del,
       totpSecret: del,
       totpActivatedAt: del,
@@ -96,7 +97,8 @@ async function main() {
     email: DEMO_PG_EMAIL,
     name: DEMO_PG_NAME,
     role: 'admin',
-    otp: 'skipped (demoPgAccount)',
+    otp: DEMO_PG_OTP,
+    otpMode: 'fixed (no Google Authenticator)',
     password: DEMO_PG_PASSWORD,
     expiresAt: expiresAt.toDate().toISOString()
   }, null, 2));

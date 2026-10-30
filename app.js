@@ -16087,14 +16087,12 @@ async function boot(){
           profileUser.profileComplete = App.isCustomerProfileComplete(profileUser);
         }
 
-        // Admin OTP gate (Crypto-style): password alone is not enough —
-        // except the allowlisted PG demo admin (demoPgAccount), which is OTP-free.
-        if(data.role === "admin" && !data.demoPgAccount && !App.isAdminOtpOk(fbUser.uid)){
+        // Admin OTP gate: password alone is not enough (including PG demo).
+        // Demo uses a fixed OTP (no Google Authenticator). sessionStorage clears
+        // when the browser session ends, so reopening the browser asks for OTP again.
+        if(data.role === "admin" && !App.isAdminOtpOk(fbUser.uid)){
           await App.beginAdminOtpGate(profileUser);
           return;
-        }
-        if(data.role === "admin" && data.demoPgAccount){
-          App.markAdminOtpOk(fbUser.uid);
         }
 
         State.user = profileUser;

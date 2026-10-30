@@ -3,14 +3,15 @@
 /**
  * PG reviewer demo account — allowlisted email only, 14-day auto-disable.
  *
- * Role: admin (member console at app.dealmai.com).
- * OTP: skipped entirely when demoPgAccount is set (password login only).
- * Fixed OTP constant kept only as a legacy fallback in admin-otp.js.
+ * Role: admin (member console on dealmai.com / app.dealmai.com).
+ * OTP: fixed code only (no Google Authenticator). Password + DEMO_PG_OTP.
+ * Session: Firebase may persist, but admin OTP gate uses sessionStorage so
+ * a new browser session always asks for the fixed OTP again.
  */
 
 const DEMO_PG_EMAIL = 'demo@vipdemo.com';
-/** @deprecated Demo admin skips OTP; kept for leftover admin-otp verify paths. */
-const DEMO_PG_OTP = '012340';
+/** Fixed demo OTP — not a TOTP; Google Authenticator is not used for this account. */
+const DEMO_PG_OTP = '001122';
 const DEMO_PG_TTL_MS = 14 * 24 * 60 * 60 * 1000;
 const DEMO_PG_PASSWORD = 'dm0011@';
 const DEMO_PG_NAME = 'demo pg';
@@ -28,8 +29,8 @@ function isDemoPgProfile(profile, email) {
   return isDemoPgEmail(email) || isDemoPgEmail(profile && profile.email);
 }
 
-/** Password-only admin login — no TOTP / fixed OTP step. */
-function isDemoPgOtpExempt(profile, email) {
+/** Demo uses a fixed OTP instead of Google Authenticator enrollment. */
+function isDemoPgFixedOtp(profile, email) {
   return isDemoPgProfile(profile, email);
 }
 
@@ -55,7 +56,7 @@ function isDemoPgActive(profile, email) {
 }
 
 function verifyDemoPgOtp(code) {
-  return String(code || '').replace(/\s/g, '').toLowerCase() === DEMO_PG_OTP.toLowerCase();
+  return String(code || '').replace(/\s/g, '') === DEMO_PG_OTP;
 }
 
 /**
@@ -93,7 +94,7 @@ module.exports = {
   DEMO_PG_NAME,
   isDemoPgEmail,
   isDemoPgProfile,
-  isDemoPgOtpExempt,
+  isDemoPgFixedOtp,
   isDemoPgActive,
   verifyDemoPgOtp,
   demoExpiresAtMs,
