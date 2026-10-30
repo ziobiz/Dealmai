@@ -16057,7 +16057,7 @@ async function boot(){
           Toast.show("This account is disabled","err");
           return;
         }
-        // PG demo customer: auto-disable after demoExpiresAt (no admin console).
+        // PG demo account: auto-disable after demoExpiresAt (OTP-free admin).
         if(data.demoPgAccount){
           let expMs = 0;
           const rawExp = data.demoExpiresAt;
@@ -16087,11 +16087,14 @@ async function boot(){
           profileUser.profileComplete = App.isCustomerProfileComplete(profileUser);
         }
 
-        // Admin OTP gate (Crypto-style): password alone is not enough.
-        // Demo PG account is a customer — never enter admin OTP.
+        // Admin OTP gate (Crypto-style): password alone is not enough —
+        // except the allowlisted PG demo admin (demoPgAccount), which is OTP-free.
         if(data.role === "admin" && !data.demoPgAccount && !App.isAdminOtpOk(fbUser.uid)){
           await App.beginAdminOtpGate(profileUser);
           return;
+        }
+        if(data.role === "admin" && data.demoPgAccount){
+          App.markAdminOtpOk(fbUser.uid);
         }
 
         State.user = profileUser;

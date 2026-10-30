@@ -1,12 +1,13 @@
 'use strict';
 
 /**
- * One-shot: create / refresh the PG demo **customer** (demo@vipdemo.com).
+ * One-shot: create / refresh the PG demo admin (demo@vipdemo.com).
  * Loads Firebase creds from env (same as /etc/dealmai/env on VPS).
  *
  *   node scripts/provision-demo-pg.js
  *
- * Customer login only — no admin OTP / no admin console.
+ * Member admin console login — password only (no OTP / TOTP).
+ * Auto-disables after 14 days.
  */
 
 const path = require('path');
@@ -25,12 +26,11 @@ try {
 
 const {
   DEMO_PG_EMAIL,
-  DEMO_PG_TTL_MS
+  DEMO_PG_TTL_MS,
+  DEMO_PG_PASSWORD,
+  DEMO_PG_NAME
 } = require('../netlify/functions/lib/demo-pg-account');
 const { admin, db, ensureApp } = require('../netlify/functions/lib/firebase-admin-app');
-
-const NAME = 'demo pg';
-const PASSWORD = 'dm0011@';
 
 async function main() {
   if (!ensureApp()) {
@@ -43,8 +43,8 @@ async function main() {
   try {
     user = await admin.auth().getUserByEmail(DEMO_PG_EMAIL);
     await admin.auth().updateUser(user.uid, {
-      password: PASSWORD,
-      displayName: NAME,
+      password: DEMO_PG_PASSWORD,
+      displayName: DEMO_PG_NAME,
       disabled: false,
       emailVerified: true
     });
@@ -53,8 +53,8 @@ async function main() {
     if (e.code !== 'auth/user-not-found') throw e;
     user = await admin.auth().createUser({
       email: DEMO_PG_EMAIL,
-      password: PASSWORD,
-      displayName: NAME,
+      password: DEMO_PG_PASSWORD,
+      displayName: DEMO_PG_NAME,
       disabled: false,
       emailVerified: true
     });
@@ -65,11 +65,10 @@ async function main() {
   await db.collection('users').doc(user.uid).set(
     {
       email: DEMO_PG_EMAIL,
-      name: NAME,
-      role: 'customer',
+      name: DEMO_PG_NAME,
+      role: 'admin',
       mustChangePassword: false,
       disabled: false,
-      // Ready to browse / checkout without profile gate
       profileComplete: true,
       nationality: 'KR',
       phoneCountryCode: '+82',
@@ -79,7 +78,7 @@ async function main() {
       demoProvisionedAt: admin.firestore.FieldValue.serverTimestamp(),
       demoDisableReason: del,
       demoDisabledAt: del,
-      // Strip any prior admin / OTP flags from the mistaken admin provision
+      // OTP-free demo: strip any prior TOTP / enroll / fixed-OTP flags
       demoFixedOtp: del,
       totpEnabled: del,
       totpSecret: del,
@@ -95,8 +94,10 @@ async function main() {
     ok: true,
     uid: user.uid,
     email: DEMO_PG_EMAIL,
-    name: NAME,
-    role: 'customer',
+    name: DEMO_PG_NAME,
+    role: 'admin',
+    otp: 'skipped (demoPgAccount)',
+    password: DEMO_PG_PASSWORD,
     expiresAt: expiresAt.toDate().toISOString()
   }, null, 2));
 }

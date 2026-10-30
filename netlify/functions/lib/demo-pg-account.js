@@ -1,14 +1,19 @@
 'use strict';
 
 /**
- * PG reviewer demo **customer** — 14-day auto-disable.
- * Allowlisted email only. Not an admin; no fixed OTP path in normal use.
+ * PG reviewer demo account — allowlisted email only, 14-day auto-disable.
+ *
+ * Role: admin (member console at app.dealmai.com).
+ * OTP: skipped entirely when demoPgAccount is set (password login only).
+ * Fixed OTP constant kept only as a legacy fallback in admin-otp.js.
  */
 
 const DEMO_PG_EMAIL = 'demo@vipdemo.com';
-/** @deprecated kept for any leftover admin-OTP path; demo user is a customer. */
+/** @deprecated Demo admin skips OTP; kept for leftover admin-otp verify paths. */
 const DEMO_PG_OTP = '012340';
 const DEMO_PG_TTL_MS = 14 * 24 * 60 * 60 * 1000;
+const DEMO_PG_PASSWORD = 'dm0011@';
+const DEMO_PG_NAME = 'demo pg';
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
@@ -21,6 +26,11 @@ function isDemoPgEmail(email) {
 function isDemoPgProfile(profile, email) {
   if (profile && profile.demoPgAccount === true) return true;
   return isDemoPgEmail(email) || isDemoPgEmail(profile && profile.email);
+}
+
+/** Password-only admin login — no TOTP / fixed OTP step. */
+function isDemoPgOtpExempt(profile, email) {
+  return isDemoPgProfile(profile, email);
 }
 
 function toMillis(value) {
@@ -79,8 +89,11 @@ module.exports = {
   DEMO_PG_EMAIL,
   DEMO_PG_OTP,
   DEMO_PG_TTL_MS,
+  DEMO_PG_PASSWORD,
+  DEMO_PG_NAME,
   isDemoPgEmail,
   isDemoPgProfile,
+  isDemoPgOtpExempt,
   isDemoPgActive,
   verifyDemoPgOtp,
   demoExpiresAtMs,
