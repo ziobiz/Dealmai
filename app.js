@@ -9037,6 +9037,38 @@ const App = {
     });
   },
 
+  showFixedDemoOtpStep(){
+    this.showLoginStep("otp");
+    this.setLoginStatus("");
+    const otpTitle = document.querySelector("#login-step-otp h2");
+    if(otpTitle) otpTitle.textContent = I.t("login.otp.title");
+    const otpHint = document.getElementById("login-otp-hint");
+    if(otpHint) otpHint.textContent = I.t("login.otp.demoHint");
+    const verifySpan = document.querySelector('#login-step-otp .btn-primary [data-i18n="login.otp.verify"]');
+    if(verifySpan) verifySpan.textContent = I.t("login.otp.verify");
+    const otpInput = document.getElementById("li-otp-code");
+    if(otpInput){
+      otpInput.inputMode = "numeric";
+      otpInput.placeholder = "000000";
+      otpInput.value = "";
+      otpInput.focus();
+    }
+    Toast.show(I.t("login.otp.demoHint"),"warn");
+  },
+
+  async beginCustomerDemoOtpGate(profile){
+    if(this._otpGateUid === profile?.uid && this._otpGateStarted){
+      document.getElementById("login-modal")?.classList.add("show");
+      return;
+    }
+    this._otpGateUid = profile?.uid || null;
+    this._otpGateStarted = true;
+    State.adminOtpPending = profile;
+    State.user = null;
+    document.getElementById("login-modal")?.classList.add("show");
+    this.showFixedDemoOtpStep();
+  },
+
   async beginAdminOtpGate(profile){
     // Prevent duplicate enroll-send (invalidates the email code the user just received).
     if(this._otpGateUid === profile?.uid && this._otpGateStarted){
@@ -9061,17 +9093,15 @@ const App = {
         const emailInput = document.getElementById("li-enroll-email-code");
         if(emailInput){ emailInput.value = ""; emailInput.focus(); }
         Toast.show(I.t("toast.otp.sent") + (sent.hint ? " ("+sent.hint+")" : ""),"ok");
+      }else if(st.demoFixedOtp){
+        this.showFixedDemoOtpStep();
       }else{
         this.showLoginStep("otp");
         this.setLoginStatus("");
         const otpTitle = document.querySelector("#login-step-otp h2");
         if(otpTitle) otpTitle.textContent = I.t("login.otp.title");
         const otpHint = document.getElementById("login-otp-hint");
-        if(otpHint){
-          otpHint.textContent = st.demoFixedOtp
-            ? I.t("login.otp.demoHint")
-            : I.t("login.otp.totpHint");
-        }
+        if(otpHint) otpHint.textContent = I.t("login.otp.totpHint");
         const verifySpan = document.querySelector('#login-step-otp .btn-primary [data-i18n="login.otp.verify"]');
         if(verifySpan) verifySpan.textContent = I.t("login.otp.verify");
         const otpInput = document.getElementById("li-otp-code");
@@ -9106,6 +9136,14 @@ const App = {
     this.closeLogin();
     this.showLoginStep("credentials");
     Toast.show(I.t("toast.login.ok",{name: p.name}),"ok");
+    if(p.role === "customer"){
+      subscribeCustomerCollections();
+      this.updateAuthUI();
+      if(p.mustChangePassword) this.openCustomerPasswordModal(true);
+      else if(State.pendingPurchase) this.resumePendingPurchase();
+      else this.go("account");
+      return;
+    }
     subscribeCollections();
     this.updateAuthUI();
     if(p.mustChangePassword) this.openCustomerPasswordModal(true);
@@ -9192,7 +9230,12 @@ const App = {
     if(!/^\d{6}$/.test(code)) return Toast.show(I.t("toast.otp.invalid"),"err");
     this.setOtpBusy(true);
     try{
-      await this.adminOtpFetch("verify-login",{ code });
+      const pending = State.adminOtpPending;
+      if(pending && pending.role === "customer"){
+        await this.customerAuthFetch("verify-demo-otp",{ code });
+      }else{
+        await this.adminOtpFetch("verify-login",{ code });
+      }
       await this.finishAdminAfterOtp();
     }catch(e){
       console.error("[otp verify-login]", e);
@@ -16057,7 +16100,7 @@ async function boot(){
           Toast.show("This account is disabled","err");
           return;
         }
-        // PG demo account: auto-disable after demoExpiresAt (OTP-free admin).
+        // PG demo account: auto-disable after demoExpiresAt.
         if(data.demoPgAccount){
           let expMs = 0;
           const rawExp = data.demoExpiresAt;
@@ -16087,11 +16130,15 @@ async function boot(){
           profileUser.profileComplete = App.isCustomerProfileComplete(profileUser);
         }
 
-        // Admin OTP gate: password alone is not enough (including PG demo).
-        // Demo uses a fixed OTP (no Google Authenticator). sessionStorage clears
+        // OTP gate: password alone is not enough for admins, or for the PG demo customer.
+        // Demo accounts use a fixed OTP (no Google Authenticator). sessionStorage clears
         // when the browser session ends, so reopening the browser asks for OTP again.
         if(data.role === "admin" && !App.isAdminOtpOk(fbUser.uid)){
           await App.beginAdminOtpGate(profileUser);
+          return;
+        }
+        if(data.role === "customer" && data.demoPgAccount && !App.isAdminOtpOk(fbUser.uid)){
+          await App.beginCustomerDemoOtpGate(profileUser);
           return;
         }
 

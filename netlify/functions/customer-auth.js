@@ -17,7 +17,11 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { admin, db, ensureApp, firebaseUnavailableResponse } = require('./lib/firebase-admin-app');
 const { loadSmtpSettings } = require('./lib/smtp-settings');
-const { expireDemoPgIfNeeded } = require('./lib/demo-pg-account');
+const {
+  expireDemoPgIfNeeded,
+  isDemoPgCustomerActive,
+  verifyDemoPgCustomerOtp
+} = require('./lib/demo-pg-account');
 
 const corsHeaders = {
   'Content-Type': 'application/json',
@@ -314,6 +318,25 @@ exports.handler = async (event) => {
         phoneCountryCode: profile.phoneCountryCode || '',
         phone: profile.phone || ''
       });
+    }
+
+    // Demo PG customer: fixed OTP (334455) — no Google Authenticator.
+    if (action === 'verify-demo-otp') {
+      const gate = await requireCustomer(event);
+      if (gate.error) return gate.error;
+      const { email, profile, ref } = gate;
+      if (!isDemoPgCustomerActive(profile, email)) {
+        return jsonResp(403, { error: 'Demo OTP is only for the PG customer demo account' });
+      }
+      const code = String(body.code || '').replace(/\s/g, '');
+      if (!verifyDemoPgCustomerOtp(code)) {
+        return jsonResp(400, { error: 'Invalid authenticator code' });
+      }
+      await ref.set(
+        { demoOtpLastVerifiedAt: admin.firestore.FieldValue.serverTimestamp() },
+        { merge: true }
+      );
+      return jsonResp(200, { ok: true, verified: true, demoFixedOtp: true });
     }
 
     // Demo PG customer self-expire (also safe if role was wrongly set to admin before).

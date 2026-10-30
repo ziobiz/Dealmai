@@ -8,8 +8,8 @@
  *   2) If totpEnabled → verify 6-digit authenticator code
  *   3) If not enrolled → email code → scan QR → activate TOTP
  *
- * Exception: allowlisted PG demo admin (admin@vipdemo.com) uses a fixed OTP
- * (no Google Authenticator enrollment). Customer demo is demo@vipdemo.com (no OTP).
+ * Exception: allowlisted PG demo admin (admin@vipdemo.com) uses fixed OTP 001122
+ * (no Google Authenticator). Customer demo OTP 334455 is handled in customer-auth.
  * Same gate on dealmai.com / app.dealmai.com.
  *
  * POST /.netlify/functions/admin-otp

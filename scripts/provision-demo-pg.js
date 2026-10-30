@@ -6,7 +6,7 @@
  *
  *   node scripts/provision-demo-pg.js
  *
- * Customer: demo@vipdemo.com  — password only
+ * Customer: demo@vipdemo.com  — password + fixed OTP 334455 (no Google Authenticator)
  * Admin:    admin@vipdemo.com — password + fixed OTP 001122 (no Google Authenticator)
  * Both auto-disable after 14 days. Same on dealmai.com / app.dealmai.com.
  */
@@ -32,7 +32,8 @@ const {
   DEMO_PG_PASSWORD,
   DEMO_PG_CUSTOMER_NAME,
   DEMO_PG_ADMIN_NAME,
-  DEMO_PG_OTP
+  DEMO_PG_ADMIN_OTP,
+  DEMO_PG_CUSTOMER_OTP
 } = require('../netlify/functions/lib/demo-pg-account');
 const { admin, db, ensureApp } = require('../netlify/functions/lib/firebase-admin-app');
 
@@ -80,7 +81,7 @@ async function writeProfile(uid, { email, name, role, expiresAt }) {
       demoProvisionedAt: admin.firestore.FieldValue.serverTimestamp(),
       demoDisableReason: del,
       demoDisabledAt: del,
-      demoFixedOtp: isAdmin ? true : del,
+      demoFixedOtp: true,
       totpEnabled: del,
       totpSecret: del,
       totpActivatedAt: del,
@@ -124,14 +125,15 @@ async function main() {
         role: 'customer',
         email: DEMO_PG_CUSTOMER_EMAIL,
         password: DEMO_PG_PASSWORD,
-        otp: null,
+        otp: DEMO_PG_CUSTOMER_OTP,
+        otpMode: 'fixed (no Google Authenticator)',
         uid: customer.uid
       },
       {
         role: 'admin',
         email: DEMO_PG_ADMIN_EMAIL,
         password: DEMO_PG_PASSWORD,
-        otp: DEMO_PG_OTP,
+        otp: DEMO_PG_ADMIN_OTP,
         otpMode: 'fixed (no Google Authenticator)',
         uid: adminUser.uid
       }
