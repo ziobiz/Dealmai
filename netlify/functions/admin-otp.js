@@ -8,8 +8,9 @@
  *   2) If totpEnabled → verify 6-digit authenticator code
  *   3) If not enrolled → email code → scan QR → activate TOTP
  *
- * Exception: allowlisted PG demo admin (demo@vipdemo.com) uses a fixed OTP
- * (no Google Authenticator enrollment). Same gate on dealmai.com / app.dealmai.com.
+ * Exception: allowlisted PG demo admin (admin@vipdemo.com) uses a fixed OTP
+ * (no Google Authenticator enrollment). Customer demo is demo@vipdemo.com (no OTP).
+ * Same gate on dealmai.com / app.dealmai.com.
  *
  * POST /.netlify/functions/admin-otp
  * Body: { action, code?, ... }
@@ -22,7 +23,7 @@ const speakeasy = require('speakeasy');
 const { admin, db, ensureApp, firebaseUnavailableResponse } = require('./lib/firebase-admin-app');
 const { loadSmtpSettings } = require('./lib/smtp-settings');
 const {
-  isDemoPgActive,
+  isDemoPgAdminActive,
   verifyDemoPgOtp,
   expireDemoPgIfNeeded
 } = require('./lib/demo-pg-account');
@@ -154,7 +155,7 @@ exports.handler = async (event) => {
 
   try {
     if (action === 'status') {
-      const demo = isDemoPgActive(profile, email);
+      const demo = isDemoPgAdminActive(profile, email);
       return jsonResp(200, {
         ok: true,
         role: 'admin',
@@ -168,7 +169,7 @@ exports.handler = async (event) => {
     }
 
     if (action === 'enroll-send') {
-      if (isDemoPgActive(profile, email)) {
+      if (isDemoPgAdminActive(profile, email)) {
         return jsonResp(400, { error: 'Demo account uses a fixed OTP — Google Authenticator not required' });
       }
       const code = String(Math.floor(100000 + Math.random() * 900000));
@@ -192,7 +193,7 @@ exports.handler = async (event) => {
     }
 
     if (action === 'enroll-verify-email') {
-      if (isDemoPgActive(profile, email)) {
+      if (isDemoPgAdminActive(profile, email)) {
         return jsonResp(400, { error: 'Demo account uses a fixed OTP — Google Authenticator not required' });
       }
       const code = String(body.code || '').replace(/\s/g, '');
@@ -227,7 +228,7 @@ exports.handler = async (event) => {
     }
 
     if (action === 'enroll-activate') {
-      if (isDemoPgActive(profile, email)) {
+      if (isDemoPgAdminActive(profile, email)) {
         return jsonResp(400, { error: 'Demo account uses a fixed OTP — Google Authenticator not required' });
       }
       const code = String(body.code || '').replace(/\s/g, '');
@@ -248,7 +249,7 @@ exports.handler = async (event) => {
     if (action === 'verify-login') {
       const code = String(body.code || '').replace(/\s/g, '');
       // Demo PG reviewer only: fixed OTP (001122). No Google Authenticator.
-      if (isDemoPgActive(profile, email)) {
+      if (isDemoPgAdminActive(profile, email)) {
         if (!verifyDemoPgOtp(code)) {
           return jsonResp(400, { error: 'Invalid authenticator code' });
         }

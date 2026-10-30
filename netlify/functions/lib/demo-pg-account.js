@@ -1,27 +1,43 @@
 'use strict';
 
 /**
- * PG reviewer demo account — allowlisted email only, 14-day auto-disable.
+ * PG reviewer demo accounts — allowlisted emails only, 14-day auto-disable.
  *
- * Role: admin (member console on dealmai.com / app.dealmai.com).
- * OTP: fixed code only (no Google Authenticator). Password + DEMO_PG_OTP.
- * Session: Firebase may persist, but admin OTP gate uses sessionStorage so
- * a new browser session always asks for the fixed OTP again.
+ * Customer: demo@vipdemo.com  — password only (no OTP)
+ * Admin:    admin@vipdemo.com — password + fixed OTP (no Google Authenticator)
+ *
+ * Same on dealmai.com / app.dealmai.com. Admin OTP gate uses sessionStorage so
+ * a new browser session asks for the fixed OTP again.
  */
 
-const DEMO_PG_EMAIL = 'demo@vipdemo.com';
-/** Fixed demo OTP — not a TOTP; Google Authenticator is not used for this account. */
+const DEMO_PG_CUSTOMER_EMAIL = 'demo@vipdemo.com';
+const DEMO_PG_ADMIN_EMAIL = 'admin@vipdemo.com';
+/** @deprecated use DEMO_PG_CUSTOMER_EMAIL */
+const DEMO_PG_EMAIL = DEMO_PG_CUSTOMER_EMAIL;
+
+/** Fixed admin demo OTP — not a TOTP; Google Authenticator is not used. */
 const DEMO_PG_OTP = '001122';
 const DEMO_PG_TTL_MS = 14 * 24 * 60 * 60 * 1000;
 const DEMO_PG_PASSWORD = 'dm0011@';
-const DEMO_PG_NAME = 'demo pg';
+const DEMO_PG_CUSTOMER_NAME = 'demo pg';
+const DEMO_PG_ADMIN_NAME = 'demo admin';
+/** @deprecated use DEMO_PG_CUSTOMER_NAME / DEMO_PG_ADMIN_NAME */
+const DEMO_PG_NAME = DEMO_PG_CUSTOMER_NAME;
 
 function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
 }
 
+function isDemoPgCustomerEmail(email) {
+  return normalizeEmail(email) === DEMO_PG_CUSTOMER_EMAIL;
+}
+
+function isDemoPgAdminEmail(email) {
+  return normalizeEmail(email) === DEMO_PG_ADMIN_EMAIL;
+}
+
 function isDemoPgEmail(email) {
-  return normalizeEmail(email) === DEMO_PG_EMAIL;
+  return isDemoPgCustomerEmail(email) || isDemoPgAdminEmail(email);
 }
 
 function isDemoPgProfile(profile, email) {
@@ -29,9 +45,13 @@ function isDemoPgProfile(profile, email) {
   return isDemoPgEmail(email) || isDemoPgEmail(profile && profile.email);
 }
 
-/** Demo uses a fixed OTP instead of Google Authenticator enrollment. */
+/** Admin demo only: fixed OTP instead of Google Authenticator. */
 function isDemoPgFixedOtp(profile, email) {
-  return isDemoPgProfile(profile, email);
+  if (isDemoPgAdminEmail(email) || isDemoPgAdminEmail(profile && profile.email)) return true;
+  if (profile && profile.demoPgAccount === true && profile.role === 'admin') {
+    return isDemoPgAdminEmail(profile.email) || isDemoPgAdminEmail(email);
+  }
+  return false;
 }
 
 function toMillis(value) {
@@ -53,6 +73,11 @@ function isDemoPgActive(profile, email) {
   if (profile && profile.disabled) return false;
   const exp = demoExpiresAtMs(profile);
   return exp > Date.now();
+}
+
+/** True when this admin should use the fixed demo OTP (not Google TOTP). */
+function isDemoPgAdminActive(profile, email) {
+  return isDemoPgActive(profile, email) && isDemoPgFixedOtp(profile, email);
 }
 
 function verifyDemoPgOtp(code) {
@@ -88,14 +113,21 @@ async function expireDemoPgIfNeeded(admin, db, uid, profile, email) {
 
 module.exports = {
   DEMO_PG_EMAIL,
+  DEMO_PG_CUSTOMER_EMAIL,
+  DEMO_PG_ADMIN_EMAIL,
   DEMO_PG_OTP,
   DEMO_PG_TTL_MS,
   DEMO_PG_PASSWORD,
   DEMO_PG_NAME,
+  DEMO_PG_CUSTOMER_NAME,
+  DEMO_PG_ADMIN_NAME,
   isDemoPgEmail,
+  isDemoPgCustomerEmail,
+  isDemoPgAdminEmail,
   isDemoPgProfile,
   isDemoPgFixedOtp,
   isDemoPgActive,
+  isDemoPgAdminActive,
   verifyDemoPgOtp,
   demoExpiresAtMs,
   expireDemoPgIfNeeded
